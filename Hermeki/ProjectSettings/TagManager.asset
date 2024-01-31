@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - UICamera
   layers:
   - Default
   - TransparentFX
@@ -13,11 +14,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - LevelBounds
+  - Editor
+  - NoCollisions
+  - Wall
   - 
   - 
   - 
@@ -40,4 +41,25 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: background
+    uniqueID: 2696108511
+    locked: 0
+  - name: Platforms
+    uniqueID: 1414804337
+    locked: 0
+  - name: shadows
+    uniqueID: 348693073
+    locked: 0
+  - name: actors
+    uniqueID: 3388987875
+    locked: 0
+  - name: foreground
+    uniqueID: 4062344271
+    locked: 0
+  - name: GUI
+    uniqueID: 2670704149
+    locked: 0
+  - name: Editor
+    uniqueID: 3329141723
     locked: 0
