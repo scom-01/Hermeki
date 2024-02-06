@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6fb0d327821de4ca19ea0fcf940b27ee
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188715
+  packageName: 2D Pixel Unit Maker - SPUM
+  packageVersion: 1.6.5
+  assetPath: Assets/SPUM/Res/Animation/Clip/2_Attack_Magic.anim
+  uploadId: 627771

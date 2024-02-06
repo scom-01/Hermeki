@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 45bbd5bcac10f2248acbdb405a96904c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188715
+  packageName: 2D Pixel Unit Maker - SPUM
+  packageVersion: 1.6.5
+  assetPath: Assets/SPUM/Res/Animation/Clip/1_Run.anim
+  uploadId: 627771

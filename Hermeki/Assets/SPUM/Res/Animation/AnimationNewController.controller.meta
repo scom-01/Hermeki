@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ab937231d0600440fb0d8757568d78d7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188715
+  packageName: 2D Pixel Unit Maker - SPUM
+  packageVersion: 1.6.5
+  assetPath: Assets/SPUM/Res/Animation/AnimationNewController.controller
+  uploadId: 627771
