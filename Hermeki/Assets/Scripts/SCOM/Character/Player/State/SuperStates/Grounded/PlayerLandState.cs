@@ -24,9 +24,9 @@ public class PlayerLandState : PlayerGroundedState
         player.Core.CoreMovement.SetVelocityY(0);
         player.JumpState.ResetAmountOfJumpsLeft();
         //착지 시 커맨드 리스트 초기화
-        player.Inventory.Weapon.ResetActionCounter();
+        player.Inventory?.Weapon.ResetActionCounter();
         SoundEffect.AudioSpawn(Land_SFX);
-        player.Core.CoreEffectManager.StartEffectsPos(Land_Effect, CollisionSenses.GroundCenterPos, Land_Effect.transform.localScale);
+        player.Core.CoreEffectManager.StartEffectsPos(Land_Effect, CollisionSenses.GroundCenterPos);
         player.Inventory?.ItemExeOnLand(player,player.TargetUnit);
         Debug.Log("player.InputHandler.ActionInputDelayCheck[i] true");
         //Land 시 
