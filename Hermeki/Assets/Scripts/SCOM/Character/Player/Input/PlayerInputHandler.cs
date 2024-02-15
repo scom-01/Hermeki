@@ -21,6 +21,7 @@ public class PlayerInputHandler : MonoBehaviour
                     , PrimarySkillInput
                     , SecondarySkillInput
                     , PrimaryInput
+                    , SecondaryInput
                     , ESCInput
                     , InteractionInput = false;
     [HideInInspector]
@@ -421,6 +422,48 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log("OnESCInput Cancled");
             ESCInput = false;
         }
+    }
+    #endregion
+
+    #region SendMessage
+    private void OnMove(InputValue value)
+    {
+        Vector2 input = value.Get<Vector2>();
+
+        if (Mathf.Abs(input.x) > 0.1 || Mathf.Abs(input.y) > 0.1) 
+        {
+            NormInputX = Mathf.Clamp(Mathf.RoundToInt(10 * input.x), -1, 1);
+            NormInputY = Mathf.Clamp(Mathf.RoundToInt(10 * input.y), -1, 1);
+        }
+        else
+        {
+            NormInputX = 0;
+            NormInputY = 0;
+        }
+
+        Debug.Log($"input = ({NormInputX}, {NormInputY})");
+    }
+
+    private void OnJump()
+    {
+        JumpInput = true;
+        Debug.Log($"OnJump = {JumpInput}");
+    }
+
+    private void OnPrimaryAction()
+    {
+        PrimaryInput = true;
+        Debug.Log($"OnPrimaryAction = {PrimaryInput}");
+    }
+    private void OnSecondaryAction()
+    {
+        SecondaryInput = true;
+        Debug.Log($"OnSecondaryAction = {SecondaryInput}");
+    }
+    private void OnInteractive()
+    {
+        InteractionInput = true;
+        Debug.Log($"OnInteractive = {InteractionInput}");
     }
     #endregion
 
