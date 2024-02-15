@@ -14,7 +14,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * Movement.FancingDirection,
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
-                    core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit
+                    LayerMask.NameToLayer("Unit")
                 );
             return (RayHit.Length > 0);
         }
@@ -30,7 +30,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * -Movement.FancingDirection,
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
-                    core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit
+                    LayerMask.NameToLayer("Unit")
                 );
             return (RayHit.Length > 0);
         }
@@ -45,7 +45,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
                     Vector2.right * Movement.FancingDirection,
                     0,
-                    core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit
+                    LayerMask.NameToLayer("Unit")
                 );
             return (RayHit.Length > 0);
         }
@@ -61,7 +61,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * Movement.FancingDirection,
                     ((core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x < 0) ? 0 : (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x,
-                    core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit
+                    LayerMask.NameToLayer("Unit")
                 );
             foreach (var coll in RayHit)
             {
@@ -84,7 +84,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * -Movement.FancingDirection,
                      ((core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x < 0) ? 0 : (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x,
-                    core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit
+                    LayerMask.NameToLayer("Unit")
                 );
             foreach (var coll in RayHit)
             {
@@ -103,7 +103,7 @@ public class EnemyCollisionSenses : CollisionSenses
             Vector2 offset = Vector2.zero;
             float size = (core.Unit.UnitData as EnemyData).UnitDetectedDistance;
             offset.Set(GroundCenterPos.x + (-CC2D.size.x * Movement.FancingDirection), GroundCenterPos.y);
-            var detected = Physics2D.OverlapCircleAll(offset, size, core.Unit.UnitData.LayerMaskSO.WhatIsEnemyUnit);
+            var detected = Physics2D.OverlapCircleAll(offset, size, LayerMask.NameToLayer("Unit"));
 
             foreach (Collider2D coll in detected)
             {

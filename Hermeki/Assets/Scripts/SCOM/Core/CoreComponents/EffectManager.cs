@@ -20,6 +20,8 @@ namespace SCOM.CoreSystem
         #region Effects
         public GameObject StartEffects(GameObject effectPrefab, Vector2 pos, Quaternion rot, Vector3 size, bool _isFollow = false)
         {
+            if (effectPrefab == null)
+                return null;
             if (effectPrefab.GetComponent<EffectController>() == null)
             {
                 effectPrefab.AddComponent<EffectController>();
@@ -41,6 +43,14 @@ namespace SCOM.CoreSystem
                 else
                     return (GameManager.Inst.StageManager.EffectContainer?.CheckObject(ObjectPooling_TYPE.Effect, effectPrefab, size, GameManager.Inst.StageManager.EffectContainer.transform) as EffectPooling).GetObejct(pos, rot, size);
             }
+        }
+        public GameObject StartEffectsPos(GameObject effectPrefab, Vector2 pos, bool _isFollow = false)
+        {
+            if(effectPrefab == null)
+            {
+                return null;
+            }
+            return StartEffects(effectPrefab, pos, effectPrefab.transform.eulerAngles, effectPrefab.transform.localScale, _isFollow);            
         }
         public GameObject StartEffectsPos(GameObject effectPrefab, Vector2 pos, Vector3 size, bool _isFollow = false)
         {

@@ -75,9 +75,8 @@ namespace SCOM.CoreSystem
         public float GroundCheckDistance { get => core.Unit.UnitData.groundCheckDistance; }
         public float WallCheckDistance { get => core.Unit.UnitData.wallCheckDistance; }
 
-        public LayerMask WhatIsGround { get => core.Unit.UnitData.LayerMaskSO.WhatIsGround; }
-        public LayerMask WhatIsWall { get => core.Unit.UnitData.LayerMaskSO.WhatIsWall; }
-        public LayerMask WhatIsPlatform { get => core.Unit.UnitData.LayerMaskSO.WhatIsPlatform; }
+        public LayerMask WhatIsGround { get => core.Unit.UnitData.GroundMask; }
+        public LayerMask WhatIsWall { get => core.Unit.UnitData.GroundMask; }
 
         protected ContactFilter2D contactFilter_Ground;
         protected ContactFilter2D contactFilter_Platform;
@@ -87,7 +86,6 @@ namespace SCOM.CoreSystem
         {
             base.Awake();
             contactFilter_Ground.SetLayerMask(WhatIsGround);
-            contactFilter_Platform.SetLayerMask(WhatIsPlatform);
             contactFilter_Ground.useLayerMask = true;
             contactFilter_Platform.useLayerMask = true;
         }
@@ -102,6 +100,9 @@ namespace SCOM.CoreSystem
                     foreach (var hit in hitBuffer)
                     {
                         if (hit.rigidbody == null)
+                            continue;
+
+                        if (hit.transform.tag != "Platform")
                             continue;
 
                         //hit의 기울기(양수면 hit의 y가 더 낮은 위치, 즉 GroundCenterPos가 hit.point보다 위에 있으면 양수)
@@ -131,6 +132,9 @@ namespace SCOM.CoreSystem
                         if (hit.rigidbody == null)
                             continue;
 
+                        if (hit.transform.tag == "Platform")
+                            continue;
+
                         //hit의 기울기(양수면 hit의 y가 더 낮은 위치, 즉 GroundCenterPos가 hit.point보다 위에 있으면 양수)
                         if (hit.normal.y < 0.9f)
                             continue;
@@ -158,14 +162,12 @@ namespace SCOM.CoreSystem
 
         public bool CheckIfCliff
         {
-            get => Physics2D.Raycast(CliffFront, Vector2.down, 0.5f, WhatIsGround) ||
-                Physics2D.Raycast(CliffFront, Vector2.down, 0.5f, WhatIsPlatform);
+            get => Physics2D.Raycast(CliffFront, Vector2.down, 0.5f, WhatIsGround);
         }
 
         public bool CheckIfCliffBack
         {
-            get => Physics2D.Raycast(CliffBack, Vector2.down, 0.5f, WhatIsGround) ||
-                Physics2D.Raycast(CliffBack, Vector2.down, 0.5f, WhatIsPlatform);
+            get => Physics2D.Raycast(CliffBack, Vector2.down, 0.5f, WhatIsGround);
         }
 
         protected virtual void OnDrawGizmos()

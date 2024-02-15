@@ -38,7 +38,7 @@ public class UnitData : ScriptableObject
 
     public Unit_Size unit_size = Unit_Size.Small;
 
-    public LayerMaskSO LayerMaskSO;
+    public LayerMask GroundMask;
 
     [Header("Animator")]
     public RuntimeAnimatorController UnitAnimator;
