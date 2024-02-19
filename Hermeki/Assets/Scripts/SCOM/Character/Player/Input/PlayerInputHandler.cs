@@ -148,7 +148,7 @@ public class PlayerInputHandler : MonoBehaviour
         //CheckHoldTime(ref attackInputs, ref ActionInputsStartTime);
         //CheckHoldTime(ref interacInput, ref interactionInputStartTime);
 
-        JumpInput = jumpInput;
+        //JumpInput = jumpInput;
         DashInput = dashInput;
         PrimarySkillInput = skill1Input;
         SecondarySkillInput = skill2Input;
@@ -162,14 +162,21 @@ public class PlayerInputHandler : MonoBehaviour
     {
         RawMovementInput = context.ReadValue<Vector2>();
 
-        NormInputX = Mathf.RoundToInt(RawMovementInput.x);
-        NormInputY = Mathf.RoundToInt(RawMovementInput.y);
+        if (Mathf.Abs(RawMovementInput.x) > 0.1 || Mathf.Abs(RawMovementInput.y) > 0.1)
+        {
+            NormInputX = Mathf.Clamp(Mathf.RoundToInt(10 * RawMovementInput.x), -1, 1);
+            NormInputY = Mathf.Clamp(Mathf.RoundToInt(10 * RawMovementInput.y), -1, 1);
+        }
+
+        //NormInputX = Mathf.RoundToInt(RawMovementInput.x);
+        //NormInputY = Mathf.RoundToInt(RawMovementInput.y);
 
         if (context.canceled)
         {
             NormInputX = 0;
             NormInputY = 0;
         }
+        Debug.Log($"input = ({NormInputX}, {NormInputY})");
     }
 
 
@@ -238,6 +245,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (context.started)
         {
+            PrimaryInput = true;
+            Debug.Log($"OnPrimaryAction = {PrimaryInput}");
+
             if (ActionInputDelayCheck[(int)CombatInputs.primary])
             {
                 ActionInputs[(int)CombatInputs.primary] = true;
@@ -256,6 +266,8 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (context.started)
         {
+            SecondaryInput = true;
+            Debug.Log($"OnSecondaryInput = {SecondaryInput}");
             if (ActionInputDelayCheck[(int)CombatInputs.secondary])
             {
                 ActionInputs[(int)CombatInputs.secondary] = true;
@@ -426,7 +438,7 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region SendMessage
-    private void OnMove(InputValue value)
+    public void OnMove(InputValue value)
     {
         Vector2 input = value.Get<Vector2>();
 
@@ -440,30 +452,24 @@ public class PlayerInputHandler : MonoBehaviour
             NormInputX = 0;
             NormInputY = 0;
         }
-
-        Debug.Log($"input = ({NormInputX}, {NormInputY})");
     }
 
     private void OnJump()
     {
         JumpInput = true;
-        Debug.Log($"OnJump = {JumpInput}");
     }
 
     private void OnPrimaryAction()
     {
         PrimaryInput = true;
-        Debug.Log($"OnPrimaryAction = {PrimaryInput}");
     }
     private void OnSecondaryAction()
     {
         SecondaryInput = true;
-        Debug.Log($"OnSecondaryAction = {SecondaryInput}");
     }
     private void OnInteractive()
     {
         InteractionInput = true;
-        Debug.Log($"OnInteractive = {InteractionInput}");
     }
     #endregion
 

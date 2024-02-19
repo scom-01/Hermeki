@@ -16,7 +16,7 @@ public class Player : Unit
     //PlayerAbilityState
     public PlayerJumpState JumpState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
-    public PlayerDashState DashState { get; private set; }
+    //public PlayerDashState DashState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
 
     public PlayerWeaponState PrimaryAttackState { get; private set; }
@@ -24,12 +24,10 @@ public class Player : Unit
     public PlayerWeaponState PrimarySkillState { get; private set; }
     public PlayerWeaponState SecondarySkillState { get; private set; }
 
-    //PlayerTouchingWallState
-    public PlayerWallSlideState WallSlideState { get; private set; }
     #endregion
 
     #region Components
-    public PlayerInputHandler InputHandler { get; private set; }
+    public PlayerInputHandler InputHandler;// { get; private set; }
     [HideInInspector]
     public PlayerData playerData;
     #endregion
@@ -45,22 +43,21 @@ public class Player : Unit
         MoveState = new PlayerMoveState(this, "move");
         JumpState = new PlayerJumpState(this, "inAir");    //점프하는 순간 공중상태이므로
         InAirState = new PlayerInAirState(this, "inAir");
-        LandState = new PlayerLandState(this, "land");
-        WallSlideState = new PlayerWallSlideState(this, "wallSlide");
-        WallJumpState = new PlayerWallJumpState(this, "inAir");
-        DashState = new PlayerDashState(this, "dash");
+        LandState = new PlayerLandState(this, "idle");
+        //WallJumpState = new PlayerWallJumpState(this, "inAir");
+        //DashState = new PlayerDashState(this, "dash");
         DeathState = new PlayerDeathState(this, "death");
-        PrimaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary)); //, Inventory.weapon);
-        SecondaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
-        PrimarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
-        SecondarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
-        Inventory.Weapon.SetCore(Core);
+        //PrimaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary)); //, Inventory.weapon);
+        //SecondaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
+        //PrimarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
+        //SecondarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
+        Inventory?.Weapon.SetCore(Core);
     }
 
     private void Init()
     {
-        InputHandler = GameManager.Inst.GetComponent<PlayerInputHandler>();
-        if (InputHandler == null) InputHandler = GameManager.Inst.GameObject().AddComponent<PlayerInputHandler>();
+        //InputHandler = this.GetComponent<PlayerInputHandler>();
+        //if (InputHandler == null) InputHandler = this.AddComponent<PlayerInputHandler>();
 
         FSM.Initialize(IdleState);
     }
