@@ -69,10 +69,18 @@ public class PlayerState : UnitState
         {
             player?.SetAnimParam("leftAction", true);
         }
-        
-        if(player.InputHandler.SecondaryInput)
+        else
+        {
+            player?.SetAnimParam("leftAction", false);
+        }
+
+        if (player.InputHandler.SecondaryInput)
         {
             player?.SetAnimParam("rightAction", true);
+        }
+        else
+        {
+            player?.SetAnimParam("rightAction", false);
         }
         return false;
         if (player.InputHandler.ActionInputs[(int)CombatInputs.primary])

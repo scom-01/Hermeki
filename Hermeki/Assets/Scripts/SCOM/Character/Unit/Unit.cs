@@ -240,6 +240,10 @@ public class Unit : MonoBehaviour
         //    }
         //}
     }
+    public void SetAnimParam(string str, int _int)
+    {
+        Anim?.SetInteger(str, _int);
+    }
 
     public void SetTarget(Unit unit)
     {
