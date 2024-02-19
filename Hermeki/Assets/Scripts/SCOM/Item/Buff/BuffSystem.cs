@@ -303,7 +303,7 @@ public class BuffSystem : MonoBehaviour
     {
         if (_unit.GetType() == typeof(Player))
         {
-            GameManager.Inst?.MainUI?.MainPanel?.BuffPanelSystem.BuffPanelRemove(_buff);
+            //GameManager.Inst?.MainUI?.MainPanel?.BuffPanelSystem.BuffPanelRemove(_buff);
         }
 
         _bufflist.Remove(_buff);

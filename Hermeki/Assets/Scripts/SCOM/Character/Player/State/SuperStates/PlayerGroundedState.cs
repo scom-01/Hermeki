@@ -13,7 +13,7 @@ public class PlayerGroundedState : PlayerState
     {
         base.Enter();
         unit.isFixedMovement = false;
-        player.DashState.ResetCanDash();
+        //player.DashState.ResetCanDash();
     }
 
     public override void Exit()
@@ -29,23 +29,23 @@ public class PlayerGroundedState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        //대쉬카운트 초기화
-        if (player.DashState.CheckIfResetDash())
-        {
-            player.DashState.ResetDash(player.playerData.dashCount);
-        }
+        ////대쉬카운트 초기화
+        //if (player.DashState.CheckIfResetDash())
+        //{
+        //    player.DashState.ResetDash(player.playerData.dashCount);
+        //}
 
         if (CheckActionInput())
         {
             return;
         }
-        //아래로 점프
-        else if (JumpInput && isPlatform && yInput < 0)
-        {
-            player.InputHandler.JumpInput = false;
-            player.StartCoroutine(player.DisableCollision());
-            return;
-        }
+        ////아래로 점프
+        //else if (JumpInput && isPlatform && yInput < 0)
+        //{
+        //    player.InputHandler.JumpInput = false;
+        //    player.StartCoroutine(player.DisableCollision());
+        //    return;
+        //}
         //점프
         else if (JumpInput && player.JumpState.CanJump() && isGrounded && yInput >= 0 && !player.CC2D.isTrigger)
         {
@@ -59,11 +59,11 @@ public class PlayerGroundedState : PlayerState
             player.FSM.ChangeState(player.InAirState);
             return;
         }
-        //대쉬
-        else if (dashInput && player.DashState.CheckIfCanDash())
-        {
-            player.FSM.ChangeState(player.DashState);
-            return;
-        }
+        ////대쉬
+        //else if (dashInput && player.DashState.CheckIfCanDash())
+        //{
+        //    player.FSM.ChangeState(player.DashState);
+        //    return;
+        //}
     }
 }

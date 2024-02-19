@@ -153,6 +153,14 @@ namespace SCOM.CoreSystem
             if (comp)
                 return comp;
 
+            //if (comp == null)
+            //{
+            //    GameObject component = GameObject.Instantiate(new GameObject());
+            //    component.transform.name = typeof(T).Name;
+            //    component.AddComponent<T>();
+            //    component.transform.parent = transform;
+            //    return component.GetComponent<T>();
+            //}
             Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");
             return null;
         }

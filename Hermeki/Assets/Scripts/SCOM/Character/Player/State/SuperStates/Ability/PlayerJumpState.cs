@@ -1,7 +1,7 @@
 using SCOM.CoreSystem;
 using UnityEngine;
 
-public class PlayerJumpState : PlayerAbilityState
+public class PlayerJumpState : PlayerInAirState
 {
     private int amountOfJumpLeft;
     private GameObject Jump_Effect;
@@ -24,7 +24,7 @@ public class PlayerJumpState : PlayerAbilityState
     {
         base.Enter();
         unit.RB.gravityScale = unit.UnitData.UnitGravity;
-        isAbilityDone = true;
+        //isAbilityDone = true;
         Jump();        
     }
 
@@ -40,12 +40,12 @@ public class PlayerJumpState : PlayerAbilityState
         if (amountOfJumpLeft < player.playerData.amountOfJumps)
         {
             player.Core.CoreEffectManager.StartEffectsPos(Jump_Effect, CollisionSenses.GroundCenterPos, Jump_Effect.transform.localScale);
-            player.Anim.SetBool("JumpFlip", true);
+            player?.SetAnimParam("JumpFlip", true);
         }
-        if (player.PrimaryAttackState.weapon != null)
-        {
-            player.PrimaryAttackState.weapon.ChangeActionCounter(0);
-        }
+        //if (player.PrimaryAttackState.weapon != null)
+        //{
+        //    player.PrimaryAttackState.weapon.ChangeActionCounter(0);
+        //}
 
         DecreaseAmountOfJumpsLeft();
         Debug.Log("DecreaseJump");
@@ -58,7 +58,7 @@ public class PlayerJumpState : PlayerAbilityState
     {
         amountOfJumpLeft = player.playerData.amountOfJumps;
         Debug.Log($"Reset amountOfJumpLeft = {amountOfJumpLeft}");
-        player.Anim.SetBool("JumpFlip", false);
+        player?.SetAnimParam("JumpFlip", false);
     }
 
     public void DecreaseAmountOfJumpsLeft()

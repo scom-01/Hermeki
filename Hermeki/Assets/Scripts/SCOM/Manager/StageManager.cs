@@ -187,7 +187,7 @@ public class StageManager : MonoBehaviour
             CVC.Follow = player.transform;
             CVC.m_Lens.OrthographicSize = (Cam_Distance <= 0) ? 5 : Cam_Distance;
         }
-        GameManager.Inst.ChangeUI(UI_State.GamePlay);
+        //GameManager.Inst.ChangeUI(UI_State.GamePlay);
         isStageClear = false;
     }
 
@@ -255,13 +255,13 @@ public class StageManager : MonoBehaviour
 
         GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.GamePlay, false);
 
-        GameManager.Inst.SetSaveData();
+        //GameManager.Inst.SetSaveData();
 
-        GameManager.Inst.ChangeUI(Start_UIState);
-        //Loading시 ESC를 눌러서 Pause가 됐을 때 생기는 오류 방지
-        GameManager.Inst.Continue();
-        GameManager.Inst.LoadData();
-        GameManager.Inst.SaveData();
+        //GameManager.Inst.ChangeUI(Start_UIState);
+        ////Loading시 ESC를 눌러서 Pause가 됐을 때 생기는 오류 방지
+        //GameManager.Inst.Continue();
+        //GameManager.Inst.LoadData();
+        //GameManager.Inst.SaveData();
 
         //씬 이름 애니메이션 Instantiate
         if (SceneNameFade != null)

@@ -52,10 +52,6 @@ public class PlayerWeaponState : PlayerAbilityState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        
-        xInput = player.InputHandler.NormInputX;
-        yInput = player.InputHandler.NormInputY;
-        JumpInput = player.InputHandler.JumpInput;
 
         //아래로 점프
         if (JumpInput && isPlatform && yInput < 0)
@@ -99,12 +95,12 @@ public class PlayerWeaponState : PlayerAbilityState
         }
 
 
-        if (player.InputHandler.DashInput && player.DashState.CheckIfCanDash())
-        {
-            weapon.EventHandler.AnimationFinishedTrigger();
-            player.FSM.ChangeState(player.DashState);
-            return;
-        }
+        //if (player.InputHandler.DashInput && player.DashState.CheckIfCanDash())
+        //{
+        //    weapon.EventHandler.AnimationFinishedTrigger();
+        //    player.FSM.ChangeState(player.DashState);
+        //    return;
+        //}
     }
 
     public void SetWeapon(Weapon weapon)

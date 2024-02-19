@@ -64,7 +64,7 @@ public class UnitState
     public virtual void Enter()
     {
         startTime = Time.time;
-        unit.Anim.SetBool(animBoolName, true);
+        unit?.SetAnimParam(animBoolName, true);
         Debug.Log(unit.name + " Enter State : " + animBoolName);
         isAnimationFinished = false;
         isExitingState = false;
@@ -73,7 +73,7 @@ public class UnitState
     public virtual void Exit()
     {
         Debug.Log(unit.name + " Exit State : " + animBoolName);
-        unit.Anim.SetBool(animBoolName, false);
+        unit?.SetAnimParam(animBoolName, false);
         isExitingState = true;
     }
 

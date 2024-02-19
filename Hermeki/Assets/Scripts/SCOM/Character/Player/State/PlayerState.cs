@@ -1,4 +1,6 @@
 using SCOM.CoreSystem;
+using System.Diagnostics;
+using UnityEngine;
 
 public class PlayerState : UnitState
 {
@@ -63,6 +65,16 @@ public class PlayerState : UnitState
     /// <returns></returns>
     protected bool CheckActionInput()
     {
+        if(player.InputHandler.PrimaryInput)
+        {
+            player?.SetAnimParam("leftAction", true);
+        }
+        
+        if(player.InputHandler.SecondaryInput)
+        {
+            player?.SetAnimParam("rightAction", true);
+        }
+        return false;
         if (player.InputHandler.ActionInputs[(int)CombatInputs.primary])
         {
             player.PrimaryAttackState.SetWeapon(player.Inventory.Weapon);

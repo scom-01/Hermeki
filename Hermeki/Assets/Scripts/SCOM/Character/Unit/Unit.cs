@@ -22,6 +22,7 @@ public class Unit : MonoBehaviour
     private Core core;
     public UnitFSM FSM { get; private set; }
     public Animator Anim { get; private set; }
+    public Animator[] Anims { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public CapsuleCollider2D CC2D
     {
@@ -113,7 +114,7 @@ public class Unit : MonoBehaviour
     #region Set variable Func
     public void Set_Fixed_CC_Immunity(bool value) => isFixed_CC_Immunity = value;
     public void Set_Fixed_Hit_Immunity(bool value) => isFixed_Hit_Immunity = value;
-    public bool Get_Fixed_CC_Immunity { get => isFixed_CC_Immunity; } 
+    public bool Get_Fixed_CC_Immunity { get => isFixed_CC_Immunity; }
     public bool Get_Fixed_Hit_Immunity { get => isFixed_Hit_Immunity; }
     #endregion
 
@@ -133,12 +134,14 @@ public class Unit : MonoBehaviour
             Debug.Log($"{this.name} UnitData is null");
         }
 
-        Anim = GetComponent<Animator>();
+        Anim = GetComponentInChildren<Animator>();
         if (Anim == null)
         {
             Anim = this.GameObject().AddComponent<Animator>();
             Anim.runtimeAnimatorController = UnitData.UnitAnimator;
         };
+
+        Anims = GetComponentsInChildren<Animator>();
 
         RB = GetComponent<Rigidbody2D>();
         if (RB == null) RB = this.GameObject().AddComponent<Rigidbody2D>();
@@ -149,7 +152,7 @@ public class Unit : MonoBehaviour
         if (CC2D == null) CC2D = this.GameObject().AddComponent<CapsuleCollider2D>();
 
         SR = GetComponent<SpriteRenderer>();
-        if (SR == null) SR = this.GameObject().AddComponent<SpriteRenderer>();
+        //if (SR == null) SR = this.GameObject().AddComponent<SpriteRenderer>();
 
         if (MapSR != null)
         {
@@ -160,18 +163,21 @@ public class Unit : MonoBehaviour
             MapSR.transform.localRotation = Quaternion.Euler(Vector3.zero);
             MapSR.gameObject.transform.localPosition = Vector3.zero;
             MapSR.transform.localPosition = new Vector3(CC2D.offset.x, CC2D.offset.y, 0);
-            MapSR.size = new Vector2(CC2D.size.x,CC2D.size.y);
+            MapSR.size = new Vector2(CC2D.size.x, CC2D.size.y);
             MapSR.gameObject.SetActive(true);
         }
 
         Inventory = GetComponent<Inventory>();
-        if (Inventory == null) Inventory = this.GameObject().AddComponent<Inventory>();
+        //if (Inventory == null) Inventory = this.GameObject().AddComponent<Inventory>();
 
     }
 
     protected virtual void Start()
     {
-        RespawnPoint = GameManager.Inst.StageManager.SpawnPoint.transform;
+        if (GameManager.Inst?.StageManager != null)
+        {
+            RespawnPoint = GameManager.Inst.StageManager.SpawnPoint.transform;
+        }
     }
 
     // Update is called once per frame
@@ -208,6 +214,31 @@ public class Unit : MonoBehaviour
         }
 
         FSM.CurrentState.LogicUpdate();
+    }
+
+    public void SetAnimParam(string str, bool boolean)
+    {
+        Anim?.SetBool(str, boolean);
+
+        //if (Anims != null)
+        //{
+        //    foreach (var _anim in Anims)
+        //    {
+        //        _anim?.SetBool(str, boolean);
+        //    }
+        //}
+    }
+    public void SetAnimParam(string str, float _float)
+    {
+        Anim?.SetFloat(str, _float);
+
+        //if (Anims != null)
+        //{
+        //    foreach (var _anim in Anims)
+        //    {
+        //        _anim?.SetFloat(str, _float);
+        //    }
+        //}
     }
 
     public void SetTarget(Unit unit)

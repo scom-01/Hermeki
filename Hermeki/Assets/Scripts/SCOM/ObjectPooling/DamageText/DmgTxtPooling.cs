@@ -96,21 +96,21 @@ public class DmgTxtPooling : ObjectPooling
             if (obj != null)
             {
                 obj.GetComponent<RectTransform>().anchoredPosition = pos;
-                switch (damageAttiribute)
-                {
-                    case DAMAGE_ATT.Magic:
-                        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.magenta);
-                        break;
-                    case DAMAGE_ATT.Physics:
-                        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.yellow);
-                        break;
-                    case DAMAGE_ATT.Fixed:
-                        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.white);
-                        break;
-                    case DAMAGE_ATT.Heal:
-                        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.green);
-                        break;
-                }
+                //switch (damageAttiribute)
+                //{
+                //    case DAMAGE_ATT.Magic:
+                //        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.magenta);
+                //        break;
+                //    case DAMAGE_ATT.Physics:
+                //        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.yellow);
+                //        break;
+                //    case DAMAGE_ATT.Fixed:
+                //        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.white);
+                //        break;
+                //    case DAMAGE_ATT.Heal:
+                //        obj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.green);
+                //        break;
+                //}
                 obj.gameObject.SetActive(true);
             }
             return obj;
@@ -119,18 +119,18 @@ public class DmgTxtPooling : ObjectPooling
         {
             var newobj = CreateObject(Vector3.one);
             newobj.GetComponent<RectTransform>().anchoredPosition = pos;
-            switch (damageAttiribute)
-            {
-                case DAMAGE_ATT.Magic:
-                    newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.magenta);
-                    break;
-                case DAMAGE_ATT.Physics:
-                    newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.yellow);
-                    break;
-                case DAMAGE_ATT.Fixed:
-                    newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.white);
-                    break;
-            }
+            //switch (damageAttiribute)
+            //{
+            //    case DAMAGE_ATT.Magic:
+            //        newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.magenta);
+            //        break;
+            //    case DAMAGE_ATT.Physics:
+            //        newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.yellow);
+            //        break;
+            //    case DAMAGE_ATT.Fixed:
+            //        newobj.GetComponentInChildren<DamageText>().SetText(damage, fontSize, Color.white);
+            //        break;
+            //}
             newobj.gameObject.SetActive(true);
             return newobj;
         }

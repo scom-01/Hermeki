@@ -84,10 +84,10 @@ public class PlayerDashState : PlayerAbilityState
             if (player.InputHandler.DashInput)
             {
                 lastDashTime = Time.time;
-                if (player.DashState.CheckIfCanDash())
+                if (CheckIfCanDash())
                 {
                     Movement.CheckIfShouldFlip(player.InputHandler.NormInputX);
-                    player.FSM.ChangeState(player.DashState);
+                    player.FSM.ChangeState(this);
                 }
             }
 

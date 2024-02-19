@@ -22,8 +22,8 @@ public class PlayerInAirState : PlayerState
     {
         base.DoChecks();
 
-        oldIsTouchingWall = isTouchingWall;
-        oldIsTouchingWallBack = isTouchingWallBack;
+        //oldIsTouchingWall = isTouchingWall;
+        //oldIsTouchingWallBack = isTouchingWallBack;
 
         isTouchingWall = CollisionSenses.CheckIfTouchingWall;
         isTouchingWallBack = CollisionSenses.CheckIfTouchingWallBack;
@@ -34,8 +34,8 @@ public class PlayerInAirState : PlayerState
             StartWallJumpCoyoteTime();
         }
 
-        CheckCoyoteTime();
-        CheckWallJumpCoyoteTime();
+        //CheckCoyoteTime();
+        //CheckWallJumpCoyoteTime();
 
         CheckJumpMultiplier();
     }
@@ -48,12 +48,11 @@ public class PlayerInAirState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        player?.SetAnimParam("yVelocity", 0);
+        player?.SetAnimParam("xVelocity", 0);
 
-        player.Anim.SetFloat("yVelocity", 0);
-        player.Anim.SetFloat("xVelocity", 0);
-
-        oldIsTouchingWall = false;
-        oldIsTouchingWallBack = false;
+        //oldIsTouchingWall = false;
+        //oldIsTouchingWallBack = false;
         isTouchingWall = false;
         isTouchingWallBack = false;
     }
@@ -98,25 +97,25 @@ public class PlayerInAirState : PlayerState
             player.FSM.ChangeState(player.JumpState);
             return;
         }
-        else if (isTouchingWall && xInput == Movement.FancingDirection && Movement.CurrentVelocity.y <= 0f)
-        {
-            player.FSM.ChangeState(player.WallSlideState);
-            return;
-        }
-        else if (dashInput && player.DashState.CheckIfCanDash())
-        {
-            player.Anim.SetBool("JumpFlip", false);
-            player.FSM.ChangeState(player.DashState);
-            return;
-        }
+        //else if (isTouchingWall && xInput == Movement.FancingDirection && Movement.CurrentVelocity.y <= 0f)
+        //{
+        //    player.FSM.ChangeState(player.WallSlideState);
+        //    return;
+        //}
+        //else if (dashInput && player.DashState.CheckIfCanDash())
+        //{
+        //    player?.SetAnimParam("JumpFlip", false);
+        //    player.FSM.ChangeState(player.DashState);
+        //    return;
+        //}
 
         Movement.CheckIfShouldFlip(xInput);
         //if(Movement.CanSetVelocity)
         if (!unit.isFixedMovement)
             Movement.SetVelocityX(UnitStats.CalculStatsData.DefaultMoveSpeed * ((100f + UnitStats.CalculStatsData.MovementVEL_Per) / 100f) * xInput);
 
-        player.Anim.SetFloat("yVelocity", Mathf.Clamp(Movement.CurrentVelocity.y, -3, 13));
-        player.Anim.SetFloat("xVelocity", Mathf.Abs(Movement.CurrentVelocity.x));
+        player?.SetAnimParam("yVelocity", Mathf.Clamp(Movement.CurrentVelocity.y, -3, 13));
+        player?.SetAnimParam("xVelocity", Mathf.Abs(Movement.CurrentVelocity.x));
     }
 
 

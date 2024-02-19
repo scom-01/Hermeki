@@ -11,7 +11,8 @@ namespace SCOM.CoreSystem
         protected override void Awake()
         {
             base.Awake();
-            SFX_soundContainer = GameManager.Inst.StageManager.SFXContainer;
+            if (GameManager.Inst?.StageManager?.SFXContainer != null)
+                SFX_soundContainer = GameManager.Inst.StageManager.SFXContainer;
         }
         public void AudioSpawn(AudioPrefab audioData)
         {
@@ -20,7 +21,7 @@ namespace SCOM.CoreSystem
                 Debug.LogWarning("Clip is Null");
                 return;
             }
-            SFX_soundContainer.CheckObject(audioData).GetObejct(audioData.Volume);
+            SFX_soundContainer?.CheckObject(audioData).GetObejct(audioData.Volume);
         }
         public void AudioSpawn(AudioClip audioClip, float volume = 1f)
         {
@@ -29,7 +30,7 @@ namespace SCOM.CoreSystem
                 Debug.LogWarning("Clip is Null");
                 return;
             }
-            SFX_soundContainer.CheckObject(new AudioPrefab(audioClip, volume)).GetObejct(volume);
+            SFX_soundContainer?.CheckObject(new AudioPrefab(audioClip, volume)).GetObejct(volume);
         }
     }
 }

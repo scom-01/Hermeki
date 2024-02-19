@@ -32,7 +32,7 @@ namespace SCOM
             source.clip = _SFX.Clip;
             source.volume = _SFX.Volume;
             source.playOnAwake = false;
-            source.outputAudioMixerGroup = DataManager.Inst.SFX;
+            //source.outputAudioMixerGroup = DataManager.Inst.SFX;
             source.loop = false;
             source.Stop();
             return source;
@@ -44,7 +44,7 @@ namespace SCOM
                 return;
 
             SoundObject = _SFX;
-            SoundSource.outputAudioMixerGroup = DataManager.Inst.SFX;
+            //SoundSource.outputAudioMixerGroup = DataManager.Inst.SFX;
             SoundSource.clip = _SFX.Clip;
             SoundSource.volume= _SFX.Volume;
             SoundSource.playOnAwake = false;

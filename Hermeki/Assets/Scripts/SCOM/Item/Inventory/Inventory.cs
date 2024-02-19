@@ -480,11 +480,11 @@ public class Inventory : MonoBehaviour
                     }
                 }
 
-                if (Unit.GetType() == typeof(Player))
-                    GameManager.Inst.SubUI.InventorySubUI.InventoryItems.RemoveItem(itemData);
+                //if (Unit.GetType() == typeof(Player))
+                //    GameManager.Inst.SubUI.InventorySubUI.InventoryItems.RemoveItem(itemData);
 
                 //spawnItem
-                GameManager.Inst.StageManager.IM.SpawnItem(GameManager.Inst.StageManager.IM.InventoryItem, Unit.Core.CoreCollisionSenses.UnitCenterPos, GameManager.Inst.StageManager.IM.transform, itemData);
+                //GameManager.Inst.StageManager.IM.SpawnItem(GameManager.Inst.StageManager.IM.InventoryItem, Unit.Core.CoreCollisionSenses.UnitCenterPos, GameManager.Inst.StageManager.IM.transform, itemData);
                 break;
             }
         }
@@ -498,8 +498,8 @@ public class Inventory : MonoBehaviour
             CheckItem = Object.GameObject();
             Debug.LogWarning("Inventory is full");
 
-            if (Unit.GetType() == typeof(Player))
-                GameManager.Inst.SubUI.InventorySubUI.SetInventoryState(InventoryUI_State.Change);
+            //if (Unit.GetType() == typeof(Player))
+            //    GameManager.Inst.SubUI.InventorySubUI.SetInventoryState(InventoryUI_State.Change);
             if (Unit.GetType() == typeof(Player))
                 GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.UI, true);
             //아이템 교체하는 코드
@@ -547,8 +547,8 @@ public class Inventory : MonoBehaviour
                 if (itemObject.CompositeItems[i].MaterialItem != Items[j].item)
                     continue;
                 //재료 아이템 제거(인벤토리)
-                if (Unit.GetType() == typeof(Player))
-                    GameManager.Inst.SubUI.InventorySubUI.InventoryItems.RemoveItem(Items[j].item);
+                //if (Unit.GetType() == typeof(Player))
+                //    GameManager.Inst.SubUI.InventorySubUI.InventoryItems.RemoveItem(Items[j].item);
 
                 //한 번 획득 한 아이템의 정보를 저장 후 재획득 시 정보를 덮어씌움
                 if (!Old_Items.Contains(Items[i]))
