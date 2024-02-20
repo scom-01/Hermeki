@@ -24,6 +24,10 @@ public class WeaponItem : MonoBehaviour
     private void Awake()
     {
         unit = GetComponentInParent<Unit>();
+        if(unit != null)
+        {
+            this.tag = unit.transform.tag;
+        }
         eventHandler = unit.GetComponentInChildren<AnimationEventHandler>();
     }
     private void Start()
@@ -67,7 +71,7 @@ public class WeaponItem : MonoBehaviour
             return;
 
         //Ground
-        if(collision.gameObject.layer == 1 <<LayerMask.NameToLayer("Ground"))
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             if (isLeft)
             {
@@ -80,7 +84,7 @@ public class WeaponItem : MonoBehaviour
             return;
         }
         //Unit
-        if (collision.gameObject.layer == 1<< LayerMask.NameToLayer("Damageable"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Damageable"))
         {
             if(collision.tag == this.gameObject.tag)
                 return;
