@@ -21,6 +21,7 @@ public class SPUM_SpriteList : MonoBehaviour
 
     public Texture2D _bodyTexture;
     public string _bodyString;
+    public string _eyeString;
 
     public List<string> _hairListString = new List<string>();
     public List<string> _clothListString = new List<string>();
@@ -140,6 +141,8 @@ public class SPUM_SpriteList : MonoBehaviour
         SyncPath(_pantList, _pantListString);
         SyncPath(_weaponList, _weaponListString);
         SyncPath(_backList, _backListString);
+        SyncPath(_bodyList, _bodyString, true); //추가
+        SyncPath(_eyeList, _eyeString, false);  //추가
     }
 
     public void SyncPath(List<SpriteRenderer> _objList, List<string> _pathList)
@@ -182,7 +185,6 @@ public class SPUM_SpriteList : MonoBehaviour
                             }
                         }
                     }
-
                 }
                 else if (tSP.Length > 0)
                 {
@@ -193,6 +195,44 @@ public class SPUM_SpriteList : MonoBehaviour
             {
                 _objList[i].sprite = null;
             }
+        }
+    }
+    public void SyncPath(List<SpriteRenderer> _objList, string _path, bool _order)
+    {        
+        string tPath = _path;
+        tPath = tPath.Replace("Assets/Resources/", "");
+        tPath = tPath.Replace(".png", "");
+
+        Sprite[] tSP = Resources.LoadAll<Sprite>(tPath);
+        if(_order)
+        {
+            for (var i = 0; i < _objList.Count; i++)
+            {
+                if (tSP[i] == null)
+                {
+                    _objList[i].sprite = null;
+                    continue;
+                }
+                _objList[i].sprite = tSP[i];
+            }
+        }
+        else
+        {
+            for (var i = 0; i < _objList.Count; i++)
+            {
+                foreach (var tsp in tSP)
+                {
+                    if (_objList[i].name == tsp.name)
+                    {
+                        _objList[i].sprite = tsp;
+                        break;
+                    }
+                    else
+                    {
+                        _objList[i].sprite = null;
+                    }
+                }
+            } 
         }
     }
 }
