@@ -49,7 +49,14 @@ public class PlayerState : UnitState
         //Input
         xInput = player.InputHandler.NormInputX;
         yInput = player.InputHandler.NormInputY;
-        JumpInput = player.InputHandler.JumpInput;
+        if(isGrounded)
+        {
+            JumpInput = player.InputHandler.JumpInput;
+        }
+        else
+        {
+            player.InputHandler.UseInput(ref player.InputHandler.JumpInput);
+        }
         JumpInputStop = player.InputHandler.JumpInputStop;
         dashInput = player.InputHandler.DashInput;
 
