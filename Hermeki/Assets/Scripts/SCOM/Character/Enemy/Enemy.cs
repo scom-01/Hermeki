@@ -47,7 +47,7 @@ public class Enemy : Unit
     protected override void Start()
     {
         base.Start();
-        Inventory.Weapon.SetCore(Core);
+        Inventory?.Weapon.SetCore(Core);
         Init();
     }
 
@@ -58,8 +58,8 @@ public class Enemy : Unit
     public virtual void EnemyPattern() { }
     public override void DieEffect()
     {
-        var item = Inventory.Items;
-        int count = item.Count;
+        //var item = Inventory.Items;
+        //int count = item.Count;
 
         //var goods = this.GetComponentsInChildren<GoodsItem>();
         //if (goods != null)
