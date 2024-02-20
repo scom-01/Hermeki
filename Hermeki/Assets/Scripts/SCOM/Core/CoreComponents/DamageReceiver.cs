@@ -100,7 +100,7 @@ namespace SCOM.CoreSystem
             Debug.Log(core.transform.parent.name + " " + amount + " Damaged!");
             var damage = stats.Comp.DecreaseHealth(attacker, _elemental, attribute, amount);
             stats.Comp.invincibleTime = core.Unit.UnitData.invincibleTime;
-            HUD_DmgTxt(1.0f, damage, 50, attacker.Core.CoreUnitStats.CalculStatsData.DamageAttiribute, isCritical);
+            //HUD_DmgTxt(1.0f, damage, 50, attacker.Core.CoreUnitStats.CalculStatsData.DamageAttiribute, isCritical);
             return damage;
         }
 
