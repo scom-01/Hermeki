@@ -1,3 +1,4 @@
+#define ASTAR_FAST_NO_EXCEPTIONS
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;

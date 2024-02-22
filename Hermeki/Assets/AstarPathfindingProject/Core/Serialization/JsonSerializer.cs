@@ -1,3 +1,4 @@
+#define ASTAR_FAST_NO_EXCEPTIONS
 using System;
 using System.IO;
 using System.Collections.Generic;
