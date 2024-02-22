@@ -18,5 +18,6 @@ public class PlayerDeathState : PlayerAbilityState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        Movement.SetVelocityX(0f);
     }
 }
