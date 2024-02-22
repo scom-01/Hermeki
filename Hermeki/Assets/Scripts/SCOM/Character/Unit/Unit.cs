@@ -33,10 +33,11 @@ public class Unit : MonoBehaviour
                 cc2d = this.GetComponent<CapsuleCollider2D>();
                 if (cc2d != null)
                 {
+                    cc2d.sharedMaterial = UnitData.UnitCC2DMaterial;
                     return cc2d;
                 }
                 cc2d = this.GameObject().AddComponent<CapsuleCollider2D>();
-                cc2d.sharedMaterial = UnitData.UnitCC2DMaterial ?? UnitData.UnitCC2DMaterial;
+                cc2d.sharedMaterial = UnitData.UnitCC2DMaterial;
                 cc2d.offset = UnitData.standCC2DOffset;
                 cc2d.size = UnitData.standCC2DSize;
             }

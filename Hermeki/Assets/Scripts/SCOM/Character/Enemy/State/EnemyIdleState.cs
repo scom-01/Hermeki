@@ -32,12 +32,12 @@ public abstract class EnemyIdleState : EnemyState
     {
         base.LogicUpdate();
 
-        if(EnemyCollisionSenses.isUnitDetectedCircle)// EnemyCollisionSenses.isUnitInFrontDetectedArea || EnemyCollisionSenses.isUnitInBackDetectedArea)
+        if (EnemyCollisionSenses.isUnitDetectedCircle)// EnemyCollisionSenses.isUnitInFrontDetectedArea || EnemyCollisionSenses.isUnitInBackDetectedArea)
         {
             enemy.SetTarget(EnemyCollisionSenses.UnitDetectedCircle?.GetComponent<Unit>());
         }
-        
-    
+
+
         //패턴 딜레이
         if (Time.time >= startTime + Random.Range(enemy.enemyData.minIdleTime, enemy.enemyData.maxIdleTime))
         {

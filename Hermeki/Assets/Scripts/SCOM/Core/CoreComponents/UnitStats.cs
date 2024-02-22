@@ -223,8 +223,9 @@ namespace SCOM.CoreSystem
                 if (CurrentHealth == 0)
                 {
                     attacker?.Inventory?.ItemExeOnKilled(attacker, core.Unit);
+                    attacker?.SetTarget(null);
                 }
-                core.Unit.Inventory.ItemExeOnDamaged(core.Unit, attacker);
+                core.Unit.Inventory?.ItemExeOnDamaged(core.Unit, attacker);
             }
             return result;
         }

@@ -82,15 +82,15 @@ public class PlayerInAirState : PlayerState
             player.FSM.ChangeState(player.LandState);
             return;
         }
-        else if (JumpInput && (isTouchingWall || isTouchingWallBack || wallJumpCoyoteTime))
-        {
-            StopWallJumpCoyoteTime();
-            unit.isFixedMovement = false;
-            isTouchingWall = CollisionSenses.CheckIfTouchingWall;
-            player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
-            player.FSM.ChangeState(player.WallJumpState);
-            return;
-        }
+        //else if (JumpInput && (isTouchingWall || isTouchingWallBack || wallJumpCoyoteTime))
+        //{
+        //    StopWallJumpCoyoteTime();
+        //    unit.isFixedMovement = false;
+        //    isTouchingWall = CollisionSenses.CheckIfTouchingWall;
+        //    player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
+        //    player.FSM.ChangeState(player.WallJumpState);
+        //    return;
+        //}
         else if (JumpInput && player.JumpState.CanJump() && !player.CC2D.isTrigger)
         {
             coyoteTime = false;

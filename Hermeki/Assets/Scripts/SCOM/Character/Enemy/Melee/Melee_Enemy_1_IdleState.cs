@@ -18,10 +18,10 @@ public class Melee_Enemy_1_IdleState : EnemyIdleState
 
     public override void MoveState()
     {
-        if (Random.Range(0.5f, 1f) >= 0.5f)
-        {
-            Movement.Flip();
-        }
+        //if (Random.Range(0.5f, 1f) >= 0.5f)
+        //{
+        //    Movement.Flip();
+        //}
         unit.FSM.ChangeState(enemy_Melee1.RunState);
     }
 }

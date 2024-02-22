@@ -8,6 +8,9 @@ public class CrushUnit : CoreComponent
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (core?.Unit == null)
+            return;
+
         //사망 시
         if (!core.Unit.IsAlive)
             return;
