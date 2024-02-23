@@ -1,4 +1,5 @@
 using SCOM.CoreSystem;
+using System;
 using UnityEngine;
 
 public class EnemyCollisionSenses : CollisionSenses
@@ -14,9 +15,16 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * Movement.FancingDirection,
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
-                    LayerMask.NameToLayer("Unit")
+                    1 << LayerMask.NameToLayer("Unit")
                 );
-            return (RayHit.Length > 0);
+            foreach (var hit in RayHit)
+            {
+                if (hit.transform.tag != core.Unit.tag)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     public bool isUnitInBackDetectedArea
@@ -30,9 +38,17 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * -Movement.FancingDirection,
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
-                    LayerMask.NameToLayer("Unit")
+                    1 << LayerMask.NameToLayer("Unit")
                 );
-            return (RayHit.Length > 0);
+
+            foreach (var hit in RayHit)
+            {
+                if (hit.transform.tag != core.Unit.tag)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     public bool isUnitDetectedCircle
@@ -45,10 +61,42 @@ public class EnemyCollisionSenses : CollisionSenses
                     (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
                     Vector2.right * Movement.FancingDirection,
                     0,
-                    LayerMask.NameToLayer("Unit")
+                    1 << LayerMask.NameToLayer("Unit")
                 );
-            return (RayHit.Length > 0);
+
+            foreach (var hit in RayHit)
+            {
+                if (hit.transform.tag != core.Unit.tag)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
+    }
+
+    public bool CheckUnitDetectedCircle(Unit unit)
+    {
+        if (unit == null)
+            return false;
+
+        Vector2 offset = Vector2.zero;
+        float size = (core.Unit.UnitData as EnemyData).UnitDetectedDistance;
+        offset.Set(GroundCenterPos.x + (-CC2D.size.x * Movement.FancingDirection), GroundCenterPos.y);
+        var detected = Physics2D.OverlapCircleAll(offset, size, 1 << LayerMask.NameToLayer("Unit"));
+
+        foreach (Collider2D coll in detected)
+        {
+            if (coll.transform.tag == core.Unit.tag)
+                continue;
+
+            
+            if (coll.GetComponent<Unit>() == core.Unit.GetTarget())
+            {
+                return true;
+            }
+        }
+        return false;
     }
     public GameObject UnitFrontDetectArea
     {
@@ -61,10 +109,13 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * Movement.FancingDirection,
                     ((core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x < 0) ? 0 : (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x,
-                    LayerMask.NameToLayer("Unit")
+                    1 << LayerMask.NameToLayer("Unit")
                 );
             foreach (var coll in RayHit)
             {
+                if (coll.transform.tag == core.Unit.tag)
+                    continue;
+
                 if (coll.collider.GetComponent<Unit>())
                 {
                     return coll.collider.gameObject;
@@ -84,10 +135,13 @@ public class EnemyCollisionSenses : CollisionSenses
                     0f,
                     Vector2.right * -Movement.FancingDirection,
                      ((core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x < 0) ? 0 : (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.size.x,
-                    LayerMask.NameToLayer("Unit")
+                    1 << LayerMask.NameToLayer("Unit")
                 );
             foreach (var coll in RayHit)
             {
+                if (coll.transform.tag == core.Unit.tag)
+                    continue;
+
                 if (coll.collider.GetComponent<Unit>())
                 {
                     return coll.collider.gameObject;
@@ -103,10 +157,13 @@ public class EnemyCollisionSenses : CollisionSenses
             Vector2 offset = Vector2.zero;
             float size = (core.Unit.UnitData as EnemyData).UnitDetectedDistance;
             offset.Set(GroundCenterPos.x + (-CC2D.size.x * Movement.FancingDirection), GroundCenterPos.y);
-            var detected = Physics2D.OverlapCircleAll(offset, size, LayerMask.NameToLayer("Unit"));
+            var detected = Physics2D.OverlapCircleAll(offset, size, 1 << LayerMask.NameToLayer("Unit"));
 
             foreach (Collider2D coll in detected)
             {
+                if (coll.transform.tag == core.Unit.tag)
+                    continue;
+
                 if (coll.GetComponent<Unit>())
                 {
                     return coll.gameObject;

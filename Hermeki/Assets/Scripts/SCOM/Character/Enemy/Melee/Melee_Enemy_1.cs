@@ -1,17 +1,18 @@
 using SCOM.CoreSystem;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Melee_Enemy_1 : Enemy
 {
     #region State Variables
-    public Melee_Enemy_1_AttackState AttackState { get; private set; }
-    public Melee_Enemy_1_IdleState IdleState { get; private set; }
-    public Melee_Enemy_1_MoveState RunState { get; private set; }
-    public Melee_Enemy_1_HitState HitState { get; private set; }
-    public Melee_Enemy_1_DeathState DeathState { get; private set; }
+    public Melee_Enemy_1_AttackState AttackState { get;  set; }
+    public Melee_Enemy_1_IdleState IdleState { get;  set; }
+    public Melee_Enemy_1_MoveState MoveState { get;  set; }
+    public Melee_Enemy_1_HitState HitState { get;  set; }
+    public Melee_Enemy_1_DeathState DeathState { get;  set; }
     #endregion
 
     #region Unity Callback Func
@@ -21,7 +22,7 @@ public class Melee_Enemy_1 : Enemy
 
         AttackState = new Melee_Enemy_1_AttackState(this, "action");
         IdleState = new Melee_Enemy_1_IdleState(this, "idle");
-        RunState = new Melee_Enemy_1_MoveState(this, "run");
+        MoveState = new Melee_Enemy_1_MoveState(this, "run");
         HitState = new Melee_Enemy_1_HitState(this, "hit");
         DeathState = new Melee_Enemy_1_DeathState(this, "death");
     }

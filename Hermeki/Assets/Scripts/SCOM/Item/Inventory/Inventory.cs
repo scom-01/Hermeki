@@ -135,7 +135,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < itemSet.itemEffectSets.Count; i++)
         {
-            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ITEM_TPYE.OnInit, Unit, Unit.TargetUnit, itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
+            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ITEM_TPYE.OnInit, Unit, Unit.GetTarget(), itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
         }
         return true;
     }
@@ -159,7 +159,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemActionExecute(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnAction, _unit, _unit.TargetUnit);
+        ExeItemEvent(ITEM_TPYE.OnAction, _unit, _unit.GetTarget());
         return true;
     }
 
@@ -170,7 +170,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemExeUpdate(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnUpdate, _unit, _unit.TargetUnit);
+        ExeItemEvent(ITEM_TPYE.OnUpdate, _unit, _unit.GetTarget());
         return true;
     }
 
@@ -183,7 +183,7 @@ public class Inventory : MonoBehaviour
     {
         if (!CanDash)
             return;
-        ExeItemEvent(ITEM_TPYE.OnDash, _unit, _unit.TargetUnit);
+        ExeItemEvent(ITEM_TPYE.OnDash, _unit, _unit.GetTarget());
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class Inventory : MonoBehaviour
     /// <param name="_unit"></param>
     public void ItemExeOnMoveMap(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnMoveMap, _unit, _unit.TargetUnit);
+        ExeItemEvent(ITEM_TPYE.OnMoveMap, _unit, _unit.GetTarget());
     }
 
     /// <summary>

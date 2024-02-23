@@ -58,7 +58,7 @@ namespace SCOM.CoreSystem
         }
         public void AddVelocity(Vector2 velocity)
         {
-            workspace.Set(CurrentVelocity.x + velocity.x * FancingDirection, CurrentVelocity.y + velocity.y);
+            workspace.Set(CurrentVelocity.x + velocity.x, CurrentVelocity.y + velocity.y);
             SetFinalVelocity();
         }
         public void SetVelocityX(float velocity)
@@ -99,11 +99,11 @@ namespace SCOM.CoreSystem
 
         public void FlipToTarget()
         {
-            if (core.Unit.TargetUnit == null)
+            if (core.Unit.GetTarget() == null)
                 return;
 
-            if ((core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterPos.x - core.CoreCollisionSenses.UnitCenterPos.x > 0) && (FancingDirection == -1) ||
-                    (core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterPos.x - core.CoreCollisionSenses.UnitCenterPos.x < 0) && (FancingDirection == 1))
+            if ((core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterPos.x - core.CoreCollisionSenses.UnitCenterPos.x > 0) && (FancingDirection == -1) ||
+                    (core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterPos.x - core.CoreCollisionSenses.UnitCenterPos.x < 0) && (FancingDirection == 1))
             {
                 Flip();
             }

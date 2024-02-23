@@ -157,7 +157,7 @@ namespace SCOM
         public void SetUp(Unit _unit, ProjectileData m_ProjectileData)
         {
             unit = _unit;
-            target = unit.TargetUnit;
+            target = unit.GetTarget();
 
             ProjectileData = m_ProjectileData;
 
@@ -230,14 +230,14 @@ namespace SCOM
                     if (!isFixedRot)
                         this.transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
                 }
-                if (ProjectileData.homingType == HomingType.isToTarget_Direct && unit.TargetUnit != null)
+                if (ProjectileData.homingType == HomingType.isToTarget_Direct && unit.GetTarget() != null)
                 {
                     if (
-                        ((unit.TargetUnit.Core.CoreCollisionSenses.GroundCenterPos - this.transform.position).x < -0.001f && FixedFancingDirection < 0) ||
-                        ((unit.TargetUnit.Core.CoreCollisionSenses.GroundCenterPos - this.transform.position).x > 0.001f && FixedFancingDirection > 0)
+                        ((unit.GetTarget().Core.CoreCollisionSenses.GroundCenterPos - this.transform.position).x < -0.001f && FixedFancingDirection < 0) ||
+                        ((unit.GetTarget().Core.CoreCollisionSenses.GroundCenterPos - this.transform.position).x > 0.001f && FixedFancingDirection > 0)
                         )
                     {
-                        Vector3 toTargetNormal = (unit.TargetUnit.Core.CoreCollisionSenses.GroundCenterPos - unit.Core.CoreCollisionSenses.GroundCenterPos);
+                        Vector3 toTargetNormal = (unit.GetTarget().Core.CoreCollisionSenses.GroundCenterPos - unit.Core.CoreCollisionSenses.GroundCenterPos);
                         this.transform.rotation = Quaternion.FromToRotation(ProjectileData.Rot, toTargetNormal);
                         RB2D.velocity = new Vector2(toTargetNormal.x, toTargetNormal.y).normalized * ProjectileData.Speed;
                     }
@@ -247,9 +247,9 @@ namespace SCOM
                     }
                 }
                 else if (
-                    ProjectileData.homingType == HomingType.isToTarget || ProjectileData.homingType == HomingType.isHoming && unit.TargetUnit != null)
+                    ProjectileData.homingType == HomingType.isToTarget || ProjectileData.homingType == HomingType.isHoming && unit.GetTarget() != null)
                 {
-                    Vector3 toTargetNormal = (unit.TargetUnit.Core.CoreCollisionSenses.GroundCenterPos - this.transform.position);
+                    Vector3 toTargetNormal = (unit.GetTarget().Core.CoreCollisionSenses.GroundCenterPos - this.transform.position);
                     this.transform.rotation = Quaternion.FromToRotation(ProjectileData.Rot, toTargetNormal);
                     RB2D.velocity = new Vector2(toTargetNormal.x, toTargetNormal.y).normalized * ProjectileData.Speed;
                 }

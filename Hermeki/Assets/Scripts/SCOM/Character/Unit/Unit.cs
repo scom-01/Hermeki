@@ -108,7 +108,7 @@ public class Unit : MonoBehaviour
     /// </summary>
     [HideInInspector]
 
-    public virtual Unit TargetUnit { get; private set; }
+    private Unit TargetUnit;
 
     #endregion
 
@@ -216,7 +216,12 @@ public class Unit : MonoBehaviour
 
         FSM.CurrentState.LogicUpdate();
     }
+    
 
+    protected virtual void FixedUpdate()
+    {
+        FSM.CurrentState.PhysicsUpdate();
+    }
     public void SetAnimParam(string str, bool boolean)
     {
         Anim?.SetBool(str, boolean);
@@ -246,12 +251,19 @@ public class Unit : MonoBehaviour
         Anim?.SetInteger(str, _int);
     }
 
-    public void SetTarget(Unit unit)
+    public virtual void SetTarget(Unit unit)
     {
-        if (unit == null)
-            return;
+        //if (unit == null)
+        //    return;
 
         TargetUnit = unit;
+    }
+
+    public virtual Unit GetTarget()
+    {
+        if (TargetUnit == null)
+            return null;
+        return TargetUnit;
     }
 
     private void CheckLife(Unit unit)
@@ -283,11 +295,6 @@ public class Unit : MonoBehaviour
         Physics2D.IgnoreLayerCollision(this.gameObject.layer, LayerMask.NameToLayer("Platform"), true);
         yield return new WaitForSeconds(0.2f);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Platform"), false);
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        FSM.CurrentState.PhysicsUpdate();
     }
     #endregion Unity Callback Func
 }

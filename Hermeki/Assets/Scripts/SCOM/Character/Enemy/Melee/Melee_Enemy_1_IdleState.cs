@@ -22,6 +22,6 @@ public class Melee_Enemy_1_IdleState : EnemyIdleState
         //{
         //    Movement.Flip();
         //}
-        unit.FSM.ChangeState(enemy_Melee1.RunState);
+        unit.FSM.ChangeState(enemy_Melee1.MoveState);
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Melee_Enemy_1_MoveState : EnemyRunState
+public class Melee_Enemy_1_MoveState : EnemyMoveState
 {
     private Melee_Enemy_1 enemy_Melee;
     public Melee_Enemy_1_MoveState(Unit unit, string animBoolName) : base(unit, animBoolName)

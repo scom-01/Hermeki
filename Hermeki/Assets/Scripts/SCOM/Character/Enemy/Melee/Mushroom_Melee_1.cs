@@ -8,11 +8,11 @@ public class Mushroom_Melee_1 : Melee_Enemy_1
 {
     public override void EnemyPattern()
     {
-        if (TargetUnit == null)
+        if (GetTarget() == null)
             return;
 
         //인식 범위 내 
-        if ((TargetUnit.Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude <= enemyData.UnitAttackDistance)
+        if ((GetTarget().Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude <= enemyData.UnitAttackDistance)
         {
             AttackState.SetWeapon(Inventory.Weapon);
             //일직선 상
@@ -26,6 +26,6 @@ public class Mushroom_Melee_1 : Melee_Enemy_1
             }
         }
         Core.CoreMovement.FlipToTarget();
-        FSM.ChangeState(RunState);
+        FSM.ChangeState(MoveState);
     }
 }

@@ -2,11 +2,11 @@ public class Water_Melee_Enemy_2 : Melee_Enemy_1
 {
     public override void EnemyPattern()
     {
-        if (TargetUnit == null)
+        if (GetTarget() == null)
             return;
 
         //인식 범위 내 
-        if ((TargetUnit.Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude <= enemyData.UnitAttackDistance)
+        if ((GetTarget().Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude <= enemyData.UnitAttackDistance)
         {
             if (Pattern_Idx.Count == 0)
                 return;
@@ -30,7 +30,7 @@ public class Water_Melee_Enemy_2 : Melee_Enemy_1
                         {
                             if (Inventory.Weapon.weaponData.weaponCommandDataSO.GroundedCommandList.Count > i)
                             {
-                                if ((TargetUnit.Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude > Pattern_Idx[i].Detected_Distance)
+                                if ((GetTarget().Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude > Pattern_Idx[i].Detected_Distance)
                                     continue;
 
                                 if (Inventory.Weapon.weaponData.weaponCommandDataSO.GroundedCommandList[i].commands[0] == null)
@@ -48,7 +48,7 @@ public class Water_Melee_Enemy_2 : Melee_Enemy_1
                         {
                             if (Inventory.Weapon.weaponData.weaponCommandDataSO.GroundedCommandList.Count > i)
                             {
-                                if ((TargetUnit.Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude > Pattern_Idx[i].Detected_Distance)
+                                if ((GetTarget().Core.CoreCollisionSenses.UnitCenterPos - Core.CoreCollisionSenses.UnitCenterPos).magnitude > Pattern_Idx[i].Detected_Distance)
                                     continue;
 
                                 if (Inventory.Weapon.weaponData.weaponCommandDataSO.GroundedCommandList[i].commands[0] == null)
@@ -77,7 +77,7 @@ public class Water_Melee_Enemy_2 : Melee_Enemy_1
             Core.CoreMovement.Flip();
         }
 
-        if (FSM.CurrentState != RunState)
-            FSM.ChangeState(RunState);
+        if (FSM.CurrentState != MoveState)
+            FSM.ChangeState(MoveState);
     }
 }

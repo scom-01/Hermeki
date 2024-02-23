@@ -1,9 +1,9 @@
 using SCOM.CoreSystem;
 using UnityEngine;
 
-public abstract class EnemyRunState : EnemyState
+public abstract class EnemyMoveState : EnemyState
 {  
-    public EnemyRunState(Unit unit, string animBoolName) : base(unit, animBoolName)
+    public EnemyMoveState(Unit unit, string animBoolName) : base(unit, animBoolName)
     {
     }
 

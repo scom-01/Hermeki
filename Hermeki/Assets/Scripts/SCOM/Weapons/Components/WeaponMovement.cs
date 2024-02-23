@@ -102,7 +102,7 @@ namespace SCOM.Weapons.Components
         #region Teleport
         private void HandleTeleport()
         {
-            if (core.Unit.TargetUnit == null)
+            if (core.Unit.GetTarget() == null)
             {
                 Debug.LogWarning("Target not found");
                 return;
@@ -110,7 +110,7 @@ namespace SCOM.Weapons.Components
             CoreMovement.SetVelocityZero();
 
             //타겟 유닛의 뒤로 이동
-            core.Unit.transform.position = core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterBack + Vector3.right * 2 * -core.Unit.TargetUnit.Core.CoreMovement.FancingDirection;
+            core.Unit.transform.position = core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterBack + Vector3.right * 2 * -core.Unit.GetTarget().Core.CoreMovement.FancingDirection;
         }
 
         private void HandleToPointTeleport()
@@ -137,13 +137,13 @@ namespace SCOM.Weapons.Components
                 timer = RushDurationTime;
             }
             RushStartPoint = core.CoreCollisionSenses.UnitCenterPos;
-            if (core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterPos.x >= core.CoreCollisionSenses.UnitCenterPos.x)
+            if (core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterPos.x >= core.CoreCollisionSenses.UnitCenterPos.x)
             {
-                RushPoint = core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterPos + new Vector3(1.25f, 0, 0);
+                RushPoint = core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterPos + new Vector3(1.25f, 0, 0);
             }
             else
             {
-                RushPoint = core.Unit.TargetUnit.Core.CoreCollisionSenses.UnitCenterPos + new Vector3(-1.25f, 0, 0);
+                RushPoint = core.Unit.GetTarget().Core.CoreCollisionSenses.UnitCenterPos + new Vector3(-1.25f, 0, 0);
             }
             FixedGravityOn();
             currentMovementIndex++;
@@ -216,7 +216,7 @@ namespace SCOM.Weapons.Components
         private void HandleStartFlip()
         {
             CoreMovement.CanFlip = true;
-            if (unit.GetType() != typeof(Player) &&  unit.TargetUnit?.GetType() == typeof(Player))
+            if (unit.GetType() != typeof(Player) &&  unit.GetTarget()?.GetType() == typeof(Player))
             {                
                 CoreMovement.FlipToTarget();
             }

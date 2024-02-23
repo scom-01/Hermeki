@@ -53,7 +53,7 @@ public abstract class EnemyIdleState : EnemyState
 
         isDelayCheck = false;
 
-        if (enemy.TargetUnit == null)
+        if (enemy.GetTarget() == null)
         {
             MoveState();
             return;
