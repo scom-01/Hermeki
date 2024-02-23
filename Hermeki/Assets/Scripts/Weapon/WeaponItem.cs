@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
 
 public enum WeaponStyle
@@ -81,6 +77,7 @@ public class WeaponItem : MonoBehaviour
             {
                 eventHandler.FinishRightAction();
             }
+            Debug.Log($"Weapon Collider Hit Ground");
             return;
         }
         //Unit
@@ -88,20 +85,25 @@ public class WeaponItem : MonoBehaviour
         {
             if(collision.tag == this.gameObject.tag)
                 return;
-            //Hit½Ã È¿°ú
+            
+            //Hitì‹œ íš¨ê³¼
             if (collision.TryGetComponent(out IDamageable victim))
             {
-                victim.Damage(unit, 1, 1);                
+                if (victim.Damage(unit, 1, 1) == 0)
+                {
+                    return;
+                }
             }
-        }
 
-        if (isLeft)
-        {
-            eventHandler.FinishLeftAction();
-        }
-        else
-        {
-            eventHandler.FinishRightAction();
+            if (isLeft)
+            {
+                eventHandler.FinishLeftAction();
+            }
+            else
+            {
+                eventHandler.FinishRightAction();
+            }
+            Debug.Log($"Weapon Collider Hit Unit");
         }
     }
 
