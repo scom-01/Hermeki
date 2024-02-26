@@ -16,7 +16,7 @@ public class Mushroom_Melee_1 : Melee_Enemy_1
         {
             AttackState.SetWeapon(Inventory.Weapon);
             //일직선 상
-            if ((Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitInFrontDetectedArea || (Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitInBackDetectedArea)
+            if ((Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitDetectedBox)
             {
                 //달려듬
                 Core.CoreMovement.FlipToTarget();

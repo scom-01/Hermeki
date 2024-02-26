@@ -26,7 +26,7 @@ public class Water_Melee_Enemy_1 : Melee_Enemy_1
                 {
                     case ENEMY_DetectedType.Box:
                         //일직선 상
-                        if ((Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitInFrontDetectedArea || (Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitInBackDetectedArea)
+                        if ((Core.CoreCollisionSenses as EnemyCollisionSenses).isUnitDetectedBox)
                         {
                             if (Inventory.Weapon.weaponData.weaponCommandDataSO.GroundedCommandList.Count > i)
                             {

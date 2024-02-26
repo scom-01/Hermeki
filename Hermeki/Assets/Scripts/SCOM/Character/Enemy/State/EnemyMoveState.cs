@@ -46,9 +46,9 @@ public abstract class EnemyMoveState : EnemyState
 
         if (unit.UnitData.GetType() != typeof(EnemyData))
             return;
-        if (EnemyCollisionSenses.UnitFrontDetectArea || EnemyCollisionSenses.UnitBackDetectArea)
+        if (EnemyCollisionSenses.isUnitDetectedBox)
         {
-            enemy.SetTarget(EnemyCollisionSenses.UnitFrontDetectArea?.GetComponent<Unit>());
+            enemy.SetTarget(EnemyCollisionSenses.UnitDetectedBox?.GetComponent<Unit>());
             Pattern();
             return;
         }

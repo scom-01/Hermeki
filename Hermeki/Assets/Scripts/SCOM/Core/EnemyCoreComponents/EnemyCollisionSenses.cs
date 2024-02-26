@@ -1,9 +1,18 @@
 using SCOM.CoreSystem;
 using System;
 using UnityEngine;
+using UnityEngine.Localization.PropertyVariants.TrackedProperties;
 
 public class EnemyCollisionSenses : CollisionSenses
 {
+    #region DetectedArea
+    public bool isUnitDetectedBox
+    {
+        get
+        {
+            return (isUnitInFrontDetectedArea || isUnitInBackDetectedArea);
+        }
+    }
     public bool isUnitInFrontDetectedArea
     {
         get
@@ -75,6 +84,51 @@ public class EnemyCollisionSenses : CollisionSenses
         }
     }
 
+    public bool CheckUnitDistBox(float _dist)
+    {
+        return (CheckUnitFrontDistBox(_dist) || CheckUnitBackDistBox(_dist));
+    }
+    public bool CheckUnitFrontDistBox(float _dist)
+    {
+        var RayHit = Physics2D.BoxCastAll
+                (
+                    new Vector2(UnitCenterFront.x, UnitCenterFront.y),
+                    CC2D.bounds.size,
+                    0f,
+                    Vector2.right * Movement.FancingDirection,
+                    _dist,
+                    1 << LayerMask.NameToLayer("Unit")
+                );
+        foreach (var hit in RayHit)
+        {
+            if (hit.transform.tag != core.Unit.tag)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool CheckUnitBackDistBox(float _dist)
+    {
+        var RayHit = Physics2D.BoxCastAll
+                (
+                    new Vector2(UnitCenterBack.x, UnitCenterBack.y),
+                    CC2D.bounds.size,
+                    0f,
+                    Vector2.right * -Movement.FancingDirection,
+                    _dist,
+                    1 << LayerMask.NameToLayer("Unit")
+                );
+
+        foreach (var hit in RayHit)
+        {
+            if (hit.transform.tag != core.Unit.tag)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public bool CheckUnitDetectedCircle(Unit unit)
     {
         if (unit == null)
@@ -87,16 +141,39 @@ public class EnemyCollisionSenses : CollisionSenses
 
         foreach (Collider2D coll in detected)
         {
-            if (coll.transform.tag == core.Unit.tag)
+            if (coll.transform.CompareTag(core.Unit.tag))
                 continue;
 
-            
+
             if (coll.GetComponent<Unit>() == core.Unit.GetTarget())
             {
                 return true;
             }
         }
         return false;
+    }
+    #endregion
+
+    #region DetectedUnit
+    public GameObject UnitDetectedBox
+    {
+        get
+        {
+            float FrontDist = -1f, BackDist = -1f;
+            if (UnitFrontDetectArea != null)
+                FrontDist = (UnitFrontDetectArea.transform.position - this.transform.position).magnitude;
+            if (UnitBackDetectArea != null)
+                BackDist = (UnitBackDetectArea.transform.position - this.transform.position).magnitude;
+
+            if (FrontDist >= BackDist)
+            {
+                return UnitFrontDetectArea;
+            }
+            else
+            {
+                return UnitBackDetectArea;
+            }
+        }
     }
     public GameObject UnitFrontDetectArea
     {
@@ -113,7 +190,7 @@ public class EnemyCollisionSenses : CollisionSenses
                 );
             foreach (var coll in RayHit)
             {
-                if (coll.transform.tag == core.Unit.tag)
+                if (coll.transform.CompareTag(core.Unit.tag))
                     continue;
 
                 if (coll.collider.GetComponent<Unit>())
@@ -139,7 +216,7 @@ public class EnemyCollisionSenses : CollisionSenses
                 );
             foreach (var coll in RayHit)
             {
-                if (coll.transform.tag == core.Unit.tag)
+                if (coll.transform.CompareTag(core.Unit.tag))
                     continue;
 
                 if (coll.collider.GetComponent<Unit>())
@@ -161,7 +238,7 @@ public class EnemyCollisionSenses : CollisionSenses
 
             foreach (Collider2D coll in detected)
             {
-                if (coll.transform.tag == core.Unit.tag)
+                if (coll.transform.CompareTag(core.Unit.tag))
                     continue;
 
                 if (coll.GetComponent<Unit>())
@@ -172,7 +249,7 @@ public class EnemyCollisionSenses : CollisionSenses
             return null;
         }
     }
-
+    #endregion
 
     protected override void OnDrawGizmos()
     {
