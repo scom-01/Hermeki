@@ -6,10 +6,10 @@ using UnityEngine.UIElements;
 
 public class Flying_Enemy_IdleState : EnemyState
 {
-    FlyingEnemy FlyingEnemy;
+    Flying_Melee_Enemy FlyingEnemy;
     public Flying_Enemy_IdleState(Unit unit, string animBoolName) : base(unit, animBoolName)
     {
-        FlyingEnemy = unit as FlyingEnemy;
+        FlyingEnemy = unit as Flying_Melee_Enemy;
     }
 
     public override void Enter()
@@ -45,10 +45,10 @@ public class Flying_Enemy_IdleState : EnemyState
 
 public class Flying_Enemy_AttackState : EnemyState
 {
-    FlyingEnemy FlyingEnemy;
+    Flying_Melee_Enemy FlyingEnemy;
     public Flying_Enemy_AttackState(Unit unit, string animBoolName) : base(unit, animBoolName)
     {
-        FlyingEnemy = unit as FlyingEnemy;
+        FlyingEnemy = unit as Flying_Melee_Enemy;
     }
     public override void PhysicsUpdate()
     {
@@ -61,10 +61,10 @@ public class Flying_Enemy_AttackState : EnemyState
 }
 public class Flying_Enemy_MoveState : EnemyState
 {
-    FlyingEnemy FlyingEnemy;
+    Flying_Melee_Enemy FlyingEnemy;
     public Flying_Enemy_MoveState(Unit unit, string animBoolName) : base(unit, animBoolName)
     {
-        FlyingEnemy = unit as FlyingEnemy;
+        FlyingEnemy = unit as Flying_Melee_Enemy;
     }
 
     public override void Enter()

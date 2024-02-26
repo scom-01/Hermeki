@@ -25,7 +25,7 @@ public class Pattern_Data
     public ENEMY_DetectedType DetectedType;
 }
 
-public class Enemy : Unit
+public abstract  class Enemy : Unit
 {
     #region State Variables
     [HideInInspector]
