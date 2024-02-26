@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -44,6 +45,8 @@ public class PlayerInputHandler : MonoBehaviour
                     dashInputStartTime,
                     PrimarySkillInputStartTime,
                     SecondarySkillInputStartTime,
+                    PrimaryInputStartTime,
+                    SecondaryInputStartTime,
                     escInputStartTime,
                     interactionInputStartTime = -1;
 
@@ -138,6 +141,8 @@ public class PlayerInputHandler : MonoBehaviour
         bool dashInput = DashInput;
         bool skill1Input = PrimarySkillInput;
         bool skill2Input = SecondarySkillInput;
+        bool pramaryInput = PrimaryInput;
+        bool secondaryInput = SecondaryInput;
         //bool interacInput = InteractionInput;
         bool[] attackInputs = ActionInputs;
 
@@ -145,6 +150,9 @@ public class PlayerInputHandler : MonoBehaviour
         CheckHoldTime(ref dashInput, ref dashInputStartTime);
         CheckHoldTime(ref skill1Input, ref PrimarySkillInputStartTime);
         CheckHoldTime(ref skill2Input, ref SecondarySkillInputStartTime);
+        //간헐적으로 Player.Anim의 LeftAction에서 Use(PrimaryInput)하는 도중 PrimaryInput키를 눌러 true로 바뀌어 Animator가 고장하는 오류 해결을 위해 PrimaryInput =true가 2초 지속되면 false로 전환
+        CheckHoldTime(ref pramaryInput, ref PrimaryInputStartTime, 2f);
+        CheckHoldTime(ref secondaryInput, ref SecondaryInputStartTime, 2f);
         //CheckHoldTime(ref attackInputs, ref ActionInputsStartTime);
         //CheckHoldTime(ref interacInput, ref interactionInputStartTime);
 
@@ -152,6 +160,8 @@ public class PlayerInputHandler : MonoBehaviour
         DashInput = dashInput;
         PrimarySkillInput = skill1Input;
         SecondarySkillInput = skill2Input;
+        PrimaryInput = pramaryInput;
+        SecondaryInput = secondaryInput;
         //ActionInputs = attackInputs;
         //InteractionInput = interacInput;
     }
@@ -461,11 +471,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnPrimaryAction()
     {
+        if (PrimaryInput)
+            return;
         PrimaryInput = true;
+        PrimaryInputStartTime = Time.time;
     }
     private void OnSecondaryAction()
     {
+        if (SecondaryInput)
+            return;
         SecondaryInput = true;
+        SecondaryInputStartTime = Time.time;
     }
     private void OnInteractive()
     {
@@ -509,8 +525,20 @@ public class PlayerInputHandler : MonoBehaviour
     //홀드 시간
 
     #region CheckHoldTime
+    private void CheckHoldTime(ref bool input, ref float inputStartTime,float holdTime)
+    {
+        if (input == false)
+            return;
+
+        if (Time.time >= inputStartTime + holdTime)
+        {
+            input = false;
+        }
+    }
     private void CheckHoldTime(ref bool input, ref float inputStartTime)
     {
+        if (input == false)
+            return;
         if (Time.time >= inputStartTime + inputHoldTime)
         {
             input = false;
@@ -518,6 +546,8 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void CheckHoldTime(ref int input, ref float inputStartTime)
     {
+        if (input == 0)
+            return;
         if (Time.time >= inputStartTime + inputHoldTime)
         {
             input = 0;
@@ -525,6 +555,8 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void CheckHoldTime(ref float input, ref float inputStartTime)
     {
+        if (input == 0.0f)
+            return;
         if (Time.time >= inputStartTime + inputHoldTime)
         {
             input = 0.0f;
