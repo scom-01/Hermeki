@@ -1,98 +1,126 @@
+using SCOM;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 
-namespace SCOM.Manager
+public class SoundManager : MonoBehaviour
 {
-    public class SoundManager : MonoBehaviour
+    public static SoundManager Inst
     {
-        AudioSource[] _audioSources = new AudioSource[(int)Sound.MaxCount];
-        Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
-
-        public void Init()
+        get
         {
-            GameObject root = GameObject.Find("@Sound");
-            if (root == null)
+            if (_Inst == null)
             {
-                root = new GameObject { name = "@Sound" };
-                Object.DontDestroyOnLoad(root);
-
-                string[] soundNames = System.Enum.GetNames(typeof(Sound));
-                for (int i = 0; i < soundNames.Length - 1; i++)
+                _Inst = FindObjectOfType(typeof(SoundManager)) as SoundManager;
+                if (_Inst == null)
                 {
-                    GameObject go = new GameObject { name = soundNames[i] };
-                    _audioSources[i] = go.AddComponent<AudioSource>();
-                    go.transform.parent = root.transform;
+                    Debug.Log("no Singleton obj");
                 }
-
-                _audioSources[(int)Sound.BGM].loop = true;
-            }
-        }
-
-        public void Clear()
-        {
-            foreach(AudioSource audioSources in _audioSources)
-            {
-                audioSources.clip = null;
-                audioSources.Stop();
-            }
-
-            _audioClips.Clear();
-        }
-
-        public void Play(AudioClip audioClip, Sound type = Sound.Effect, float pitch = 1.0f)
-        {
-            if (audioClip == null)
-                return;
-
-            if (type == Sound.BGM) // BGM Î∞∞Í≤ΩÏùåÏïÖ Ïû¨ÏÉù
-            {
-                AudioSource audioSource = _audioSources[(int)Sound.BGM];
-                if (audioSource.isPlaying)
-                    audioSource.Stop();
-
-                audioSource.pitch = pitch;
-                audioSource.clip = audioClip;
-                audioSource.Play();
-            }
-            else // Effect Ìö®Í≥ºÏùå Ïû¨ÏÉù
-            {
-                AudioSource audioSource = _audioSources[(int)Sound.Effect];
-                audioSource.pitch = pitch;
-                audioSource.PlayOneShot(audioClip);
-            }
-        }
-
-        public void Play(string path, Sound type = Sound.Effect, float pitch = 1.0f)
-        {
-            AudioClip audioClip = GetOrAddAudioClip(path, type);
-            Play(audioClip, type, pitch);
-        }
-
-        AudioClip GetOrAddAudioClip(string path, Sound type = Sound.Effect)
-        {
-            if (path.Contains("Sounds/") == false)
-                path = $"Sounds/{path}"; // üìÇSound Ìè¥Îçî ÏïàÏóê Ï†ÄÏû•Îê† Ïàò ÏûàÎèÑÎ°ù
-
-            AudioClip audioClip = null;
-
-            if (type == Sound.BGM) // BGM Î∞∞Í≤ΩÏùåÏïÖ ÌÅ¥Î¶Ω Î∂ôÏù¥Í∏∞
-            {
-                audioClip = Resources.Load<AudioClip>(path);
-            }
-            else // Effect Ìö®Í≥ºÏùå ÌÅ¥Î¶Ω Î∂ôÏù¥Í∏∞
-            {
-                if (_audioClips.TryGetValue(path, out audioClip) == false)
+                else
                 {
-                    audioClip = Resources.Load<AudioClip>(path);
-                    _audioClips.Add(path, audioClip);
+                    DontDestroyOnLoad(_Inst.gameObject);
                 }
             }
+            return _Inst;
+        }
+    }
+    private static SoundManager _Inst = null;
 
-            if (audioClip == null)
-                Debug.Log($"AudioClip Missing ! {path}");
 
-            return audioClip;
+    AudioSource[] _audioSources = new AudioSource[(int)Sound.MaxCount];
+    [SerializeField] AudioMixerGroup[] MixerGroup;
+    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
+
+    private void Awake()
+    {
+        if (_Inst)
+        {
+            var managers = Resources.FindObjectsOfTypeAll(typeof(SoundManager));
+            for (int i = 0; i < managers.Length; i++)
+            {
+                Debug.Log($"{managers[i]} = {i}");
+                if (i > 0)
+                {
+                    Destroy(managers[i].GameObject());
+                }
+            }
+            return;
+        }
+
+        _Inst = this;
+        DontDestroyOnLoad(this.gameObject);
+    }
+    private void Start()
+    {
+        Init();
+    }
+    public void Init()
+    {
+        GameObject root = GameObject.Find("@Sound");
+        if (root == null)
+        {
+            root = new GameObject { name = "@Sound" };
+            Object.DontDestroyOnLoad(root);
+
+            string[] soundNames = System.Enum.GetNames(typeof(Sound));
+            for (int i = 0; i < soundNames.Length - 1; i++)
+            {
+                GameObject go = new GameObject { name = soundNames[i] };
+                _audioSources[i] = go.AddComponent<AudioSource>();
+                _audioSources[i].outputAudioMixerGroup = MixerGroup[i];
+                go.transform.parent = root.transform;
+            }
+
+            _audioSources[(int)Sound.BGM].loop = true;
+        }
+
+    }
+    public void Play(AudioData data, Sound type = Sound.Effect, float pitch = 1.0f)
+    {
+        if (data.Clip == null)
+            return;
+
+        if (type == Sound.BGM) // BGM πË∞Ê¿Ωæ« ¿Áª˝
+        {
+            AudioSource audioSource = _audioSources[(int)Sound.BGM];
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+
+            audioSource.pitch = pitch;
+            audioSource.clip = data.Clip;
+            audioSource.volume = data.Volume;
+            audioSource.Play();
+        }
+        else // Effect »ø∞˙¿Ω ¿Áª˝
+        {
+            AudioSource audioSource = _audioSources[(int)Sound.Effect];
+            audioSource.pitch = pitch;
+            audioSource.volume = data.Volume;
+            audioSource.PlayOneShot(data.Clip);
+        }
+    }
+    public void Play(AudioClip audioClip, Sound type = Sound.Effect, float pitch = 1.0f)
+    {
+        if (audioClip == null)
+            return;
+
+        if (type == Sound.BGM) // BGM πË∞Ê¿Ωæ« ¿Áª˝
+        {
+            AudioSource audioSource = _audioSources[(int)Sound.BGM];
+            if (audioSource.isPlaying)
+                audioSource.Stop();
+
+            audioSource.pitch = pitch;
+            audioSource.clip = audioClip;
+            audioSource.Play();
+        }
+        else // Effect »ø∞˙¿Ω ¿Áª˝
+        {
+            AudioSource audioSource = _audioSources[(int)Sound.Effect];
+            audioSource.pitch = pitch;
+            audioSource.PlayOneShot(audioClip);
         }
     }
 }

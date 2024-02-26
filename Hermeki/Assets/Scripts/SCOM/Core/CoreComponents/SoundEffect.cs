@@ -14,14 +14,16 @@ namespace SCOM.CoreSystem
             if (GameManager.Inst?.StageManager?.SFXContainer != null)
                 SFX_soundContainer = GameManager.Inst.StageManager.SFXContainer;
         }
-        public void AudioSpawn(AudioPrefab audioData)
+        public void AudioSpawn(AudioData audioData)
         {
             if (audioData.Clip == null)
             {
                 Debug.LogWarning("Clip is Null");
                 return;
             }
-            SFX_soundContainer?.CheckObject(audioData).GetObejct(audioData.Volume);
+            SoundManager.Inst?.Play(audioData, Sound.Effect);
+
+            //SFX_soundContainer?.CheckObject(audioData).GetObejct(audioData.Volume);
         }
         public void AudioSpawn(AudioClip audioClip, float volume = 1f)
         {
@@ -30,7 +32,8 @@ namespace SCOM.CoreSystem
                 Debug.LogWarning("Clip is Null");
                 return;
             }
-            SFX_soundContainer?.CheckObject(new AudioPrefab(audioClip, volume)).GetObejct(volume);
+            SoundManager.Inst?.Play(new AudioData(audioClip, volume), Sound.Effect);
+            //SFX_soundContainer?.CheckObject(new AudioData(audioClip, volume)).GetObejct(volume);
         }
     }
 }
