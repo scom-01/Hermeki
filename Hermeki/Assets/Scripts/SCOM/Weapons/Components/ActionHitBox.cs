@@ -67,10 +67,10 @@ namespace SCOM.Weapons.Components
             #region HitAction Effect Spawn
             foreach (Collider2D coll in detected)
             {
-                if (coll.gameObject.tag == this.gameObject.tag)
+                if (coll.gameObject.CompareTag(this.gameObject.tag))
                     continue;
 
-                if (coll.gameObject.tag == "Trap")
+                if (coll.gameObject.CompareTag("Trap"))
                     continue;
 
                 //객체 사망 시 무시

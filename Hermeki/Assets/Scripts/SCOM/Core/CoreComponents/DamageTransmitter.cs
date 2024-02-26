@@ -148,7 +148,7 @@ namespace SCOM.CoreSystem
             if (!isSingle)
                 return;
 
-            if (coll.tag == this.tag)
+            if (coll.CompareTag(this.tag))
                 return;
 
             var DmgReceiver = coll.GetComponent<DamageReceiver>();
@@ -258,7 +258,7 @@ namespace SCOM.CoreSystem
             if (isSingle)
                 return;
 
-            if (coll.tag == this.tag)
+            if (coll.CompareTag(this.tag))
                 return;
 
 

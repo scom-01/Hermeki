@@ -9,7 +9,7 @@ public class Trap : TouchObject
     public string IgnoreTag;
     public override void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == IgnoreTag)
+        if (collision.CompareTag(IgnoreTag))
         {
             return;
         }

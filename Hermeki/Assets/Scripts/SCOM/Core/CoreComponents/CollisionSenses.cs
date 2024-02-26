@@ -132,7 +132,7 @@ namespace SCOM.CoreSystem
                         if (hit.rigidbody == null)
                             continue;
 
-                        if (hit.transform.tag == "Platform")
+                        if (hit.transform.CompareTag("Platform"))
                             continue;
 
                         //hit의 기울기(양수면 hit의 y가 더 낮은 위치, 즉 GroundCenterPos가 hit.point보다 위에 있으면 양수)
@@ -170,6 +170,7 @@ namespace SCOM.CoreSystem
             get => Physics2D.Raycast(CliffBack, Vector2.down, 0.5f, WhatIsGround);
         }
 
+#if UNITY_EDITOR
         protected virtual void OnDrawGizmos()
         {
             Gizmos.color = Color.white;
@@ -199,5 +200,6 @@ namespace SCOM.CoreSystem
             //CheckIfTouchingWallBack
             Gizmos.DrawLine(WallkBackPos, WallkBackPos + Vector3.right * -Movement.FancingDirection * (WallCheckDistance));
         }
+#endif
     }
 }

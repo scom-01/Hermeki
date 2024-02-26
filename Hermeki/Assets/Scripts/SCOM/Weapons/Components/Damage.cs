@@ -39,7 +39,7 @@ namespace SCOM.Weapons.Components
 
             foreach (var coll in colls)
             {
-                if (coll.gameObject.tag == this.gameObject.tag)
+                if (coll.gameObject.CompareTag(this.gameObject.tag))
                     continue;
 
                 if (coll.TryGetComponent(out IDamageable victim))

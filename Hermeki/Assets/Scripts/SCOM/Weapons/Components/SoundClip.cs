@@ -28,7 +28,7 @@ namespace SCOM.Weapons.Components
 
             foreach(var item in coll)
             {
-                if (item.gameObject.tag == this.gameObject.tag)
+                if (item.gameObject.CompareTag(this.gameObject.tag))
                     continue;
                 
             }

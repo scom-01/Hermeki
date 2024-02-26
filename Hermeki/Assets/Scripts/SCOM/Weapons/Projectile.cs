@@ -14,8 +14,8 @@ namespace SCOM
         public GameObject ProjectileObject;
         public GameObject ImpactObject;
         [Space(10)]
-        public AudioPrefab ProjectileShootClip;
-        public AudioPrefab ImpactClip;
+        public AudioData ProjectileShootClip;
+        public AudioData ImpactClip;
         [SerializeField] private bool isFixedRot;
         private ProjectilePooling parent;
         private GameObject Spawned_ProjectileObject;
@@ -372,13 +372,13 @@ namespace SCOM
         private void CheckCollision(Collider2D coll)
         {
             //같은 Tag는 무시
-            if (coll.tag == this.tag)
+            if (coll.CompareTag(this.tag))
             {
                 return;
             }
 
             //트랩에는 데미지X
-            if (coll.gameObject.tag == "Trap")
+            if (coll.gameObject.CompareTag("Trap"))
                 return;
 
             //피격 대상이 Ground면 이펙트

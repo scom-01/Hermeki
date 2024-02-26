@@ -48,7 +48,7 @@ namespace SCOM.Weapons.Components
 
             foreach (var detecte in coll)
             {
-                if (detecte.gameObject.tag == this.gameObject.tag)
+                if (detecte.gameObject.CompareTag(this.gameObject.tag))
                     continue;
 
                 if (detecte.TryGetComponent(out IKnockBackable knockbackables))
