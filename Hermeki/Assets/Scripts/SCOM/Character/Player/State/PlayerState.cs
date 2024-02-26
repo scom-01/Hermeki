@@ -90,81 +90,81 @@ public class PlayerState : UnitState
             player?.SetAnimParam("rightAction", false);
         }
         return false;
-        if (player.InputHandler.ActionInputs[(int)CombatInputs.primary])
-        {
-            player.PrimaryAttackState.SetWeapon(player.Inventory.Weapon);
-            if (player.PrimaryAttackState.CheckCommand(isGrounded, ref player.Inventory.Weapon.CommandList))
-            {
-                player.FSM.ChangeState(player.PrimaryAttackState);
-                return true;
-            }
-        }
-        else if (player.InputHandler.ActionInputs[(int)CombatInputs.secondary])
-        {
-            player.SecondaryAttackState.SetWeapon(player.Inventory.Weapon);
-            if (player.SecondaryAttackState.CheckCommand(isGrounded, ref player.Inventory.Weapon.CommandList))
-            {
-                player.FSM.ChangeState(player.SecondaryAttackState);
-                return true;
-            }
-        }
+        //if (player.InputHandler.ActionInputs[(int)CombatInputs.primary])
+        //{
+        //    player.PrimaryAttackState.SetWeapon(player.Inventory.Weapon);
+        //    if (player.PrimaryAttackState.CheckCommand(isGrounded, ref player.Inventory.Weapon.CommandList))
+        //    {
+        //        player.FSM.ChangeState(player.PrimaryAttackState);
+        //        return true;
+        //    }
+        //}
+        //else if (player.InputHandler.ActionInputs[(int)CombatInputs.secondary])
+        //{
+        //    player.SecondaryAttackState.SetWeapon(player.Inventory.Weapon);
+        //    if (player.SecondaryAttackState.CheckCommand(isGrounded, ref player.Inventory.Weapon.CommandList))
+        //    {
+        //        player.FSM.ChangeState(player.SecondaryAttackState);
+        //        return true;
+        //    }
+        //}
 
-        if (player.InputHandler.PrimarySkillInput)
-        {
-            if (
-                unit.Inventory.Weapon.PrimarySkillStartTime != 0f &&
-                GameManager.Inst.PlayTime < (unit.Inventory.Weapon.PrimarySkillStartTime + unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.SkillCoolTime)
-                )
-                return false;
-            player.PrimarySkillState.SetWeapon(player.Inventory.Weapon);
+        //if (player.InputHandler.PrimarySkillInput)
+        //{
+        //    if (
+        //        unit.Inventory.Weapon.PrimarySkillStartTime != 0f &&
+        //        GameManager.Inst.PlayTime < (unit.Inventory.Weapon.PrimarySkillStartTime + unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.SkillCoolTime)
+        //        )
+        //        return false;
+        //    player.PrimarySkillState.SetWeapon(player.Inventory.Weapon);
 
-            if (isGrounded)
-            {
-                if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.GroundweaponData))
-                    return false;
-            }
-            else
-            {
-                if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.AirweaponData))
-                    return false;
-            }
-            unit.Inventory.Weapon.PrimarySkillStartTime = GameManager.Inst.PlayTime;
-            //DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.PrimarySkillStartTime = unit.Inventory.Weapon.PrimarySkillStartTime;
-            player.FSM.ChangeState(player.PrimarySkillState);
-            //GameManager.Inst?.MainUI?.MainPanel?.SkillPanelSystem?.PrimarySkillPanel?.UpdateSkillPanel(
-            //    unit.Inventory.Weapon.PrimarySkillStartTime,
-            //    unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.SkillCoolTime);
-            player.Inventory.ItemExeOnSKill(unit);
-            return true;
-        }
-        else if (player.InputHandler.SecondarySkillInput)
-        {
-            if (
-                unit.Inventory.Weapon.SecondarySkillStartTime != 0f &&
-                GameManager.Inst.PlayTime < (unit.Inventory.Weapon.SecondarySkillStartTime + unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.SkillCoolTime)
-                )
-                return false;
-            player.SecondarySkillState.SetWeapon(player.Inventory.Weapon);
-            if (isGrounded)
-            {
-                if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.GroundweaponData))
-                    return false;
-            }
-            else
-            {
-                if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.AirweaponData))
-                    return false;
-            }
-            unit.Inventory.Weapon.SecondarySkillStartTime = GameManager.Inst.PlayTime;
-            //DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.SecondarySkillStartTime = unit.Inventory.Weapon.SecondarySkillStartTime;
-            player.FSM.ChangeState(player.SecondarySkillState);
-            //GameManager.Inst?.MainUI?.MainPanel?.SkillPanelSystem?.SecondarySkillPanel?.UpdateSkillPanel(
-                //unit.Inventory.Weapon.SecondarySkillStartTime,
-                //unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.SkillCoolTime);
-            player.Inventory.ItemExeOnSKill(unit);
-            return true;
-        }
+        //    if (isGrounded)
+        //    {
+        //        if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.GroundweaponData))
+        //            return false;
+        //    }
+        //    else
+        //    {
+        //        if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.AirweaponData))
+        //            return false;
+        //    }
+        //    unit.Inventory.Weapon.PrimarySkillStartTime = GameManager.Inst.PlayTime;
+        //    //DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.PrimarySkillStartTime = unit.Inventory.Weapon.PrimarySkillStartTime;
+        //    player.FSM.ChangeState(player.PrimarySkillState);
+        //    //GameManager.Inst?.MainUI?.MainPanel?.SkillPanelSystem?.PrimarySkillPanel?.UpdateSkillPanel(
+        //    //    unit.Inventory.Weapon.PrimarySkillStartTime,
+        //    //    unit.Inventory.Weapon.weaponData.weaponCommandDataSO.PrimarySkillData.SkillCoolTime);
+        //    player.Inventory.ItemExeOnSKill(unit);
+        //    return true;
+        //}
+        //else if (player.InputHandler.SecondarySkillInput)
+        //{
+        //    if (
+        //        unit.Inventory.Weapon.SecondarySkillStartTime != 0f &&
+        //        GameManager.Inst.PlayTime < (unit.Inventory.Weapon.SecondarySkillStartTime + unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.SkillCoolTime)
+        //        )
+        //        return false;
+        //    player.SecondarySkillState.SetWeapon(player.Inventory.Weapon);
+        //    if (isGrounded)
+        //    {
+        //        if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.GroundweaponData))
+        //            return false;
+        //    }
+        //    else
+        //    {
+        //        if (!player.Inventory.Weapon.weaponGenerator.GenerateWeapon(unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.AirweaponData))
+        //            return false;
+        //    }
+        //    unit.Inventory.Weapon.SecondarySkillStartTime = GameManager.Inst.PlayTime;
+        //    //DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.SecondarySkillStartTime = unit.Inventory.Weapon.SecondarySkillStartTime;
+        //    player.FSM.ChangeState(player.SecondarySkillState);
+        //    //GameManager.Inst?.MainUI?.MainPanel?.SkillPanelSystem?.SecondarySkillPanel?.UpdateSkillPanel(
+        //        //unit.Inventory.Weapon.SecondarySkillStartTime,
+        //        //unit.Inventory.Weapon.weaponData.weaponCommandDataSO.SecondarySkillData.SkillCoolTime);
+        //    player.Inventory.ItemExeOnSKill(unit);
+        //    return true;
+        //}
 
-        return false;
+        //return false;
     }
 }

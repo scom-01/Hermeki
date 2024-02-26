@@ -111,5 +111,5 @@ public struct ItemEventData
     /// <summary>
     /// Effect SFX
     /// </summary>
-    public AudioPrefab SFX;
+    public AudioData SFX;
 }

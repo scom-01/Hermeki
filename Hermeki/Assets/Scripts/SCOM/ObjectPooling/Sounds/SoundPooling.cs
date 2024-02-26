@@ -7,7 +7,7 @@ namespace SCOM
 {
     public class SoundPooling : MonoBehaviour
     {
-        public AudioPrefab SoundObject;
+        public AudioData SoundObject;
         [HideInInspector]
         public AudioSource SoundSource
         {
@@ -26,7 +26,7 @@ namespace SCOM
         }
         private AudioSource audio = new();
 
-        public AudioSource CreateObject(AudioPrefab _SFX)
+        public AudioSource CreateObject(AudioData _SFX)
         {
             var source = this.AddComponent<AudioSource>();
             source.clip = _SFX.Clip;
@@ -38,7 +38,7 @@ namespace SCOM
             return source;
         }
 
-        public void Init(AudioPrefab _SFX)
+        public void Init(AudioData _SFX)
         {
             if (_SFX.Clip == null)
                 return;

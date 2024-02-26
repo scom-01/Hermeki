@@ -11,7 +11,7 @@ public class BuffItemSO : ItemDataSO
     public int Health;
 
     [Header("--Effects--")]
-    public EffectData InitEffectData;
+    public ItemEquipData InitEffectData;
 
     public BuffItem_Data BuffData;
 }

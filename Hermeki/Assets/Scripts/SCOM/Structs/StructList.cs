@@ -62,12 +62,12 @@ namespace SCOM
     }
 
     [Serializable]
-    public struct AudioPrefab
+    public struct AudioData
     {
         public AudioClip Clip;
         [Range(0,1)]
         public float Volume;
-        public AudioPrefab(AudioClip clip, float volume)
+        public AudioData(AudioClip clip, float volume)
         {
             Clip = clip;
             Volume = volume;
@@ -220,7 +220,7 @@ namespace SCOM
         /// <summary>
         /// 공격 시 사운드
         /// </summary>
-        public AudioPrefab[] audioClips;
+        public AudioData[] audioClips;
         /// <summary>
         /// 공격 시 ShakeCam
         /// </summary>

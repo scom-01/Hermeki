@@ -7,7 +7,7 @@ using UnityEngine;
 public class TouchObject : MonoBehaviour, ITouch
 {
     protected Transform effectContainer;
-    public AudioPrefab SFX;
+    public AudioData SFX;
     public GameObject EffectObject;
     private void Awake()
     {

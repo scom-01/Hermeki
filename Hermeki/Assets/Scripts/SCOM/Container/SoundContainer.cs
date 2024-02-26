@@ -6,7 +6,7 @@ public class SoundContainer : MonoBehaviour
 {
     public GameObject Base_SoundPooling;
     public List<SoundPooling> SoundPoolingList = new List<SoundPooling>();
-    public SoundPooling CheckObject(AudioPrefab _Sfx)
+    public SoundPooling CheckObject(AudioData _Sfx)
     {
         if(SoundPoolingList.Count == 0)
         {
@@ -24,7 +24,7 @@ public class SoundContainer : MonoBehaviour
         return newObj;
     }
 
-    public GameObject AddObject(AudioPrefab _Sfx)
+    public GameObject AddObject(AudioData _Sfx)
     {
         if (Base_SoundPooling == null)
         {

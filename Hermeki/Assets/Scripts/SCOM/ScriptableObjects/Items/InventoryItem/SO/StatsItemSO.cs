@@ -26,7 +26,7 @@ public struct ItemComposite
 {
     public StatsItemSO MaterialItem;
     public StatsItemSO ResultItem;
-    public AudioPrefab EditSFX;
+    public AudioData EditSFX;
     public GameObject EditVFX;
 }
 
@@ -82,7 +82,7 @@ public class StatsItemSO : ItemDataSO
     [Header("--Buff--")]
     public List<BuffItemSO> buffItems = new List<BuffItemSO>();
     [Header("--Effects--")]
-    public EffectData InitEffectData;
+    public ItemEquipData InitEffectData;
     public List<EffectPrefab> InfinityEffectObjects = new List<EffectPrefab>();
     [Header("--ItemEvent--")]
     [field: SerializeField] public List<ItemEventSO> ItemEvents = new List<ItemEventSO>();
@@ -96,13 +96,13 @@ public class StatsItemSO : ItemDataSO
 }
 
 [Serializable]
-public struct EffectData
+public struct ItemEquipData
 {
     [field: Header("Collider Use")]
     [field: Tooltip("획득 시 이펙트")]
     [field: SerializeField] public GameObject AcquiredEffectPrefab { get; private set; }
     [field: Tooltip("획득 시 사운드이펙트")]
-    [field: SerializeField] public AudioPrefab AcquiredSFX { get; private set; }
+    [field: SerializeField] public AudioData AcquiredSFX { get; private set; }
 
     [field: Tooltip("아이템 소비 여부")]
     [field: SerializeField] public bool isEquipment { get; private set; }

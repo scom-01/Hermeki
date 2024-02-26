@@ -19,6 +19,6 @@ namespace SCOM.Weapons.Components
         /// <summary>
         /// 버프효과사운드
         /// </summary>
-        public AudioPrefab EquipAudio;
+        public AudioData EquipAudio;
     }
 }

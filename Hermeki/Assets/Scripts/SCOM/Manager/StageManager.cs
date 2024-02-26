@@ -1,9 +1,7 @@
 using Cinemachine;
-using System.Collections.Generic;
 using SCOM;
-using SCOM.Manager;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class StageManager : MonoBehaviour
@@ -156,7 +154,7 @@ public class StageManager : MonoBehaviour
 
     [Header("----Sounds----")]
     public AudioSource BGM;
-    public AudioPrefab BGM_source;
+    public AudioData BGM_source;
 
     private void Awake()
     {
