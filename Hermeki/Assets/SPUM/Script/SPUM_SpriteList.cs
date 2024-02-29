@@ -28,8 +28,6 @@ public class SPUM_SpriteList : MonoBehaviour
     public List<string> _weaponListString = new List<string>();
     public List<string> _backListString = new List<string>();
 
-
-
     public void Reset()
     {
         for (var i = 0; i < _hairList.Count; i++)
@@ -195,6 +193,17 @@ public class SPUM_SpriteList : MonoBehaviour
             }
         }
     }
+
+    public void SyncPath(List<SpriteRenderer> _objList, List<Sprite> _sprites)
+    {
+        for (int i = 0; i < _objList.Count; i++)
+        {
+            if (_sprites.Count - 1 >= i)
+            {
+                _objList[i].sprite = _sprites[i];
+            }
+        }
+    }
     public void SyncPath(List<SpriteRenderer> _objList, string _path, bool _order)
     {        
         string tPath = _path;
@@ -232,5 +241,13 @@ public class SPUM_SpriteList : MonoBehaviour
                 }
             } 
         }
+    }
+
+    public void SyncPath(SpriteRenderer _obj, Sprite _sprite)
+    {
+        if (_obj == null || _sprite == null)
+            return;
+
+        _obj.sprite = _sprite;
     }
 }
