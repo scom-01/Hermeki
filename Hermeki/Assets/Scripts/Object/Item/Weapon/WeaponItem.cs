@@ -32,68 +32,12 @@ public class WeaponItem : MonoBehaviour
     private void Start()
     {
         SetWeaponStyle(weaponStyle);
-        if (dataSO != null) 
-            SetWeapon(new WeaponItemData(dataSO, dataSO.MaxDurability));
-    }
-
-    public void SetWeapon(WeaponItemData _data)
-    {
-        dataSO = _data.dataSO;
-        CurrentDurability = _data.CurrentDurability;
-        CalculateWeaponSprite();
-    }
-
-    [ContextMenu("SetCollider2D")]
-    public void SetCollider2D()
-    {
-        if (sr == null)
-            return;
-
-        if (pc2D == null)
-            this.AddComponent<PolygonCollider2D>().isTrigger = true;
-        PolygonCollider2D polygon = pc2D;
-
-        int shapeCount = sr.sprite.GetPhysicsShapeCount();
-        polygon.pathCount = shapeCount;
-        var points = new List<Vector2>(64);
-        for (int i = 0; i < shapeCount; i++)
-        {
-            sr.sprite.GetPhysicsShape(i, points);
-            polygon.SetPath(i, points);
-        }
-        polygon.isTrigger = true;
         if (dataSO != null)
-        {
-            polygon.sharedMaterial = dataSO.PM2D;
-        }
+            SetWeaponData(new EquipItemData(dataSO, dataSO.MaxDurability));
+        SetCollider2D();
     }
 
-    public void SetWeaponData(WeaponItemData _data)
-    {
-        if (_data == null)
-        {
-            dataSO = null;
-            SetWeaponSprite(null);
-            return;
-        }
-        dataSO = _data.dataSO;
-        CurrentDurability = _data.CurrentDurability;
-    }
-
-    public void SetWeaponStyle(WeaponStyle style)
-    {
-        weaponStyle = style;
-
-        if (isLeft)
-        {
-            unit.SetAnimParam("leftWeapon", (int)style);
-        }
-        else
-        {
-            unit.SetAnimParam("rightWeapon", (int)style);
-        }
-    }
-
+    #region Variable
     private void DecreaseDurability()
     {
         CurrentDurability--;
@@ -118,7 +62,8 @@ public class WeaponItem : MonoBehaviour
         sr.sprite = sprite;
         if (sprite == null && pc2D != null)
         {
-            Destroy(pc2D);
+            pc2D.enabled = false;
+            //Destroy(pc2D);
         }
     }
     private void CalculateWeaponSprite()
@@ -127,9 +72,9 @@ public class WeaponItem : MonoBehaviour
             return;
 
         int idx = 0;
-        for (int i = 0; i < dataSO.WeaponSprite.Length; i++)
+        for (int i = 0; i < dataSO.Sprite.Length; i++)
         {
-            if (CurrentDurability <= dataSO.WeaponSprite[i].durability)
+            if (CurrentDurability <= dataSO.Sprite[i].durability)
             {
                 idx = i;
             }
@@ -138,12 +83,76 @@ public class WeaponItem : MonoBehaviour
                 break;
             }
         }
-        if (sr.sprite != dataSO.WeaponSprite[idx].sprite)
+        if (sr.sprite != dataSO.Sprite[idx].sprite)
         {
-            SetWeaponSprite(dataSO.WeaponSprite[idx].sprite);
+            SetWeaponSprite(dataSO.Sprite[idx].sprite);
             SetCollider2D();
         }
     }
+
+    #endregion
+
+    #region Collider
+    [ContextMenu("SetCollider2D")]
+    public void SetCollider2D()
+    {
+        if (pc2D == null)
+            this.AddComponent<PolygonCollider2D>().isTrigger = true;
+
+        if (sr?.sprite == null)
+        {
+            pc2D.enabled = false;
+            return;
+        }
+        PolygonCollider2D polygon = pc2D;
+
+        polygon.enabled = true;
+        int shapeCount = sr.sprite.GetPhysicsShapeCount();
+        polygon.pathCount = shapeCount;
+        var points = new List<Vector2>(64);
+        for (int i = 0; i < shapeCount; i++)
+        {
+            sr.sprite.GetPhysicsShape(i, points);
+            polygon.SetPath(i, points);
+        }
+        polygon.isTrigger = true;
+        if (dataSO != null)
+        {
+            polygon.sharedMaterial = dataSO.PM2D;
+        }
+    }
+    #endregion
+
+    public void SetWeaponData(EquipItemData _data)
+    {
+        if (_data == null)
+        {
+            dataSO = null;
+            SetWeaponSprite(null);
+            CurrentDurability = 0;
+            //unit.ItemManager.RemoveItemEvent(new WeaponItemEventSet(_data.dataSO));
+            return;
+        }
+        dataSO = _data.dataSO;
+        CurrentDurability = _data.CurrentDurability;
+        CalculateWeaponSprite();
+    }
+
+    public void SetWeaponStyle(WeaponStyle style)
+    {
+        weaponStyle = style;
+
+        if (isLeft)
+        {
+            unit.SetAnimParam("leftWeapon", (int)style);
+        }
+        else
+        {
+            unit.SetAnimParam("rightWeapon", (int)style);
+        }
+    }
+
+    
     private void Effect(Vector2 _pos, EffectPrefab effectData, AudioData audioData)
     {
         effectData.SpawnObject(_pos);
@@ -157,6 +166,47 @@ public class WeaponItem : MonoBehaviour
         Debug.Log($"Effect transform = {_transform}");
     }
 
+    #region Action
+    private void Action()
+    {
+        isAction = true;
+        switch (weaponStyle)
+        {
+            case WeaponStyle.Sword:
+                break;
+            case WeaponStyle.Staff:
+                break;
+            default:
+                break;
+        }
+        if (isLeft)
+            Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
+        else
+            Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
+        unit.ItemManager?.ItemActionExecute();
+    }
+
+    private void FinishAction()
+    {
+        if ((unit as Player)?.InputHandler == null)
+        {
+            return;
+        }
+
+        isAction = false;
+        if (isLeft)
+        {
+            (unit as Player).InputHandler.UseInput(ref (unit as Player).InputHandler.PrimaryInput);
+            Debug.Log($"FinishAction Left = {(unit as Player).InputHandler.PrimaryInput}");
+        }
+        else
+        {
+            (unit as Player).InputHandler.UseInput(ref (unit as Player).InputHandler.SecondaryInput);
+            Debug.Log($"FinishAction Right = {(unit as Player).InputHandler.SecondaryInput}");
+        }
+    }
+
+    #endregion
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (!isAction)
@@ -173,6 +223,7 @@ public class WeaponItem : MonoBehaviour
             {
                 eventHandler.FinishRightAction();
             }
+            unit.ItemManager?.ItemOnHitGround();
             DecreaseDurability();
             if (dataSO != null)
                 Effect(this.transform, dataSO.Grounded_effectData, dataSO.Grounded_audioData);
@@ -200,6 +251,7 @@ public class WeaponItem : MonoBehaviour
                 {
                     eventHandler.FinishRightAction();
                 }
+                unit.ItemManager.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
                 if (dataSO != null)
                     Effect(coll.transform, dataSO.Unit_effectData, dataSO.Unit_audioData);
@@ -208,45 +260,8 @@ public class WeaponItem : MonoBehaviour
         }
     }
 
-    private void Action()
-    {
-        isAction = true;
-        switch (weaponStyle)
-        {
-            case WeaponStyle.Sword:
-                break;
-            case WeaponStyle.Staff:
-                break;
-            default:
-                break;
-        }
-        if (isLeft)
-            Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
-        else
-            Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
 
-    }
-
-    private void FinishAction()
-    {
-        if ((unit as Player)?.InputHandler == null)
-        {
-            return;
-        }
-
-        isAction = false;
-        if (isLeft)
-        {
-            (unit as Player).InputHandler.UseInput(ref (unit as Player).InputHandler.PrimaryInput);
-            Debug.Log($"FinishAction Left = {(unit as Player).InputHandler.PrimaryInput}");
-        }
-        else
-        {
-            (unit as Player).InputHandler.UseInput(ref (unit as Player).InputHandler.SecondaryInput);
-            Debug.Log($"FinishAction Right = {(unit as Player).InputHandler.SecondaryInput}");
-        }
-    }
-
+    #region OnEvent
     private void OnEnable()
     {
         if (isLeft)
@@ -278,4 +293,5 @@ public class WeaponItem : MonoBehaviour
             eventHandler.OnRightActionFinish -= FinishAction;
         }
     }
+    #endregion
 }
