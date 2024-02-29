@@ -2,19 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipObject : MonoBehaviour,IInteractive
-{    
-    public void Interactive()
-    {
-        
-    }
+public abstract class EquipObject : MonoBehaviour,IInteractive
+{
+    public abstract void Interactive(Unit unit);
+    public abstract void UnInteractive(Unit unit);
 
-    public void UnInteractive()
-    {
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(this.tag))
             return;
@@ -26,8 +19,24 @@ public class EquipObject : MonoBehaviour,IInteractive
         //Unit
         if (collision.gameObject.layer == LayerMask.NameToLayer("Unit"))
         {
-            Interactive();
-            Debug.Log($"Touched Unit name = {collision.gameObject.name}");
+            Interactive(collision.GetComponent<Unit>());
+            Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag(this.tag))
+            return;
+
+        //Ground
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            return;
+
+        //Unit
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Unit"))
+        {
+            UnInteractive(collision.GetComponent<Unit>());
+            Debug.Log($"TriggerExit Unit name = {collision.gameObject.name}");
         }
     }
 }
