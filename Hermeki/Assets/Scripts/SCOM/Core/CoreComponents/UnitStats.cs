@@ -177,7 +177,7 @@ namespace SCOM.CoreSystem
             CurrentHealth += amount;
             if (amount > 0)
             {
-                core.Unit.Inventory?.ItemExeOnHealing(core.Unit, core.Unit.GetTarget());
+                //core.Unit.Inventory?.ItemExeOnHealing(core.Unit, core.Unit.GetTarget());
                 core.CoreDamageReceiver.HUD_DmgTxt(1.0f, CurrentHealth - oldHealth, 30, DAMAGE_ATT.Heal, false);
             }
 
@@ -222,10 +222,10 @@ namespace SCOM.CoreSystem
             {
                 if (CurrentHealth == 0)
                 {
-                    attacker?.Inventory?.ItemExeOnKilled(attacker, core.Unit);
+                    attacker?.ItemManager?.ItemExeOnKilled(core.Unit);
                     attacker?.SetTarget(null);
                 }
-                core.Unit.Inventory?.ItemExeOnDamaged(core.Unit, attacker);
+                core.Unit.ItemManager?.ItemExeOnDamaged(attacker);
             }
             return result;
         }

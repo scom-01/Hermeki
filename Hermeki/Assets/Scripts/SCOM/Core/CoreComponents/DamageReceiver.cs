@@ -290,7 +290,7 @@ namespace SCOM.CoreSystem
         {
             if (core.Unit.Get_Fixed_Hit_Immunity)
             {
-                core.Unit.Inventory?.ItemExeOnDodge(core.Unit, attacker);
+                //core.Unit.Inventory?.ItemExeOnDodge(core.Unit, attacker);
                 return true;
             }
             return false;
@@ -308,7 +308,7 @@ namespace SCOM.CoreSystem
         {
             if (attacker.Core.CoreUnitStats.CalculStatsData.CriticalPer >= Random.Range(0, 100.0f))
             {
-                core.Unit.Inventory?.ItemExeOnCritical(core.Unit, attacker);
+                //core.Unit.Inventory?.ItemExeOnCritical(core.Unit, attacker);
                 return true;
             }
             return false;

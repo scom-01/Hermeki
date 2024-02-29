@@ -59,19 +59,16 @@ public enum ITEM_TPYE
 {
     None = 0,
     OnAction = 1,
-    OnHit = 2,
-    OnUpdate = 3,
-    OnInit = 4,
-    OnDash = 5,
-    OnMoveMap = 6,
-    OnDamaged = 7,
-    OnCritical = 8,
+    OnHitEnemy = 2,
+    OnHitGround = 3,
+    OnUpdate = 4,
+    OnInit = 5,
+    OnDash = 6,
+    OnMoveMap = 7,
+    OnDamaged = 8,
     OnJump = 9,
     OnLand = 10,
-    OnDodge = 11,
-    OnHealing = 12,
-    OnKilled = 13,
-    OnSkill = 14,
+    OnKilled = 11,    
 }
 
 public enum ITEM_Level

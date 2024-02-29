@@ -83,6 +83,13 @@ public abstract class ItemEventSO : ScriptableObject, IExecuteEvent
 
         return itemEventSet;
     }
+    public virtual ItemEventSet ExcuteEvent(ITEM_TPYE type, EquipItemDataSO parentItem, Unit unit, Unit enemy, ItemEventSet itemEventSet)
+    {
+        if (Item_Type != type || Item_Type == ITEM_TPYE.None || itemEventSet == null)
+            return itemEventSet;
+
+        return itemEventSet;
+    }
 }
 
 [Serializable]

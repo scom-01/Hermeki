@@ -148,7 +148,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemOnHitExecute(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnHit, _unit, enemy);
+        ExeItemEvent(ITEM_TPYE.OnHitEnemy, _unit, enemy);
         return true;
     }
 
@@ -206,16 +206,6 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// 크리티컬 공격 시 호출
-    /// </summary>
-    /// <param name="_unit"></param>
-    /// <param name="enemy"></param>
-    public void ItemExeOnCritical(Unit _unit, Unit enemy = null)
-    {
-        ExeItemEvent(ITEM_TPYE.OnCritical, _unit, enemy);
-    }
-
-    /// <summary>
     /// 점프 시 호출
     /// </summary>
     /// <param name="_unit"></param>
@@ -234,28 +224,6 @@ public class Inventory : MonoBehaviour
     {
         ExeItemEvent(ITEM_TPYE.OnLand, _unit, enemy);
     }
-
-    /// <summary>
-    /// 체력 회복 시 호출
-    /// </summary>
-    /// <param name="_unit"></param>
-    /// <param name="enemy"></param>
-    public void ItemExeOnHealing(Unit _unit, Unit enemy = null)
-    {
-        ExeItemEvent(ITEM_TPYE.OnHealing, _unit, enemy);
-    }
-
-
-    /// <summary>
-    /// 회피 시 호출
-    /// </summary>
-    /// <param name="_unit"></param>
-    /// <param name="enemy"></param>
-    public void ItemExeOnDodge(Unit _unit, Unit enemy = null)
-    {
-        ExeItemEvent(ITEM_TPYE.OnDodge, _unit, enemy);
-    }
-
     /// <summary>
     /// 적 처치 시 호출
     /// </summary>
@@ -264,16 +232,6 @@ public class Inventory : MonoBehaviour
     public void ItemExeOnKilled(Unit _unit, Unit enemy = null)
     {
         ExeItemEvent(ITEM_TPYE.OnKilled, _unit, enemy);
-    }
-    
-    /// <summary>
-    /// 스킬 사용 시 호출
-    /// </summary>
-    /// <param name="_unit"></param>
-    /// <param name="enemy"></param>
-    public void ItemExeOnSKill(Unit _unit, Unit enemy = null)
-    {
-        ExeItemEvent(ITEM_TPYE.OnSkill, _unit, enemy);
     }
 
     #endregion

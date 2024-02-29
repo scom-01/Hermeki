@@ -27,7 +27,7 @@ public class PlayerLandState : PlayerGroundedState
         player.Inventory?.Weapon.ResetActionCounter();
         SoundEffect.AudioSpawn(Land_SFX);
         player.Core.CoreEffectManager.StartEffectsPos(Land_Effect, CollisionSenses.GroundCenterPos);
-        player.Inventory?.ItemExeOnLand(player,player.GetTarget());
+        player.ItemManager?.ItemExeOnLand(player.GetTarget());
         //Land 시 
         for (int i = 0; i < player.InputHandler.ActionInputDelayCheck.Length; i++)
         {

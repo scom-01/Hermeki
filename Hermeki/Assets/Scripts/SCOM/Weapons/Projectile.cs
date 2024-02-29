@@ -420,7 +420,8 @@ namespace SCOM
                 if (ProjectileData.isOnHit)
                 {
                     //히트 시 효과
-                    unit.Inventory.ItemOnHitExecute(unit, coll.GetComponentInParent<Unit>());
+                    unit.ItemManager?.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
+                    //unit.Inventory.ItemOnHitExecute(unit, coll.GetComponentInParent<Unit>());
                 }
 
                 Debug.Log($"Projectile Touch {coll.name}");
