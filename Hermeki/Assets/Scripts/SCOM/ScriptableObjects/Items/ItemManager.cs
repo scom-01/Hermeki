@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
@@ -55,6 +56,9 @@ public class ItemManager : MonoBehaviour
     public List<WeaponItem> WeaponItemList = new List<WeaponItem>();
     public List<ArmorItem> ArmorItemList = new List<ArmorItem>();
 
+    public List<EquipItemData> WeaponDataList = new List<EquipItemData>();
+    public List<EquipItemData> ArmorDataList = new List<EquipItemData>();
+
     private void Start()
     {
         ArmorItemList = this.GetComponentsInChildren<ArmorItem>().ToList();
@@ -64,76 +68,47 @@ public class ItemManager : MonoBehaviour
     {
         ItemExeUpdate();
     }
-    public bool AddArmorItem(GameObject obj)
+    public bool AddArmorItem(EquipItemData data)
     {
-        if (obj == null)
+        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
             return false;
 
-        ArmorEquipObject armoritem = obj.GetComponent<ArmorEquipObject>();
-        if (armoritem == null)
-            return false;
-
-        SpriteRenderer[] SR_Array = obj.GetComponentsInChildren<SpriteRenderer>();
         List<Sprite> sprites = new List<Sprite>();
-        foreach (var SR in SR_Array)
+        int idx = data.dataSO.CalculateDurability(data.CurrentDurability);
+        foreach (var SR in data.dataSO.Sprite[idx].sprites)
         {
-            sprites.Add(SR.sprite);
+            sprites.Add(SR);
         }
+
         foreach (var _armoritem in ArmorItemList)
         {
-            if(_armoritem.Style == armoritem.style)
+            if (_armoritem.Style == (data.dataSO as ArmorItemDataSO).Style)
             {
-                _armoritem.SetSprite(sprites);
-                break;
+                _armoritem.SetArmorData(data);
+                return true;
             }
         }
-        //switch (armoritem.style)
-        //{
-        //    case ArmorStyle.Helmet:
-        //        SPUM_SpriteList?.SyncPath(SPUM_SpriteList._hairList[1], sprites[0]);
-        //        break;
-        //    case ArmorStyle.Armor:
-        //        SPUM_SpriteList?.SyncPath(SPUM_SpriteList._armorList, sprites);
-        //        break;
-        //    case ArmorStyle.Boots:
-        //        SPUM_SpriteList?.SyncPath(SPUM_SpriteList._pantList, sprites);
-        //        break;
-        //    default:
-        //        break;
-        //}
-        
+        Debug.Log($"방어구 DB에 저장");
+        ArmorDataList.Add(data);
         return true;
     }
-    public bool AddWeaponItem(GameObject obj)
+
+    public bool AddWeaponItem(EquipItemData data)
     {
-        if (obj == null)
+        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
             return false;
 
-        ArmorEquipObject armoritem = obj.GetComponent<ArmorEquipObject>();
-        if (armoritem == null)
-            return false;
-
-        SpriteRenderer[] SR_Array = obj.GetComponentsInChildren<SpriteRenderer>();
-        List<Sprite> sprites = new List<Sprite>();
-        foreach (var SR in SR_Array)
+        foreach (var _weaponitem in WeaponItemList)
         {
-            sprites.Add(SR.sprite);
+            if(_weaponitem.Data.dataSO != null)
+            {
+                continue;
+            }
+            _weaponitem.SetWeaponData(data);
+            return true;
         }
-        switch (armoritem.style)
-        {
-            case ArmorStyle.Helmet:
-                SPUM_SpriteList?.SyncPath(SPUM_SpriteList._hairList[1], sprites[0]);
-                break;
-            case ArmorStyle.Armor:
-                SPUM_SpriteList?.SyncPath(SPUM_SpriteList._armorList, sprites);
-                break;
-            case ArmorStyle.Boots:
-                SPUM_SpriteList?.SyncPath(SPUM_SpriteList._pantList, sprites);
-                break;
-            default:
-                break;
-        }
-
+        Debug.Log($"무기 DB에 저장");
+        WeaponDataList.Add(data);
         return true;
     }
     #region Add, Remove
