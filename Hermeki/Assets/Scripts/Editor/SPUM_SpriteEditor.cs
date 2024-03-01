@@ -39,7 +39,8 @@ public class SPUM_PrefabEditor : Editor
                 }
                 base.OnInspectorGUI();
             }
-            
+            // Save
+            AssetDatabase.SaveAssets();
         }
        
     }

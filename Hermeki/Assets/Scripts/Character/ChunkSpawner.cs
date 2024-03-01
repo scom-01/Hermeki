@@ -37,6 +37,6 @@ public class ChunkSpawner : MonoBehaviour
         obj.AddComponent<PolygonCollider2D>().isTrigger = false;
 
         obj.transform.position = this.transform.position;
-
+        Destroy(obj, 2);
     }
 }

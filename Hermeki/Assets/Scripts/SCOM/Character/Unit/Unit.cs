@@ -55,6 +55,7 @@ public class Unit : MonoBehaviour
     [Tooltip("Map에 표시될 SpriteRenderer")]
     public SpriteRenderer MapSR;
 
+    public ItemManager ItemManager;
     public Inventory Inventory { get; private set; }
 
     [HideInInspector] public Transform RespawnPoint;
@@ -225,32 +226,27 @@ public class Unit : MonoBehaviour
     public void SetAnimParam(string str, bool boolean)
     {
         Anim?.SetBool(str, boolean);
-
-        //if (Anims != null)
-        //{
-        //    foreach (var _anim in Anims)
-        //    {
-        //        _anim?.SetBool(str, boolean);
-        //    }
-        //}
+    }
+    public bool GetAnimBoolParam(string str)
+    {
+        return Anim.GetBool(str);
     }
     public void SetAnimParam(string str, float _float)
     {
         Anim?.SetFloat(str, _float);
-
-        //if (Anims != null)
-        //{
-        //    foreach (var _anim in Anims)
-        //    {
-        //        _anim?.SetFloat(str, _float);
-        //    }
-        //}
+    }
+    public float GetAnimFloatParam(string str)
+    {
+        return Anim.GetFloat(str);
     }
     public void SetAnimParam(string str, int _int)
     {
         Anim?.SetInteger(str, _int);
     }
-
+    public int GetAnimIntParam(string str)
+    {
+        return Anim.GetInteger(str);
+    }
     public virtual void SetTarget(Unit unit)
     {
         //if (unit == null)

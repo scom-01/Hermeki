@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - UICamera
+  - Enemy
+  - Projectile
+  - Item
+  - Trap
+  - Wall
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -13,14 +19,14 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Unit
+  - Object
+  - Transparent
+  - Damageable
   - Ground
-  - LevelBounds
-  - Editor
-  - NoCollisions
-  - Wall
   - 
   - 
+  - Area
   - 
   - 
   - 
@@ -42,7 +48,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: background
+  - name: Background
     uniqueID: 2696108511
     locked: 0
   - name: Platforms
@@ -53,6 +59,9 @@ TagManager:
     locked: 0
   - name: actors
     uniqueID: 3388987875
+    locked: 0
+  - name: item
+    uniqueID: 1277665923
     locked: 0
   - name: foreground
     uniqueID: 4062344271

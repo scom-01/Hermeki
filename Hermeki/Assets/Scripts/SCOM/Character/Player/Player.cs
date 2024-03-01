@@ -27,6 +27,7 @@ public class Player : Unit
     #endregion
 
     #region Components
+        
     public PlayerInputHandler InputHandler;// { get; private set; }
     [HideInInspector]
     public PlayerData playerData;
