@@ -6,6 +6,8 @@ public abstract class EquipObject : MonoBehaviour,IInteractive
 {
     public abstract void Interactive(Unit unit);
     public abstract void UnInteractive(Unit unit);
+    public abstract void SetSpriteRenderer();
+    public EquipItemData Data;
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {

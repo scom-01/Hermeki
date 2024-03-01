@@ -1,23 +1,23 @@
+﻿using SCOM;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class EquipItemData
 {
-    public WeaponItemDataSO dataSO;
+    public EquipItemDataSO dataSO;
     public int CurrentDurability;
-    public EquipItemData(WeaponItemDataSO dataSO, int currentDurability)
+    public EquipItemData(EquipItemDataSO dataSO, int currentDurability)
     {
         this.dataSO = dataSO;
         CurrentDurability = currentDurability;
     }
 }
-
-
 [Serializable]
 public struct ItemSpriteData
 {
-    public Sprite sprite;
+    public Sprite[] sprites;
     public int durability;
 }
 
@@ -33,5 +33,27 @@ public class EquipItemDataSO : ScriptableObject
     public virtual ItemEventSet ExeEvent(ITEM_TPYE type, Unit unit, Unit enemy, ItemEventSO _itemEvent, ItemEventSet itemEventSet)
     {
         return _itemEvent.ExcuteEvent(type, this, unit, enemy, itemEventSet);
+    }
+
+    /// <summary>
+    /// 현재 내구도에 맞는 Sprite idx를 계산해주는 함수
+    /// </summary>
+    /// <param name="_Curr">아이템의 현재 내구도</param>
+    /// <returns></returns>
+    public int CalculateDurability(int _Curr)
+    {
+        int idx = 0;
+        for (int i = 0; i < Sprite.Length; i++)
+        {
+            if (_Curr <= Sprite[i].durability)
+            {
+                idx = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return idx;
     }
 }
