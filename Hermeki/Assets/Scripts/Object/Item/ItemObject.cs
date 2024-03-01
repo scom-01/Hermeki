@@ -5,38 +5,49 @@ using UnityEngine;
 
 public class ItemObject : MonoBehaviour
 {
-    private SpriteRenderer sr;
-    private Rigidbody2D rb2d;
+    [HideInInspector]
+    public SpriteRenderer SR => this.GetComponent<SpriteRenderer>();
+    private Rigidbody2D rb2d => this.GetComponent<Rigidbody2D>();
     private PolygonCollider2D pc2d => GetComponent<PolygonCollider2D>();
-    public WeaponItemDataSO dataSO;
+    private EquipItemData data;
     private void Awake()
     {
-        sr = this.GetComponent<SpriteRenderer>();
-        rb2d = this.GetComponent<Rigidbody2D>();
+        //SR = this.GetComponent<SpriteRenderer>();
+        //rb2d = this.GetComponent<Rigidbody2D>();
+        SetPolygon();
+    }
+
+    public void SetSpriteRenderer(EquipItemData _data)
+    {
+        if (_data == null)
+            return;
+        this.data = _data;
+        int idx = data.dataSO.CalculateDurability(data.CurrentDurability);
+        SR.sprite = data.dataSO.Sprite[idx].sprites[0];
         SetPolygon();
     }
 
     private void SetPolygon()
     {
-        if (sr == null && pc2d == null)
+        if (SR == null && pc2d == null)
             return;
 
         if (pc2d == null)
             this.AddComponent<PolygonCollider2D>().isTrigger = false;
         PolygonCollider2D polygon = pc2d;
 
-        int shapeCount = sr.sprite.GetPhysicsShapeCount();
+        int shapeCount = SR.sprite.GetPhysicsShapeCount();
         polygon.pathCount = shapeCount;
         var points = new List<Vector2>(64);
         for (int i = 0; i < shapeCount; i++)
         {
-            sr.sprite.GetPhysicsShape(i, points);
+            SR.sprite.GetPhysicsShape(i, points);
             polygon.SetPath(i, points);
         }
         polygon.isTrigger = false;
-        if (dataSO != null)
+        if (data != null)
         {
-            polygon.sharedMaterial = dataSO.PM2D;
+            polygon.sharedMaterial = (data.dataSO as WeaponItemDataSO).PM2D;
         }
     }
 
