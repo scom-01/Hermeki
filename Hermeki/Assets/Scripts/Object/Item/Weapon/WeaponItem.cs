@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public enum WeaponStyle
 {
@@ -15,11 +16,9 @@ public class WeaponItem : MonoBehaviour
     private SpriteRenderer sr => GetComponent<SpriteRenderer>();
     private PolygonCollider2D pc2D => GetComponent<PolygonCollider2D>();
 
-    public WeaponStyle weaponStyle;
     public bool isLeft;
     public bool isAction;
-    public WeaponItemDataSO dataSO;
-    public int CurrentDurability;
+    public EquipItemData Data;
     private void Awake()
     {
         unit = GetComponentInParent<Unit>();
@@ -31,17 +30,16 @@ public class WeaponItem : MonoBehaviour
     }
     private void Start()
     {
-        SetWeaponStyle(weaponStyle);
-        if (dataSO != null)
-            SetWeaponData(new EquipItemData(dataSO, dataSO.MaxDurability));
+        if (Data != null)
+            SetWeaponData(new EquipItemData(Data.dataSO, Data.dataSO.MaxDurability));
         SetCollider2D();
     }
 
     #region Variable
     private void DecreaseDurability()
     {
-        CurrentDurability--;
-        if (CurrentDurability > 0)
+        Data.CurrentDurability--;
+        if (Data.CurrentDurability > 0)
         {
             CalculateWeaponSprite();
             return;
@@ -68,24 +66,15 @@ public class WeaponItem : MonoBehaviour
     }
     private void CalculateWeaponSprite()
     {
-        if (CurrentDurability <= 0 || sr?.sprite == null || dataSO == null)
+        if (Data.CurrentDurability <= 0 || Data.dataSO == null)
             return;
+                
+        int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
 
-        int idx = 0;
-        for (int i = 0; i < dataSO.Sprite.Length; i++)
+        //무기의 Sprite는 1개 이므로 sprites[0]으로 고정
+        if (Data.dataSO.Sprite[idx].sprites[0] != null && sr.sprite != Data.dataSO.Sprite[idx].sprites[0])
         {
-            if (CurrentDurability <= dataSO.Sprite[i].durability)
-            {
-                idx = i;
-            }
-            else
-            {
-                break;
-            }
-        }
-        if (sr.sprite != dataSO.Sprite[idx].sprite)
-        {
-            SetWeaponSprite(dataSO.Sprite[idx].sprite);
+            SetWeaponSprite(Data.dataSO.Sprite[idx].sprites[0]);
             SetCollider2D();
         }
     }
@@ -116,9 +105,9 @@ public class WeaponItem : MonoBehaviour
             polygon.SetPath(i, points);
         }
         polygon.isTrigger = true;
-        if (dataSO != null)
+        if (Data != null)
         {
-            polygon.sharedMaterial = dataSO.PM2D;
+            polygon.sharedMaterial = (Data.dataSO as WeaponItemDataSO).PM2D;
         }
     }
     #endregion
@@ -127,21 +116,18 @@ public class WeaponItem : MonoBehaviour
     {
         if (_data == null)
         {
-            dataSO = null;
+            Data = null;
             SetWeaponSprite(null);
-            CurrentDurability = 0;
             //unit.ItemManager.RemoveItemEvent(new WeaponItemEventSet(_data.dataSO));
             return;
         }
-        dataSO = _data.dataSO;
-        CurrentDurability = _data.CurrentDurability;
+        Data = _data;
         CalculateWeaponSprite();
+        SetWeaponStyle((Data.dataSO as WeaponItemDataSO).Style);
     }
 
     public void SetWeaponStyle(WeaponStyle style)
     {
-        weaponStyle = style;
-
         if (isLeft)
         {
             unit.SetAnimParam("leftWeapon", (int)style);
@@ -170,7 +156,7 @@ public class WeaponItem : MonoBehaviour
     private void Action()
     {
         isAction = true;
-        switch (weaponStyle)
+        switch ((Data.dataSO as WeaponItemDataSO).Style)
         {
             case WeaponStyle.Sword:
                 break;
@@ -225,8 +211,10 @@ public class WeaponItem : MonoBehaviour
             }
             unit.ItemManager?.ItemOnHitGround();
             DecreaseDurability();
-            if (dataSO != null)
-                Effect(this.transform, dataSO.Grounded_effectData, dataSO.Grounded_audioData);
+            if (Data != null)
+            {
+                Effect(this.transform, (Data.dataSO as WeaponItemDataSO).Grounded_effectData, (Data.dataSO as WeaponItemDataSO).Grounded_audioData);
+            }
             Debug.Log($"Weapon Collider Hit Ground");
             return;
         }
@@ -253,8 +241,8 @@ public class WeaponItem : MonoBehaviour
                 }
                 unit.ItemManager.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
-                if (dataSO != null)
-                    Effect(coll.transform, dataSO.Unit_effectData, dataSO.Unit_audioData);
+                if (Data != null)
+                    Effect(coll.transform, (Data.dataSO as WeaponItemDataSO).Unit_effectData, (Data.dataSO as WeaponItemDataSO).Unit_audioData);
             }
             Debug.Log($"Weapon Collider Hit Unit");
         }

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 
 public enum ArmorStyle
 {
@@ -14,8 +12,7 @@ public class ArmorItem : MonoBehaviour
     private Unit unit;
     protected AnimationEventHandler eventHandler;
     public ArmorStyle Style;
-    public int CurrentDurability;
-
+    public EquipItemData Data;
     private void Awake()
     {
         unit = GetComponentInParent<Unit>();
@@ -28,8 +25,8 @@ public class ArmorItem : MonoBehaviour
 
     private void DecreaseDurability()
     {
-        CurrentDurability--;
-        if (CurrentDurability > 0)
+        Data.CurrentDurability--;
+        if (Data.CurrentDurability > 0)
         {
             //CalculateWeaponSprite();
             return;
@@ -39,6 +36,20 @@ public class ArmorItem : MonoBehaviour
             //SetWeaponData(null);
             Debug.Log($"Destroy Weapon {this.name}");
         }
+    }
+
+    public void SetArmorData(EquipItemData data)
+    {
+        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
+            return;
+        Data = data;
+        int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
+        List<UnityEngine.Sprite> spriteList = new List<UnityEngine.Sprite>();
+        foreach (var sprite in Data.dataSO.Sprite[idx].sprites)
+        {
+            spriteList.Add(sprite);
+        }
+        SetSprite(spriteList);
     }
 
     public void SetSprite(List<UnityEngine.Sprite> sprites)

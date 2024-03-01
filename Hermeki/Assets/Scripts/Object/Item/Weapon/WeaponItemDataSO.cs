@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newWeaponItemDataSO", menuName = "Data/Equip Data/Weapon Item Data")]
 public class WeaponItemDataSO : EquipItemDataSO
 {
+    public WeaponStyle Style;
     [Header("Physics")]
     public PhysicsMaterial2D PM2D;
     [Header("Effect")]
