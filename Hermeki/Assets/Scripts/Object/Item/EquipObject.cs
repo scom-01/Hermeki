@@ -9,6 +9,15 @@ public abstract class EquipObject : MonoBehaviour,IInteractive
     public abstract void SetSpriteRenderer();
     public EquipItemData Data;
 
+    public EquipObject(EquipItemData data)
+    {
+        Data = data;
+    }
+
+    protected virtual void Start()
+    {
+        SetSpriteRenderer();
+    }
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(this.tag))
