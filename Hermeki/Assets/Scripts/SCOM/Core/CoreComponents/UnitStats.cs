@@ -232,9 +232,17 @@ namespace SCOM.CoreSystem
         public float DecreaseHealth(float amount)
         {
             core.Unit.HitEffect();
-            CurrentHealth -= amount;
+            if (core.Unit.ItemManager != null && core.Unit.ItemManager.DamagedArmor((int)amount))
+            {
+                //방어구 아이템 내구도 감소
+                Debug.Log($"{core.Unit.name} Decrease Armor Durability {(int)amount}");
+            }
+            else
+            {
+                CurrentHealth -= amount;
+            }
 
-            Debug.Log($"{core.transform.parent.name} Health = {currentHealth}");
+            Debug.Log($"{core.transform.parent.name} Health = {currentHealth}");            
             if (CurrentHealth == 0.0f)
             {
                 OnHealthZero?.Invoke();
