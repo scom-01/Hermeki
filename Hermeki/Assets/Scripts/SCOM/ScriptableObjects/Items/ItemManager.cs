@@ -111,6 +111,34 @@ public class ItemManager : MonoBehaviour
         WeaponDataList.Add(data);
         return true;
     }
+    private int CurrentArmorPower()
+    {
+        int result = 0;
+        foreach (var _armoritem in ArmorItemList)
+        {
+            result += _armoritem.Data.CurrentDurability;
+        }
+        return result;
+    }
+
+    public bool DamagedArmor(int _damage = 1)
+    {
+        if (CurrentArmorPower() == 0)
+            return false;
+
+        for (int i = 0; i < _damage; i++)
+        {
+            foreach (var _armorItem in ArmorItemList)
+            {
+                if (_armorItem.Data.CurrentDurability > 0)
+                {
+                    _armorItem.DecreaseDurability();
+                    break;
+                }
+            }
+        }
+        return true;
+    }
     #region Add, Remove
     public bool AddItemEvent(WeaponItemEventSet item)
     {
