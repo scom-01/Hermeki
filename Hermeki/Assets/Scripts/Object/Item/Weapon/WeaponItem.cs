@@ -30,7 +30,7 @@ public class WeaponItem : MonoBehaviour
     }
     private void Start()
     {
-        if (Data != null)
+        if (Data?.dataSO != null)
             SetWeaponData(new EquipItemData(Data.dataSO, Data.dataSO.MaxDurability));
         SetCollider2D();
     }
@@ -39,13 +39,15 @@ public class WeaponItem : MonoBehaviour
     private void DecreaseDurability()
     {
         Data.CurrentDurability--;
+
         if (Data.CurrentDurability > 0)
-        {
+        {            
             CalculateWeaponSprite();
             return;
         }
         else
         {
+            Data.CurrentDurability = 0;
             SetWeaponData(null);
             Debug.Log($"Destroy Weapon {this.name}");
         }
@@ -66,7 +68,7 @@ public class WeaponItem : MonoBehaviour
     }
     private void CalculateWeaponSprite()
     {
-        if (Data.CurrentDurability <= 0 || Data.dataSO == null)
+        if (Data.CurrentDurability <= 0 || Data?.dataSO == null)
             return;
                 
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
@@ -105,7 +107,7 @@ public class WeaponItem : MonoBehaviour
             polygon.SetPath(i, points);
         }
         polygon.isTrigger = true;
-        if (Data != null)
+        if (Data?.dataSO != null)
         {
             polygon.sharedMaterial = (Data.dataSO as WeaponItemDataSO).PM2D;
         }
@@ -116,7 +118,7 @@ public class WeaponItem : MonoBehaviour
     {
         if (_data == null)
         {
-            Data = null;
+            Data.dataSO = null;
             SetWeaponSprite(null);
             //unit.ItemManager.RemoveItemEvent(new WeaponItemEventSet(_data.dataSO));
             return;
@@ -156,15 +158,19 @@ public class WeaponItem : MonoBehaviour
     private void Action()
     {
         isAction = true;
-        switch ((Data.dataSO as WeaponItemDataSO).Style)
+        if (Data?.dataSO != null)
         {
-            case WeaponStyle.Sword:
-                break;
-            case WeaponStyle.Staff:
-                break;
-            default:
-                break;
+            switch ((Data.dataSO as WeaponItemDataSO).Style)
+            {
+                case WeaponStyle.Sword:
+                    break;
+                case WeaponStyle.Staff:
+                    break;
+                default:
+                    break;
+            }
         }
+        
         if (isLeft)
             Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
         else
@@ -211,7 +217,7 @@ public class WeaponItem : MonoBehaviour
             }
             unit.ItemManager?.ItemOnHitGround();
             DecreaseDurability();
-            if (Data != null)
+            if (Data?.dataSO != null)
             {
                 Effect(this.transform, (Data.dataSO as WeaponItemDataSO).Grounded_effectData, (Data.dataSO as WeaponItemDataSO).Grounded_audioData);
             }
@@ -241,7 +247,7 @@ public class WeaponItem : MonoBehaviour
                 }
                 unit.ItemManager.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
-                if (Data != null)
+                if (Data?.dataSO != null)
                     Effect(coll.transform, (Data.dataSO as WeaponItemDataSO).Unit_effectData, (Data.dataSO as WeaponItemDataSO).Unit_audioData);
             }
             Debug.Log($"Weapon Collider Hit Unit");

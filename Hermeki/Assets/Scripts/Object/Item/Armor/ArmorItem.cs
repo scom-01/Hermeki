@@ -23,17 +23,22 @@ public class ArmorItem : MonoBehaviour
         eventHandler = unit.GetComponentInChildren<AnimationEventHandler>();
     }
 
-    private void DecreaseDurability()
+    private void Start()
+    {
+        SetArmorData(Data);
+    }
+    public void DecreaseDurability()
     {
         Data.CurrentDurability--;
         if (Data.CurrentDurability > 0)
         {
-            //CalculateWeaponSprite();
+            SetArmorData(Data);
             return;
         }
         else
         {
-            //SetWeaponData(null);
+            Data.CurrentDurability = 0;
+            SetArmorData(null);
             Debug.Log($"Destroy Weapon {this.name}");
         }
     }
@@ -41,7 +46,11 @@ public class ArmorItem : MonoBehaviour
     public void SetArmorData(EquipItemData data)
     {
         if (data == null || data.dataSO == null || data.CurrentDurability == 0)
+        {
+            Data.dataSO = null;
+            SetSprite(null);
             return;
+        }
         Data = data;
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
         List<UnityEngine.Sprite> spriteList = new List<UnityEngine.Sprite>();
@@ -57,6 +66,11 @@ public class ArmorItem : MonoBehaviour
         switch (Style)
         {
             case ArmorStyle.Helmet:
+                if (sprites == null)
+                {
+                    unit.ItemManager?.SPUM_SpriteList?.SyncPath(unit.ItemManager.SPUM_SpriteList._hairList[1], null);
+                    break;
+                }
                 unit.ItemManager?.SPUM_SpriteList?.SyncPath(unit.ItemManager.SPUM_SpriteList._hairList[1], sprites[0]);
                 break;
             case ArmorStyle.Armor:
