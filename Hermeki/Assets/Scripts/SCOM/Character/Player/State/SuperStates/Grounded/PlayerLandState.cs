@@ -47,6 +47,12 @@ public class PlayerLandState : PlayerGroundedState
         if (xInput != 0f && isGrounded)
         {
             player.FSM.ChangeState(player.MoveState);
+            return;
+        }
+        else if (xInput == 0f&& isGrounded)
+        {
+            player.FSM.ChangeState(player.IdleState);
+            return;
         }
     }
 
