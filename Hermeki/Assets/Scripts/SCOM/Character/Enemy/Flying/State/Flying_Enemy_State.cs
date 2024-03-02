@@ -116,10 +116,11 @@ public class Flying_Enemy_DeathState : EnemyDeathState
     {
         base.Enter();
         unit.RB.gravityScale = 5;
-        unit.Core.CoreMovement.SetVelocityZero();
+        unit.Core.CoreMovement.SetVelocityX(0);
     }
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        unit.Core.CoreMovement.SetVelocityX(0);
     }
 }
