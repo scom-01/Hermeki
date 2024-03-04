@@ -15,13 +15,12 @@ public class Grounded_Melee_Enemy_IdleState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        unit.Core.CoreMovement.SetVelocityX(0);
     }
 
-    public override void LogicUpdate()
+    public override void DoChecks()
     {
-        base.LogicUpdate();
-        if (Death.isDead)
-            return;
+        base.DoChecks();
 
         if (EnemyCollisionSenses.isUnitDetectedCircle)
         {
@@ -32,10 +31,50 @@ public class Grounded_Melee_Enemy_IdleState : EnemyState
             grounded_Melee_Enemy.SetTarget(null);
         }
 
+    }
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+        if (Death.isDead)
+            return;
+
         //타겟 방향 회전
         unit.Core.CoreMovement.FlipToTarget();
 
         if (enemy.GetTarget() != null)
+        {
+            //앞 감지
+            if (EnemyCollisionSenses.isUnitInFrontDetectedArea)
+            {
+                //앞 절벽 혹은 벽
+                if (!isCliff || isTouchingWall)
+                {
+                }
+                else
+                {
+                    grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.MoveState);
+                    return;
+                }
+            }
+            //뒤 감지
+            else if (EnemyCollisionSenses.isUnitInBackDetectedArea)
+            {
+                //뒤 절벽 혹은 벽
+                if (!isCliffBack || isTouchingWallBack)
+                {
+                }
+                else
+                {
+                    grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.MoveState);
+                    return;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
         {
             grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.MoveState);
             return;
@@ -90,11 +129,14 @@ public class Grounded_Melee_Enemy_MoveState : EnemyState
             return;
         }
 
+        //(!isCliff && !isCliffBack) : 앞 뒤 모두 절벽
+        //(isTouchingWall && isTouchingWallBack) : 앞 뒤 모두 벽
         if ((!isCliff && !isCliffBack) || (isTouchingWall && isTouchingWallBack))
         {
             enemy.SetTarget(null);
             return;
         }
+        //(!isCliff || isTouchingWall) : 앞 절벽 혹은 벽
         else if (!isCliff || isTouchingWall)
         {
             Movement.SetVelocityX(0);
@@ -103,31 +145,53 @@ public class Grounded_Melee_Enemy_MoveState : EnemyState
         Movement.SetVelocityX(UnitStats.CalculStatsData.DefaultMoveSpeed * ((100f + UnitStats.CalculStatsData.MovementVEL_Per) / 100f) * Movement.FancingDirection);
     }
 
+    private float filpDelay = 0f;
+    private float flipStartTime = 0f;
     public override void LogicUpdate()
     {
         base.LogicUpdate();
         if (Death.isDead)
             return;
-        
-        if (EnemyCollisionSenses.isUnitDetectedBox)
-        {
-            //타겟 방향 회전
-            unit.Core.CoreMovement.FlipToTarget();
-            enemy.SetTarget(EnemyCollisionSenses.UnitDetectedBox?.GetComponent<Unit>());
 
-            if(EnemyCollisionSenses.CheckUnitDistBox(enemy.enemyData.UnitAttackDistance))
+        //앞 감지
+        if (EnemyCollisionSenses.isUnitInFrontDetectedArea)
+        {
+            //앞 절벽 혹은 벽
+            if (!isCliff || isTouchingWall)
             {
-                grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.AttackState);
+                grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.IdleState);
+                return;
             }
+            else
+            {
+
+            }
+        }
+        //뒤 감지
+        else if (EnemyCollisionSenses.isUnitInBackDetectedArea)
+        {
+            //뒤 절벽 혹은 벽
+            if (!isCliffBack || isTouchingWallBack)
+            {
+                grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.IdleState);
+                return;
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
             return;
         }
 
-        //if (!EnemyCollisionSenses.CheckUnitDetectedCircle(unit.GetTarget()))
-        //{
-        //    grounded_Melee_Enemy.SetTarget(null);
-        //    grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.IdleState);
-        //    return;
-        //}        
+        enemy.SetTarget(EnemyCollisionSenses.UnitDetectedBox?.GetComponent<Unit>());
+
+        if (EnemyCollisionSenses.CheckUnitDistBox(enemy.enemyData.UnitAttackDistance))
+        {
+            grounded_Melee_Enemy.FSM.ChangeState(grounded_Melee_Enemy.AttackState);
+        }
     }
 }
 
