@@ -23,7 +23,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     CC2D.bounds.size,
                     0f,
                     Vector2.right * Movement.FancingDirection,
-                    (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
+                    (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.bounds.size.x,
                     1 << LayerMask.NameToLayer("Unit")
                 );
             foreach (var hit in RayHit)
@@ -46,7 +46,7 @@ public class EnemyCollisionSenses : CollisionSenses
                     CC2D.bounds.size,
                     0f,
                     Vector2.right * -Movement.FancingDirection,
-                    (core.Unit.UnitData as EnemyData).UnitDetectedDistance,
+                    (core.Unit.UnitData as EnemyData).UnitDetectedDistance - CC2D.bounds.size.x,
                     1 << LayerMask.NameToLayer("Unit")
                 );
 
