@@ -8,6 +8,8 @@ public class ShadowController : MonoBehaviour
     [SerializeField]
     Transform ShadowSprite;
     Vector3 ShadowScale;
+    SpriteRenderer SR;
+    float ShadowAlpha = 1f;
     [SerializeField]
     private float ShadowDistance = 5f;
     protected ContactFilter2D contactFilter_Ground;
@@ -18,14 +20,12 @@ public class ShadowController : MonoBehaviour
         contactFilter_Ground.SetLayerMask(unit.Core.CoreCollisionSenses.WhatIsGround);
         contactFilter_Ground.useLayerMask = true;
         if (ShadowSprite != null)
+        {
             ShadowScale = ShadowSprite.localScale;
+            SR = ShadowSprite.GetComponent<SpriteRenderer>();
+            ShadowAlpha = SR.color.a;
+        }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private void Update()
     {
         if (unit == null || ShadowSprite == null)
@@ -50,14 +50,7 @@ public class ShadowController : MonoBehaviour
                 {
                     ShadowSprite.transform.position = new Vector3(ShadowSprite.transform.position.x, hit.point.y, 0);
                     ShadowSprite.localScale = ShadowScale * ((ShadowDistance - hit.distance) / ShadowDistance);
-                }
-                Debug.Log($"Shadow ShadowSprite.transform.position= {ShadowSprite.transform.position}");
-                //hit의 포인트(Ray가 부딪힌 지점)
-                if (unit.Core.CoreCollisionSenses.GroundCenterPos.y > hit.point.y)
-                {
-                    Debug.Log($"Shadow hit = {hit}");
-                    break;
-                    //return;
+                    SR.color = new Color(SR.color.r, SR.color.g, SR.color.b, (ShadowAlpha * ((ShadowDistance - hit.distance) / ShadowDistance)));
                 }
             }
         }
@@ -65,9 +58,6 @@ public class ShadowController : MonoBehaviour
         {
             ShadowSprite.localScale = Vector3.zero;
         }
-        //return;
-
-        //if (unit.Core.CoreCollisionSenses.CheckIfGrounded)
     }
 
     private void OnDrawGizmos()
