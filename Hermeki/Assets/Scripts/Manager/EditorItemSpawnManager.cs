@@ -24,6 +24,7 @@ public class EditorItemSpawnManager : MonoBehaviour
     private void Spawn(Vector3 pos, GameObject enemy)
     {
         GameObject _enemy = Instantiate(enemy);
+        _enemy.transform.parent = this.transform;
         _enemy.transform.position = pos;
     }
 }

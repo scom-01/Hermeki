@@ -102,7 +102,7 @@ namespace SCOM.CoreSystem
                         if (hit.rigidbody == null)
                             continue;
 
-                        if (hit.transform.tag != "Platform")
+                        if (!hit.transform.CompareTag("Platform"))
                             continue;
 
                         //hit의 기울기(양수면 hit의 y가 더 낮은 위치, 즉 GroundCenterPos가 hit.point보다 위에 있으면 양수)

@@ -19,7 +19,7 @@ namespace SCOM.CoreSystem
             CheckKnockBack();
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -28,15 +28,15 @@ namespace SCOM.CoreSystem
         /// <param name="direction">방향</param>
         public void KnockBack(Vector2 angle, float strength, int direction)
         {
-            
-            if(death.Comp.isDead)
+
+            if (death.Comp.isDead)
             {
                 Debug.Log(core.Unit.name + "is Dead");
                 return;
             }
 
             //CC기 면역
-            if(core.Unit.isCC_immunity)
+            if (core.Unit.isCC_immunity)
             {
                 return;
             }
@@ -44,17 +44,17 @@ namespace SCOM.CoreSystem
         }
         public void TrapKnockBack(Vector2 angle, float strength, bool isUnitFancingDirection = true)
         {
-            
-            if(death.Comp.isDead)
+
+            if (death.Comp.isDead)
             {
                 Debug.Log(core.Unit.name + "is Dead");
                 return;
             }
-            if(damageReceiver.Comp.isTouch)
+            if (damageReceiver.Comp.isTouch)
             {
                 return;
             }
-            if(isUnitFancingDirection)
+            if (isUnitFancingDirection)
             {
                 SetKnockBack(angle, strength, movement.Comp.FancingDirection);
             }
@@ -75,7 +75,7 @@ namespace SCOM.CoreSystem
         private void CheckKnockBack()
         {
             if (isKnockBackActive
-                && ((movement.Comp?.CurrentVelocity.y <= 0.01f && (collisionSenses.Comp.CheckIfGrounded || collisionSenses.Comp.CheckIfPlatform)/*collisionSenses.Comp.GroundCheck*/)
+                && ((movement.Comp?.CurrentVelocity.y <= 0.01f && (collisionSenses.Comp.CheckIfGrounded)/*collisionSenses.Comp.GroundCheck*/)
                     || Time.time >= knockBackStartTime + maxKnockBackTime)
                )
             {

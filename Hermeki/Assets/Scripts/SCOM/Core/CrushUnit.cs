@@ -15,7 +15,7 @@ public class CrushUnit : CoreComponent
         if (!core.Unit.IsAlive)
             return;
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Damageable") && collision.tag != this.tag)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Damageable") && !collision.CompareTag(this.tag))
         {
             Unit unit = collision.GetComponentInParent<Unit>();
             if (unit == null)

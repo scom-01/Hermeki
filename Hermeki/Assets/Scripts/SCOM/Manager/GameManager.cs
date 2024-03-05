@@ -161,26 +161,27 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (StageManager != null && InputHandler.playerInput.currentActionMap == InputHandler.playerInput.actions.FindActionMap("GamePlay"))
-        {
-            PlayTime += Time.deltaTime;
-        }
+        PlayTime += Time.deltaTime;
+        //        if (StageManager != null && InputHandler.playerInput.currentActionMap == InputHandler.playerInput.actions.FindActionMap("GamePlay"))
+        //        {
+        //            PlayTime += Time.deltaTime;
+        //        }
 
-#if UNITY_EDITOR
-        if (InputHandler.ESCInput)
-        {
-            //사망 시엔 ResultUI의 Title누르는 것 외엔 작동하지않도록
-        }
-        if (EventSystem.current.currentSelectedGameObject != null)
-        {
-            LastSelectedObject = EventSystem.current.currentSelectedGameObject;
-            Debug.Log("currentSelectedGameObject = " + EventSystem.current.currentSelectedGameObject.name);
-        }
-        else
-        {
-            Debug.Log("CurrentSelectedGameObject = null");
-        }
-#endif
+        //#if UNITY_EDITOR
+        //        if (InputHandler.ESCInput)
+        //        {
+        //            //사망 시엔 ResultUI의 Title누르는 것 외엔 작동하지않도록
+        //        }
+        //        if (EventSystem.current.currentSelectedGameObject != null)
+        //        {
+        //            LastSelectedObject = EventSystem.current.currentSelectedGameObject;
+        //            Debug.Log("currentSelectedGameObject = " + EventSystem.current.currentSelectedGameObject.name);
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("CurrentSelectedGameObject = null");
+        //        }
+        //#endif
     }
     private void Start()
     {

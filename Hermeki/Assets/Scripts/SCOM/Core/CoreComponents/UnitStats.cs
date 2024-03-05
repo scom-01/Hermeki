@@ -222,10 +222,10 @@ namespace SCOM.CoreSystem
             {
                 if (CurrentHealth == 0)
                 {
-                    attacker?.ItemManager?.ItemExeOnKilled(core.Unit);
+                    attacker?.ItemManager?.ItemExeOnKilled(null, core.Unit);
                     attacker?.SetTarget(null);
                 }
-                core.Unit.ItemManager?.ItemExeOnDamaged(attacker);
+                core.Unit.ItemManager?.ItemExeOnDamaged(null, attacker);
             }
             return result;
         }
