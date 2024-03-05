@@ -10,22 +10,22 @@ using static UnityEditor.Progress;
 
 
 [Serializable]
-public class WeaponItemEventSet
+public class EquipItemEventSet
 {
-    public WeaponItemDataSO weaponItemData;
+    public EquipItemDataSO EquipItemData;
     public List<ItemEventSet> itemEffectSets = new List<ItemEventSet>();
     /// <summary>
     /// OnAction이면 OnAction의 Count를 OnHit면 OnHit의 Count를 계산
     /// </summary>
     public List<int> EffectCount = new List<int>();
-    public WeaponItemEventSet(WeaponItemDataSO itemSO, ItemEventSet _itemEffectSets = null)//  float _startTime = 0, int _Count = 0)
+    public EquipItemEventSet(EquipItemDataSO itemSO, ItemEventSet _itemEffectSets = null)//  float _startTime = 0, int _Count = 0)
     {
-        this.weaponItemData = itemSO;
+        this.EquipItemData = itemSO;
 
         if (_itemEffectSets == null)
         {
             itemEffectSets = new List<ItemEventSet>();
-            for (int i = 0; i < weaponItemData.ItemEvents.Count; i++)
+            for (int i = 0; i < EquipItemData.ItemEvents.Count; i++)
             {
                 itemEffectSets.Add(new ItemEventSet());
             }
@@ -50,7 +50,7 @@ public class ItemManager : MonoBehaviour
     /// <summary>
     /// 현재 아이템
     /// </summary>
-    public List<WeaponItemEventSet> ItemEventList = new List<WeaponItemEventSet>();
+    public List<EquipItemEventSet> ItemEventList = new List<EquipItemEventSet>();
     public SPUM_SpriteList SPUM_SpriteList;
 
     public List<WeaponItem> WeaponItemList = new List<WeaponItem>();
@@ -84,7 +84,7 @@ public class ItemManager : MonoBehaviour
         {
             if (_armoritem.Style == (data.dataSO as ArmorItemDataSO).Style)
             {
-                _armoritem.SetArmorData(data);
+                _armoritem.SetItemData(data);
                 return true;
             }
         }
@@ -104,7 +104,8 @@ public class ItemManager : MonoBehaviour
             {
                 continue;
             }
-            _weaponitem.SetWeaponData(data);
+            _weaponitem.SetItemData(data);
+            ItemEventList.Add(new EquipItemEventSet(_weaponitem.Data.dataSO as WeaponItemDataSO));
             return true;
         }
         Debug.Log($"무기 DB에 저장");
@@ -140,21 +141,21 @@ public class ItemManager : MonoBehaviour
         return true;
     }
     #region Add, Remove
-    public bool AddItemEvent(WeaponItemEventSet item)
+    public bool AddItemEvent(EquipItemEventSet item)
     {
         if (item == null)
             return false;
 
         if (ItemEventList.Contains(item))
         {
-            Debug.Log($"Contains {item.weaponItemData.name}");
+            Debug.Log($"Contains {item.EquipItemData.name}");
             return false;
         }
         ItemEventList.Add(item);
 
         return true;
     }
-    public bool RemoveItemEvent(WeaponItemEventSet item)
+    public bool RemoveItemEvent(EquipItemEventSet item)
     {
         if (item == null)
             return false;
@@ -165,13 +166,24 @@ public class ItemManager : MonoBehaviour
     #endregion
 
     #region Event
-    public bool ExeItemEvent(ITEM_TPYE type, Unit enemy = null)
+    public bool ExeItemEvent(List<EquipItemEventSet> _ItemEventList = null, ITEM_TPYE type = ITEM_TPYE.None, Unit enemy = null)
     {
-        for (int i = 0; i < ItemEventList.Count; i++)
+        if (_ItemEventList == null)
         {
-            for (int j = 0; j < ItemEventList[i].itemEffectSets.Count; j++)
+            for (int i = 0; i < ItemEventList.Count; i++)
             {
-                ItemEventList[i].itemEffectSets[j] = ItemEventList[i].weaponItemData.ExeEvent(type, Unit, enemy, ItemEventList[i].weaponItemData.ItemEvents[j], ItemEventList[i].itemEffectSets[j]);
+                for (int j = 0; j < ItemEventList[i].itemEffectSets.Count; j++)
+                {
+                    ItemEventList[i].itemEffectSets[j] = ItemEventList[i].EquipItemData.ExeEvent(type, Unit, enemy, ItemEventList[i].EquipItemData.ItemEvents[j], ItemEventList[i].itemEffectSets[j]);
+                }
+            }
+            return true;
+        }
+        for (int i = 0; i < _ItemEventList.Count; i++)
+        {
+            for (int j = 0; j < _ItemEventList[i].itemEffectSets.Count; j++)
+            {
+                _ItemEventList[i].itemEffectSets[j] = _ItemEventList[i].EquipItemData.ExeEvent(type, Unit, enemy, _ItemEventList[i].EquipItemData.ItemEvents[j], _ItemEventList[i].itemEffectSets[j]);
             }
         }
         return true;
@@ -199,21 +211,21 @@ public class ItemManager : MonoBehaviour
     /// <param name="Unit">공격 주체</param>
     /// <param name="Enemy">적중 당한 적</param>
     /// <returns></returns>
-    public bool ItemOnHitExecute(Unit enemy = null)
+    public bool ItemOnHitExecute(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return false;
 
-        ExeItemEvent(ITEM_TPYE.OnHitEnemy, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnHitEnemy, enemy);
         return true;
     }
 
-    public bool ItemOnHitGround(Unit enemy = null)
+    public bool ItemOnHitGround(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return false;
 
-        ExeItemEvent(ITEM_TPYE.OnHitGround, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnHitGround, enemy);
         return true;
     }
 
@@ -222,12 +234,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <returns></returns>
-    public bool ItemActionExecute()
+    public bool ItemActionExecute(List<EquipItemEventSet> _ItemEventList = null)
     {
         if (Unit == null)
             return false;
 
-        ExeItemEvent(ITEM_TPYE.OnAction, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnAction, Unit?.GetTarget());
         return true;
     }
 
@@ -236,12 +248,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <returns></returns>
-    public bool ItemExeUpdate()
+    public bool ItemExeUpdate(List<EquipItemEventSet> _ItemEventList = null)
     {
         if (Unit == null)
             return false;
 
-        ExeItemEvent(ITEM_TPYE.OnUpdate, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnUpdate, Unit?.GetTarget());
         return true;
     }
 
@@ -249,12 +261,12 @@ public class ItemManager : MonoBehaviour
     /// 씬 변경 시 호출
     /// </summary>
     /// <param name="Unit"></param>
-    public void ItemExeOnMoveMap()
+    public void ItemExeOnMoveMap(List<EquipItemEventSet> _ItemEventList = null)
     {
         if (Unit == null)
             return;
 
-        ExeItemEvent(ITEM_TPYE.OnMoveMap, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnMoveMap, Unit?.GetTarget());
     }
 
     /// <summary>
@@ -262,12 +274,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <param name="enemy"></param>
-    public void ItemExeOnDamaged(Unit enemy = null)
+    public void ItemExeOnDamaged(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return;
 
-        ExeItemEvent(ITEM_TPYE.OnDamaged, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnDamaged, enemy);
     }
 
 
@@ -276,12 +288,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <param name="enemy"></param>
-    public void ItemExeOnJump(Unit enemy = null)
+    public void ItemExeOnJump(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return;
 
-        ExeItemEvent(ITEM_TPYE.OnJump, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnJump, enemy);
     }
 
     /// <summary>
@@ -289,12 +301,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <param name="enemy"></param>
-    public void ItemExeOnLand(Unit enemy = null)
+    public void ItemExeOnLand(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return;
 
-        ExeItemEvent(ITEM_TPYE.OnLand, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnLand, enemy);
     }
 
     /// <summary>
@@ -302,12 +314,12 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="Unit"></param>
     /// <param name="enemy"></param>
-    public void ItemExeOnKilled(Unit enemy = null)
+    public void ItemExeOnKilled(List<EquipItemEventSet> _ItemEventList = null, Unit enemy = null)
     {
         if (Unit == null)
             return;
 
-        ExeItemEvent(ITEM_TPYE.OnKilled, enemy);
+        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnKilled, enemy);
     }
     #endregion
 }
