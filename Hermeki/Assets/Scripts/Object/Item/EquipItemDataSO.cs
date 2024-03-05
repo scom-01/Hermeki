@@ -30,6 +30,10 @@ public class EquipItemDataSO : ScriptableObject
 
     [Header("ItemEvent")]
     [field: SerializeField] public List<ItemEventSO> ItemEvents = new List<ItemEventSO>();
+
+    [Header("Sounds")]
+    [Tooltip("아이템 내구도 파괴 시 호출될 사운드")]
+    public AudioData BrokenAudioData;
     public virtual ItemEventSet ExeEvent(ITEM_TPYE type, Unit unit, Unit enemy, ItemEventSO _itemEvent, ItemEventSet itemEventSet)
     {
         return _itemEvent.ExcuteEvent(type, this, unit, enemy, itemEventSet);
