@@ -7,51 +7,42 @@ public enum ArmorStyle
     Armor = 1,
     Boots = 2,
 }
-public class ArmorItem : MonoBehaviour
+public class ArmorItem : EquipItem
 {
-    private Unit unit;
-    protected AnimationEventHandler eventHandler;
     public ArmorStyle Style;
-    public EquipItemData Data;
-    private void Awake()
-    {
-        unit = GetComponentInParent<Unit>();
-        if (unit != null)
-        {
-            this.tag = unit.transform.tag;
-        }
-        eventHandler = unit.GetComponentInChildren<AnimationEventHandler>();
-    }
 
-    private void Start()
+    #region override
+    protected override void Start()
     {
-        SetArmorData(Data);
+        base.Start();
+        SetItemData(Data);
     }
-    public void DecreaseDurability()
+    public override void DecreaseDurability()
     {
-        Data.CurrentDurability--;
+        base.DecreaseDurability();
+
         if (Data.CurrentDurability > 0)
         {
-            SetArmorData(Data);
+            SetItemData(Data);
             return;
         }
         else
         {
             Data.CurrentDurability = 0;
-            SetArmorData(null);
+            SetItemData(null);
             Debug.Log($"Destroy Weapon {this.name}");
         }
     }
 
-    public void SetArmorData(EquipItemData data)
+    public override bool SetItemData(EquipItemData _data)
     {
-        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
+        if(!base.SetItemData(_data))
         {
+            DestroyItem();
             Data.dataSO = null;
             SetSprite(null);
-            return;
+            return false;
         }
-        Data = data;
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
         List<UnityEngine.Sprite> spriteList = new List<UnityEngine.Sprite>();
         foreach (var sprite in Data.dataSO.Sprite[idx].sprites)
@@ -59,7 +50,18 @@ public class ArmorItem : MonoBehaviour
             spriteList.Add(sprite);
         }
         SetSprite(spriteList);
+        return true;
     }
+    public override bool DestroyItem()
+    {
+        if (base.DestroyItem())
+        {
+            return false;
+        }
+
+        return true;
+    }
+    #endregion
 
     public void SetSprite(List<UnityEngine.Sprite> sprites)
     {

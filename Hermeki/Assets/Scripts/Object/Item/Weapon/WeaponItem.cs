@@ -9,36 +9,25 @@ public enum WeaponStyle
     Sword = 0,
     Staff = 1,
 }
-public class WeaponItem : MonoBehaviour
+public class WeaponItem : EquipItem
 {
-    private Unit unit;
-    protected AnimationEventHandler eventHandler;
     private SpriteRenderer sr => GetComponent<SpriteRenderer>();
     private PolygonCollider2D pc2D => GetComponent<PolygonCollider2D>();
 
     public bool isLeft;
     public bool isAction;
-    public EquipItemData Data;
-    private void Awake()
+    protected override void Start()
     {
-        unit = GetComponentInParent<Unit>();
-        if (unit != null)
-        {
-            this.tag = unit.transform.tag;
-        }
-        eventHandler = unit.GetComponentInChildren<AnimationEventHandler>();
-    }
-    private void Start()
-    {
+        base.Start();
         if (Data?.dataSO != null)
-            SetWeaponData(new EquipItemData(Data.dataSO, Data.dataSO.MaxDurability));
+            SetItemData(new EquipItemData(Data.dataSO, Data.dataSO.MaxDurability));
         SetCollider2D();
     }
 
     #region Variable
-    private void DecreaseDurability()
+    public override void DecreaseDurability()
     {
-        Data.CurrentDurability--;
+        base.DecreaseDurability();
 
         if (Data.CurrentDurability > 0)
         {            
@@ -48,7 +37,7 @@ public class WeaponItem : MonoBehaviour
         else
         {
             Data.CurrentDurability = 0;
-            SetWeaponData(null);
+            SetItemData(null);
             Debug.Log($"Destroy Weapon {this.name}");
         }
     }
@@ -114,20 +103,31 @@ public class WeaponItem : MonoBehaviour
     }
     #endregion
 
-    public void SetWeaponData(EquipItemData _data)
-    {
-        if (_data == null)
+    public override bool SetItemData(EquipItemData _data)
+    {        
+        if (!base.SetItemData(_data))
         {
+            DestroyItem();
             Data.dataSO = null;
             SetWeaponSprite(null);
-            //unit.ItemManager.RemoveItemEvent(new WeaponItemEventSet(_data.dataSO));
-            return;
+            ItemEventList = new List<EquipItemEventSet>();
+            return false;
         }
-        Data = _data;
+        ItemEventList.Add(new EquipItemEventSet(Data.dataSO));
         CalculateWeaponSprite();
         SetWeaponStyle((Data.dataSO as WeaponItemDataSO).Style);
+        return false;
     }
 
+    public override bool DestroyItem()
+    {
+        if (base.DestroyItem())
+        {
+            return false;
+        }
+
+        return true;
+    }
     public void SetWeaponStyle(WeaponStyle style)
     {
         if (isLeft)
@@ -154,6 +154,7 @@ public class WeaponItem : MonoBehaviour
         Debug.Log($"Effect transform = {_transform}");
     }
 
+    public List<EquipItemEventSet> ItemEventList = new List<EquipItemEventSet>();
     #region Action
     private void Action()
     {
@@ -175,7 +176,7 @@ public class WeaponItem : MonoBehaviour
             Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
         else
             Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
-        unit.ItemManager?.ItemActionExecute();
+        unit.ItemManager?.ItemActionExecute(ItemEventList);
     }
 
     private void FinishAction()
@@ -215,7 +216,7 @@ public class WeaponItem : MonoBehaviour
             {
                 eventHandler.FinishRightAction();
             }
-            unit.ItemManager?.ItemOnHitGround();
+            unit.ItemManager?.ItemOnHitGround(ItemEventList);
             DecreaseDurability();
             if (Data?.dataSO != null)
             {
@@ -245,7 +246,7 @@ public class WeaponItem : MonoBehaviour
                 {
                     eventHandler.FinishRightAction();
                 }
-                unit.ItemManager.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
+                unit.ItemManager.ItemOnHitExecute(ItemEventList, coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
                 if (Data?.dataSO != null)
                     Effect(coll.transform, (Data.dataSO as WeaponItemDataSO).Unit_effectData, (Data.dataSO as WeaponItemDataSO).Unit_audioData);
