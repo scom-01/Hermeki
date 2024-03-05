@@ -15,11 +15,24 @@ public class CrushUnit : CoreComponent
         if (!core.Unit.IsAlive)
             return;
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Damageable") && collision.tag != this.tag) 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Damageable") && collision.tag != this.tag)
         {
+            Unit unit = collision.GetComponentInParent<Unit>();
+            if (unit == null)
+                return;
+
             if (collision.TryGetComponent(out IDamageable victim))
             {
-                victim.Damage(core.Unit, 1, 1);
+                //머리 밟기(플레이어의 바닥 y좌표가 해당 유닛의 (머리 + 중앙)/2 보다 높거나 같을 때
+                if (unit.Core.CoreCollisionSenses.GroundCenterPos.y >= ((core.CoreCollisionSenses.HeaderCenterPos.y + core.CoreCollisionSenses.UnitCenterPos.y) / 2))
+                {
+                    core.CoreDamageReceiver.Damage(unit, 1, 1);
+                    unit.Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(0, 1f), 10, false);
+                }
+                else
+                {
+                    victim.Damage(core.Unit, 1, 1);
+                }
             }
         }
     }
