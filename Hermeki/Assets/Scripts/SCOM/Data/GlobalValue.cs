@@ -18,9 +18,9 @@ public class GlobalValue : MonoBehaviour
     public const string NextStageName = "NextStage";
     public const string RebindsKey = "rebinds";
 
-    public static GameObject Base_Projectile = Resources.Load<GameObject>("Prefabs/Weapons/Projectiles/Base_Projectile");
+    public static GameObject Base_Projectile = Resources.Load<GameObject>("Prefabs/Projectiles/Base_Projectile");
     public static GameObject Base_EffectPooling = Resources.Load<GameObject>("Prefabs/Effects/Base_EffectPooling");
-    public static GameObject Base_ProjectilePooling = Resources.Load<GameObject>("Prefabs/Effects/Base_ProjectilePooling");
+    public static GameObject Base_ProjectilePooling = Resources.Load<GameObject>("Prefabs/Projectiles/Base_ProjectilePooling");
     public static GameObject Base_DmgTxtPooling = Resources.Load<GameObject>("Prefabs/Effects/Base_DmgTxtPooling");
     public static GameObject Base_AttackMessageBox= Resources.Load<GameObject>("Prefabs/Effects/AttackMessageBox");
     public static GameObject Base_SoundPooling = Resources.Load<GameObject>("Prefabs/Sounds/Base_SoundPooling");

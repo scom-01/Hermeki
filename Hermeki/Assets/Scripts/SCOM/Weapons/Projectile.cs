@@ -6,19 +6,21 @@ namespace SCOM
     public class Projectile : MonoBehaviour
     {
         //공격하는 주체
-        [SerializeField] private Unit unit;
+        [SerializeField] protected Unit unit;
         //지정 타겟
-        private Unit target;
+        protected Unit target;
         [HideInInspector] public ProjectileData ProjectileData;
 
+        [Tooltip("투사체 이펙트, ex)ParticleSystem, Animator를 가진 오브젝트")]
         public GameObject ProjectileObject;
+        [Tooltip("폭발 이펙트")]
         public GameObject ImpactObject;
         [Space(10)]
         public AudioData ProjectileShootClip;
         public AudioData ImpactClip;
-        [SerializeField] private bool isFixedRot;
-        private ProjectilePooling parent;
-        private GameObject Spawned_ProjectileObject;
+        [SerializeField] protected bool isFixedRot;
+        protected ProjectilePooling parent;
+        protected GameObject Spawned_ProjectileObject;
 
         public int FancingDirection
         {
@@ -29,8 +31,8 @@ namespace SCOM
                 return unit.Core.CoreMovement.FancingDirection;
             }
         }
-        private int FixedFancingDirection = 1;
-        private float m_startTime;
+        protected int FixedFancingDirection = 1;
+        protected float m_startTime;
         public Rigidbody2D RB2D
         {
             get
@@ -45,9 +47,9 @@ namespace SCOM
                 return rb2d;
             }
         }
-        private Rigidbody2D rb2d;
+        protected Rigidbody2D rb2d;
 
-        private CircleCollider2D CC2D
+        protected CircleCollider2D CC2D
         {
             get
             {
@@ -69,8 +71,8 @@ namespace SCOM
             }
         }
 
-        private CircleCollider2D cc2d;
-        private BoxCollider2D BC2D
+        protected CircleCollider2D cc2d;
+        protected BoxCollider2D BC2D
         {
             get
             {
@@ -92,7 +94,7 @@ namespace SCOM
             }
         }
 
-        private BoxCollider2D bc2d;
+        protected BoxCollider2D bc2d;
         public Projectile(Unit _unit, ProjectileData m_ProjectileData)
         {
             unit = _unit;
@@ -111,7 +113,7 @@ namespace SCOM
                 this.tag = unit.tag;
                 this.transform.position = unit.Core.CoreCollisionSenses.UnitCenterPos + Vector3.right * ProjectileData.Pos.x * FancingDirection + Vector3.up * ProjectileData.Pos.y;
             }
-            this.gameObject.layer = LayerMask.NameToLayer("Projectile");
+            this.gameObject.layer = LayerMask.NameToLayer("Transparent");
             //this.transform.rotation = Quaternion.Euler(ProjectileData.Rot);
 
 
@@ -131,6 +133,7 @@ namespace SCOM
             //set ProjectilPrefab
             if (Spawned_ProjectileObject == null)
                 Spawned_ProjectileObject = Instantiate(ProjectileObject, this.transform);
+
             if (ProjectileData.EffectScale == Vector3.zero)
                 Spawned_ProjectileObject.gameObject.transform.localScale = Vector3.one;
             else
@@ -167,7 +170,7 @@ namespace SCOM
                 this.tag = unit.tag;
                 this.transform.position = unit.Core.CoreCollisionSenses.UnitCenterPos + Vector3.right * ProjectileData.Pos.x * FancingDirection + Vector3.up * ProjectileData.Pos.y;
             }
-            this.gameObject.layer = LayerMask.NameToLayer("Projectile");
+            this.gameObject.layer = LayerMask.NameToLayer("Transparent");
             //this.transform.rotation = Quaternion.Euler(ProjectileData.Rot);
 
             CC2D.radius = ProjectileData.Radius;
@@ -199,7 +202,7 @@ namespace SCOM
         }
 
         //발사체 투척
-        public void Shoot()
+        public virtual void Shoot()
         {
             //set startTime
             if (GameManager.Inst != null)
@@ -262,7 +265,7 @@ namespace SCOM
             }
         }
         // Update is called once per frame
-        void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (GameManager.Inst == null)
                 return;
@@ -299,16 +302,16 @@ namespace SCOM
             }
         }
 
-        private void OnEnable()
+        protected void OnEnable()
         {
             parent = this.GetComponentInParent<ProjectilePooling>();
         }
-        private void OnDisable()
+        protected void OnDisable()
         {
 
         }
 
-        private void Impact(bool _isSingleShoot = true)
+        protected void Impact(bool _isSingleShoot = true)
         {
             //Impact            
             if (unit != null)
@@ -345,7 +348,7 @@ namespace SCOM
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D coll)
+        protected void OnTriggerEnter2D(Collider2D coll)
         {
             //공격한 주체가 없을 때 무시
             if (unit == null)
@@ -355,7 +358,7 @@ namespace SCOM
             CheckCollision(coll);
         }
 
-        private void OnCollisionEnter2D(Collision2D coll)
+        protected void OnCollisionEnter2D(Collision2D coll)
         {
             if (!ProjectileData.isBound)
                 return;
@@ -369,7 +372,7 @@ namespace SCOM
             CheckCollision(coll.collider);
         }
 
-        private void CheckCollision(Collider2D coll)
+        protected void CheckCollision(Collider2D coll)
         {
             //같은 Tag는 무시
             if (coll.CompareTag(this.tag))
@@ -388,15 +391,8 @@ namespace SCOM
                 return;
             }
 
-            //피격 대상이 Platform이면 이펙트
-            if (!ProjectileData.isBound && ProjectileData.isCollisionPlatform && coll.gameObject.layer == LayerMask.NameToLayer("Platform"))
-            {
-                Impact(ProjectileData.isSingleShoot);
-                return;
-            }
-
             //Damagable이 아니면 무시
-            if (coll.gameObject.layer != LayerMask.NameToLayer("Damagable"))
+            if (coll.gameObject.layer != LayerMask.NameToLayer("Damageable"))
             {
                 return;
             }
@@ -420,7 +416,7 @@ namespace SCOM
                 if (ProjectileData.isOnHit)
                 {
                     //히트 시 효과
-                    unit.ItemManager?.ItemOnHitExecute(coll.GetComponentInParent<Unit>());
+                    unit.ItemManager?.ItemOnHitExecute(null, coll.GetComponentInParent<Unit>());
                     //unit.Inventory.ItemOnHitExecute(unit, coll.GetComponentInParent<Unit>());
                 }
 
