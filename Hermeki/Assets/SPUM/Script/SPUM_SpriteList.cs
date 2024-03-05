@@ -198,6 +198,12 @@ public class SPUM_SpriteList : MonoBehaviour
     {
         for (int i = 0; i < _objList.Count; i++)
         {
+            if (_sprites == null)
+            {
+                _objList[i].sprite = null;
+                continue;
+            }
+
             if (_sprites.Count - 1 >= i)
             {
                 _objList[i].sprite = _sprites[i];
