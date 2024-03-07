@@ -1,20 +1,22 @@
-using Photon.Pun;
-using Photon.Pun.Demo.Cockpit;
+ï»¿using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class NetworkingManager : MonoBehaviourPunCallbacks
 {
     public TMP_Text StatusText;
     public TMP_InputField roomInput, NickNameInput;
-
+    public PhotonView PV;
     private void Awake()
     {
         Screen.SetResolution(1920, 1080, false);
+    }
+    private void Start()
+    {
+        PlayerPrefs.SetInt("IsMulti", 0);
     }
 
     private void Update()
@@ -22,11 +24,57 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
     }
 
+
+    public void StartMultiPlay()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("RPCStartMultiPlay", RpcTarget.AllBuffered);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    [PunRPC]
+    public void RPCStartMultiPlay()
+    {
+        if ((!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom))
+        {
+            print($"ê²Œì„ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ.");
+            return;
+        }
+
+        PlayerPrefs.SetInt("IsMulti", 1);
+        StartCoroutine(LoadMyAsyncScene());
+    }
+
+    IEnumerator LoadMyAsyncScene()
+    {
+        // AsyncOperationì„ í†µí•´ Scene Load ì •ë„ë¥¼ ì•Œ ìˆ˜ ìˆë‹¤.
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(2);
+
+        // Sceneì„ ë¶ˆëŸ¬ì˜¤ëŠ” ê²ƒì´ ì™„ë£Œë˜ë©´, AsyncOperationì€ isDone ìƒíƒœê°€ ëœë‹¤.
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        //GameManager.Inst.Player       
+        //TitleSceneë‹«ê¸°
+        SceneManager.UnloadSceneAsync(0);
+    }
+
+
     public void Connect() => PhotonNetwork.ConnectUsingSettings();
     public void Disconnect() => PhotonNetwork.Disconnect();
     public void JoinLobby() => PhotonNetwork.JoinLobby();
 
-    public void CreateRoom() => PhotonNetwork.CreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 4 });
+    public void CreateRoom()
+    {
+        PhotonNetwork.CreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 4 });
+    }
     public void JoinRoom() => PhotonNetwork.JoinRoom(roomInput.text);
     public void JoinOrCreateRoom() => PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 4 }, null);
     public void JoinRandomRoom() => PhotonNetwork.JoinRandomRoom();
@@ -36,13 +84,13 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         base.OnConnectedToMaster();
-        print("¼­¹ö Á¢¼Ó ¿Ï·á");
+        print("ì„œë²„ ì ‘ì† ì™„ë£Œ");
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
     }
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
-        print("¹æ »ı¼º ¿Ï·á");
+        print("ë°© ìƒì„± ì™„ë£Œ");
     }
     public override void OnJoinedRoom()
     {
@@ -52,7 +100,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        print("¼­¹ö Á¢¼Ó ÇØÁ¦");
+        print("ì„œë²„ ì ‘ì† í•´ì œ");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -85,11 +133,11 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.InRoom)
         {
-            print($"ÇöÀç ¹æ ÀÌ¸§ :  {PhotonNetwork.CurrentRoom.Name}");
-            print($"ÇöÀç ¹æ ÀÎ¿ø ¼ö :  {PhotonNetwork.CurrentRoom.PlayerCount}");
-            print($"ÇöÀç ¹æ ÃÖ´ë ÀÎ¿ø ¼ö :  {PhotonNetwork.CurrentRoom.MaxPlayers}");
+            print($"í˜„ì¬ ë°© ì´ë¦„ :  {PhotonNetwork.CurrentRoom.Name}");
+            print($"í˜„ì¬ ë°© ì¸ì› ìˆ˜ :  {PhotonNetwork.CurrentRoom.PlayerCount}");
+            print($"í˜„ì¬ ë°© ìµœëŒ€ ì¸ì› ìˆ˜ :  {PhotonNetwork.CurrentRoom.MaxPlayers}");
 
-            string playerstr = "¹æ¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾î ¸ñ·Ï : ";
+            string playerstr = "ë°©ì— ìˆëŠ” í”Œë ˆì´ì–´ ëª©ë¡ : ";
             for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
             {
                 playerstr += PhotonNetwork.PlayerList[i].NickName + ", ";
@@ -98,11 +146,11 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            print($"Á¢¼ÓÇÑ ÀÎ¿ø ¼ö :  {PhotonNetwork.CountOfPlayers}");
-            print($"¹æ °³¼ö :  {PhotonNetwork.CountOfRooms}");
-            print($"¸ğµç ¹æ¿¡ ÀÖ´Â ÀÎ¿ø ¼ö :  {PhotonNetwork.CountOfPlayersInRooms}");
-            print($"·Îºñ¿¡ ÀÖ´Â°¡? :  {PhotonNetwork.InLobby}");
-            print($"Çö°á »óÅÂ :  {PhotonNetwork.IsConnected}");
+            print($"ì ‘ì†í•œ ì¸ì› ìˆ˜ :  {PhotonNetwork.CountOfPlayers}");
+            print($"ë°© ê°œìˆ˜ :  {PhotonNetwork.CountOfRooms}");
+            print($"ëª¨ë“  ë°©ì— ìˆëŠ” ì¸ì› ìˆ˜ :  {PhotonNetwork.CountOfPlayersInRooms}");
+            print($"ë¡œë¹„ì— ìˆëŠ”ê°€? :  {PhotonNetwork.InLobby}");
+            print($"í˜„ê²° ìƒíƒœ :  {PhotonNetwork.IsConnected}");
         }
     }
 }
