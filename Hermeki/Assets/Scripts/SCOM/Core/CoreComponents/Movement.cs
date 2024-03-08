@@ -1,11 +1,9 @@
+using Photon.Pun;
 using UnityEngine;
-
 namespace SCOM.CoreSystem
 {
     public class Movement : CoreComponent
     {
-        public Rigidbody2D RB { get; private set; }
-
         public int FancingDirection
         {
             get
@@ -27,7 +25,6 @@ namespace SCOM.CoreSystem
         protected override void Awake()
         {
             base.Awake();
-            RB = GetComponentInParent<Rigidbody2D>();
 
             FancingDirection = 1;
             CanSetVelocity = true;
@@ -35,7 +32,7 @@ namespace SCOM.CoreSystem
 
         public override void LogicUpdate()
         {
-            CurrentVelocity = RB.velocity;
+            CurrentVelocity = core.Unit.RB.velocity;
         }
 
         #region Set Func
@@ -73,9 +70,38 @@ namespace SCOM.CoreSystem
         }
         private void SetFinalVelocity()
         {
+            if (PV != null && !PV.IsMine)
+            {
+                return;
+            }
+
             if (CanSetVelocity)
             {
-                RB.velocity = workspace;
+                Debug.Log($"{core.Unit.name} Movement Velocity Update");
+                core.Unit.RB.velocity = workspace;
+                CurrentVelocity = workspace;
+            }
+            //if(core.Unit.isMulti)
+            //{
+            //    //PV.RPC("RPCSetFinalVelocity", RpcTarget.AllBuffered);
+            //}
+            //else
+            //if (PV != null && PV.IsMine) 
+            //{
+            //    if (CanSetVelocity)
+            //    {
+            //        RB.velocity = workspace;
+            //        CurrentVelocity = workspace;
+            //    }
+            //}
+        }
+
+        [PunRPC]
+        private void RPCSetFinalVelocity()
+        {
+            if (CanSetVelocity)
+            {
+                core.Unit.RB.velocity = workspace;
                 CurrentVelocity = workspace;
             }
         }
@@ -86,15 +112,23 @@ namespace SCOM.CoreSystem
         {
             if (xInput != 0 && xInput != FancingDirection)
             {
-                Flip();
+                if (PV != null && core.Unit.isMulti && PV.IsMine)
+                {
+                    PV.RPC("Flip", RpcTarget.AllBuffered);
+                }
+                else
+                {
+                    Flip();
+                }
             }
         }
 
+        [PunRPC]
         //2D Filp
         public void Flip()
         {
             FancingDirection *= -1;
-            RB.transform.Rotate(0.0f, 180.0f, 0.0f);
+            core.Unit.RB.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
 
         public void FlipToTarget()
