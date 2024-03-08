@@ -4,7 +4,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class NetworkingManager : MonoBehaviourPunCallbacks
 {
     public TMP_Text StatusText;
@@ -12,7 +12,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public PhotonView PV;
     private void Awake()
     {
-        Screen.SetResolution(1920, 1080, false);
+        Screen.SetResolution(1080, 720, false);
     }
     private void Start()
     {
@@ -26,10 +26,10 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
 
 
     public void StartMultiPlay()
-    {
+    {        
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("RPCStartMultiPlay", RpcTarget.AllBuffered);
+            RPCStartMultiPlay();
         }
         else
         {
@@ -45,6 +45,8 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
             print($"게임을 찾을 수 없음.");
             return;
         }
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { "IsPlay", true } });
 
         PlayerPrefs.SetInt("IsMulti", 1);
         StartCoroutine(LoadMyAsyncScene());
@@ -73,7 +75,10 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 4 });
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 4;
+        roomOptions.CustomRoomProperties = new Hashtable() { { "IsPlay", false } };
+        PhotonNetwork.CreateRoom(roomInput.text, roomOptions);
     }
     public void JoinRoom() => PhotonNetwork.JoinRoom(roomInput.text);
     public void JoinOrCreateRoom() => PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 4 }, null);
@@ -95,6 +100,12 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
+        Hashtable cp = PhotonNetwork.CurrentRoom.CustomProperties;
+        if ((bool)cp["IsPlay"])
+        {
+            PhotonNetwork.IsMessageQueueRunning = false;
+            RPCStartMultiPlay();
+        }
         print("Join Room");
     }
     public override void OnDisconnected(DisconnectCause cause)
