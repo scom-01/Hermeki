@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShadowController : MonoBehaviour
 {
@@ -16,7 +14,7 @@ public class ShadowController : MonoBehaviour
     protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
     private void Awake()
     {
-        unit = this.transform.root.GetComponent<Unit>();
+        unit = this.GetComponentInParent<Unit>();
         contactFilter_Ground.SetLayerMask(unit.Core.CoreCollisionSenses.WhatIsGround);
         contactFilter_Ground.useLayerMask = true;
         if (ShadowSprite != null)
