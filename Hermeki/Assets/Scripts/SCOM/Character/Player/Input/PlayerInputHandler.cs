@@ -1,12 +1,14 @@
+using Photon.Pun;
 using System;
 using System.Collections;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : MonoBehaviourPunCallbacks
 {
+    private Unit unit;
+    public PhotonView PV;
     public PlayerInput playerInput
     {
         get => GetComponent<PlayerInput>();
@@ -80,7 +82,10 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerInputActions == null)
             playerInputActions = new PlayerInputActions();
+
         int count = Enum.GetValues(typeof(CombatInputs)).Length;
+        unit = this.GetComponentInParent<Unit>();
+        PV = this.GetComponent<PhotonView>();
 
         JumpInput = false;
         DashInput = false;
@@ -375,7 +380,7 @@ public class PlayerInputHandler : MonoBehaviour
                 return;
             }
 
-            if(OnESCInput_MultiAction.Excute())
+            if (OnESCInput_MultiAction.Excute())
             {
                 OnESCInput_MultiAction.Clear();
             }
@@ -448,14 +453,37 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region SendMessage
-    public void OnMove(InputValue value)
+    private void OnMove(InputValue value)
     {
         Vector2 input = value.Get<Vector2>();
 
-        if (Mathf.Abs(input.x) > 0.1 || Mathf.Abs(input.y) > 0.1) 
+        //if(PV.IsMine)
+        //{
+        //    //PV.RPC("RPC_OnMove", RpcTarget.AllBuffered, input);
+        //}        
+        //else if (!unit.isMulti)
+        if (PV.IsMine)
         {
-            NormInputX = Mathf.Clamp(Mathf.RoundToInt(10 * input.x), -1, 1);
-            NormInputY = Mathf.Clamp(Mathf.RoundToInt(10 * input.y), -1, 1);
+            if (Mathf.Abs(input.x) > 0.1 || Mathf.Abs(input.y) > 0.1)
+            {
+                NormInputX = Mathf.Clamp(Mathf.RoundToInt(10 * input.x), -1, 1);
+                NormInputY = Mathf.Clamp(Mathf.RoundToInt(10 * input.y), -1, 1);
+            }
+            else
+            {
+                NormInputX = 0;
+                NormInputY = 0;
+            }
+        }
+    }
+
+    [PunRPC]
+    private void RPC_OnMove(Vector2 _input)
+    {
+        if (Mathf.Abs(_input.x) > 0.1 || Mathf.Abs(_input.y) > 0.1)
+        {
+            NormInputX = Mathf.Clamp(Mathf.RoundToInt(10 * _input.x), -1, 1);
+            NormInputY = Mathf.Clamp(Mathf.RoundToInt(10 * _input.y), -1, 1);
         }
         else
         {
@@ -463,20 +491,65 @@ public class PlayerInputHandler : MonoBehaviour
             NormInputY = 0;
         }
     }
-
     private void OnJump()
+    {
+        //if (PV.IsMine)
+        //{
+        //    //PV.RPC("RPC_OnJump", RpcTarget.AllBuffered);
+        //}
+        //else if (!unit.isMulti)
+        if (PV.IsMine)
+        {
+            JumpInput = true;
+        }
+    }
+    [PunRPC]
+    private void RPC_OnJump()
     {
         JumpInput = true;
     }
 
     private void OnPrimaryAction()
     {
+        //if (PV.IsMine)
+        //{
+        //    //PV.RPC("RPC_OnPrimaryAction", RpcTarget.AllBuffered);
+        //}
+        //else if (!unit.isMulti)
+        if (PV.IsMine)
+        {
+            if (PrimaryInput)
+                return;
+            PrimaryInput = true;
+            PrimaryInputStartTime = Time.time;
+        }
+    }
+    [PunRPC]
+    private void RPC_OnPrimaryAction()
+    {
         if (PrimaryInput)
             return;
         PrimaryInput = true;
         PrimaryInputStartTime = Time.time;
     }
+
     private void OnSecondaryAction()
+    {
+        //if (PV.IsMine)
+        //{
+        //    //PV.RPC("RPC_OnSecondaryAction", RpcTarget.AllBuffered);
+        //}
+        //else if(!unit.isMulti)
+        if (PV.IsMine)
+        {
+            if (SecondaryInput)
+                return;
+            SecondaryInput = true;
+            SecondaryInputStartTime = Time.time;
+        }
+    }
+    [PunRPC]
+    private void RPC_OnSecondaryAction()
     {
         if (SecondaryInput)
             return;
@@ -485,8 +558,22 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void OnInteractive()
     {
+        //if (PV.IsMine)
+        //{
+        //    PV.RPC("RPC_OnInteractive", RpcTarget.AllBuffered);
+        //}
+        //else if (!unit.isMulti)
+        if (PV.IsMine)
+        {
+            InteractionInput = true;
+        }
+    }
+    [PunRPC]
+    private void RPC_OnInteractive()
+    {
         InteractionInput = true;
     }
+
     #endregion
 
     /// <summary>
@@ -525,7 +612,7 @@ public class PlayerInputHandler : MonoBehaviour
     //홀드 시간
 
     #region CheckHoldTime
-    private void CheckHoldTime(ref bool input, ref float inputStartTime,float holdTime)
+    private void CheckHoldTime(ref bool input, ref float inputStartTime, float holdTime)
     {
         if (input == false)
             return;
