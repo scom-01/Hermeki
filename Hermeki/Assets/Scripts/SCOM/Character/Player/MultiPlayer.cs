@@ -1,8 +1,9 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class MultiPlayer : Player,IPunObservable
+public class MultiPlayer : Player, IPunObservable
 {
+    public PhotonView PV;
     #region Unity Callback Func
     protected override void Awake()
     {
@@ -84,7 +85,7 @@ public class MultiPlayer : Player,IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if(stream.IsWriting)
+        if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
         }

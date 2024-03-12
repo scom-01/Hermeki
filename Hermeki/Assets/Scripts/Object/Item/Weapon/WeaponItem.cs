@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
-
 public enum WeaponStyle
 {
     Sword = 0,

@@ -29,11 +29,6 @@ public class PlayerGroundedState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        ////대쉬카운트 초기화
-        //if (player.DashState.CheckIfResetDash())
-        //{
-        //    player.DashState.ResetDash(player.playerData.dashCount);
-        //}
 
         if (CheckActionInput())
         {

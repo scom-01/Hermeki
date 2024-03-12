@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EquipObject : MonoBehaviour,IInteractive
+public abstract class EquipObject : MonoBehaviour, IInteractive
 {
     public abstract void Interactive(Unit unit);
     public abstract void UnInteractive(Unit unit);

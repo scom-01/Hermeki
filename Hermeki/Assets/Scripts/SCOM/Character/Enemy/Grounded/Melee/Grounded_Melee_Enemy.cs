@@ -1,8 +1,4 @@
-﻿using Pathfinding;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Grounded_Melee_Enemy : Enemy
 {
@@ -39,7 +35,6 @@ public class Grounded_Melee_Enemy : Enemy
         base.Init();
         FSM.Initialize(IdleState);
     }
-
     public override void DieEffect()
     {
         base.DieEffect();

@@ -1,7 +1,5 @@
 using SCOM.CoreSystem;
-using System;
 using UnityEngine;
-using UnityEngine.Localization.PropertyVariants.TrackedProperties;
 
 public class EnemyCollisionSenses : CollisionSenses
 {
@@ -251,6 +249,7 @@ public class EnemyCollisionSenses : CollisionSenses
     }
     #endregion
 
+#if UNITY_EDITOR
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
@@ -284,6 +283,7 @@ public class EnemyCollisionSenses : CollisionSenses
             new Vector2((core.Unit.UnitData as EnemyData).UnitDetectedDistance, CC2D.bounds.size.y));
     }
 
+#endif
     protected override void Awake()
     {
         base.Awake();

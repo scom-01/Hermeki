@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SCOM.CoreSystem
 {
-
     public class CoreComponent : MonoBehaviour, ILogicUpdate
     {
         protected Core core

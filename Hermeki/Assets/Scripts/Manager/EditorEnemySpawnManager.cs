@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +22,7 @@ public class EditorEnemySpawnManager : MonoBehaviour
 
     private void Spawn(Vector3 pos, GameObject enemy)
     {
-        GameObject _enemy = Instantiate(enemy);
-        _enemy.transform.position = pos;
+            GameObject _enemy = Instantiate(enemy);
+            _enemy.transform.position = pos;
     }
 }

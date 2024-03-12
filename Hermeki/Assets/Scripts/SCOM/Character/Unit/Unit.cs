@@ -1,10 +1,12 @@
-using System.Collections;
+using Photon.Pun;
 using SCOM.CoreSystem;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public bool isMulti = false;
     #region Component
     public Core Core
     {
@@ -152,6 +154,7 @@ public class Unit : MonoBehaviour
 
         CC2D = GetComponent<CapsuleCollider2D>();
         if (CC2D == null) CC2D = this.GameObject().AddComponent<CapsuleCollider2D>();
+        CC2D.sharedMaterial = UnitData.UnitCC2DMaterial;
 
         SR = GetComponent<SpriteRenderer>();
         //if (SR == null) SR = this.GameObject().AddComponent<SpriteRenderer>();
@@ -217,7 +220,7 @@ public class Unit : MonoBehaviour
 
         FSM.CurrentState.LogicUpdate();
     }
-    
+
 
     protected virtual void FixedUpdate()
     {
@@ -278,10 +281,9 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public virtual void DieEffect()
-    {
-    }
+    public virtual void DieEffect() { }
 
+    public virtual void Jump() { }
     public void SetActiveFalse()
     {
         gameObject.SetActive(false);

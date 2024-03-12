@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class Player : Unit
 {
@@ -30,6 +31,7 @@ public class Player : Unit
     public PlayerInputHandler InputHandler;// { get; private set; }
     [HideInInspector]
     public PlayerData playerData;
+    public GameObject Controller;
     #endregion
 
     #region Unity Callback Func
@@ -44,28 +46,28 @@ public class Player : Unit
         JumpState = new PlayerJumpState(this, "inAir");    //점프하는 순간 공중상태이므로
         InAirState = new PlayerInAirState(this, "inAir");
         LandState = new PlayerLandState(this, "idle");
-        //WallJumpState = new PlayerWallJumpState(this, "inAir");
-        //DashState = new PlayerDashState(this, "dash");
-        DeathState = new PlayerDeathState(this, "death");
-        //PrimaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary)); //, Inventory.weapon);
-        //SecondaryAttackState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
-        //PrimarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.primary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
-        //SecondarySkillState = new PlayerWeaponState(this, "action", ((int)CombatInputs.primary == (int)CombatInputs.secondary));//, Inventory.weapons[(int)CombatInputs.secondary]);        
+        DeathState = new PlayerDeathState(this, "death");       
         Inventory?.Weapon.SetCore(Core);
     }
 
-    private void Init()
+    protected void Init()
     {
-        //InputHandler = this.GetComponent<PlayerInputHandler>();
-        //if (InputHandler == null) InputHandler = this.AddComponent<PlayerInputHandler>();
-
         FSM.Initialize(IdleState);
     }
 
     protected override void Start()
     {
         base.Start();
-
+        //if (PV != null && PV.IsMine)
+        //{
+        //    InputHandler.gameObject.SetActive(true);
+        //    //InputHandler = Instantiate(Controller, this.transform).GetComponent<PlayerInputHandler>();
+        //}
+        //else if(!isMulti)
+        {
+            InputHandler.gameObject.SetActive(true);
+            //InputHandler = Instantiate(Controller, this.transform).GetComponent<PlayerInputHandler>();
+        }
         Init();
     }
 
