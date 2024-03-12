@@ -1,8 +1,7 @@
 ﻿using Cinemachine;
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviourPunCallbacks
 {
@@ -12,32 +11,51 @@ public class LevelManager : MonoBehaviourPunCallbacks
     public GameObject UserObject;
     public Transform StartPos;
 
-
-    [Header("Photon")]
-    public bool isMulti = false;
-    public string PhotonUserObjectPath;
-    public PhotonView PV;
-
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
+    private void Awake()
+    {
+        Application.targetFrameRate = 120;
+        if (GameManager.Inst != null)
+        {
+            GameManager.Inst.LevelManager = this;
+        }
+    }
     public virtual void Start()
     {
-        Vector3 _Pos = StartPos.position;
-        if (PlayerPrefs.GetInt("IsMulti") == 1)
-            isMulti = true;
-        if (isMulti)
+        //GameStart();
+    }
+    public void GameStart()
+    {
+        PhotonNetwork.IsMessageQueueRunning = true;
+        Vector3 _Pos = Vector3.zero;
+        if (StartPos != null)
         {
-            GameObject obj = PhotonNetwork.Instantiate(PhotonUserObjectPath, _Pos, Quaternion.identity);
-            obj.name = PhotonNetwork.NickName;
-            player = obj.GetComponent<Unit>();
+            _Pos = StartPos.position;
         }
-        else
-        {
-            GameObject obj = Instantiate(UserObject, StartPos);
-            player = obj.GetComponent<Unit>();
-        }
-
+        
+        GameObject obj = Instantiate(UserObject, StartPos);
+        player = obj.GetComponent<Unit>();
+        
         if (VirtualCamera != null && player != null)
             VirtualCamera.Follow = player.transform;
+    }
+    //private void SpawnPlayer()
+    //{
+    //    Vector3 _Pos = StartPos.position;
+    //    GameObject obj = PhotonNetwork.Instantiate(PhotonUserObjectPath, _Pos, Quaternion.identity);
+    //    obj.name = PhotonNetwork.NickName;
+    //    player = obj.GetComponent<Unit>();
+    //}
+
+    public void GoLobby()
+    {
+        SceneManager.LoadSceneAsync(0);
+        PhotonNetwork.Disconnect();
+    }
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        Debug.Log("LeveleManager Room Join");
     }
 }

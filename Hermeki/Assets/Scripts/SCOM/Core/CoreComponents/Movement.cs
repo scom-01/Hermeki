@@ -1,4 +1,3 @@
-using Photon.Pun;
 using UnityEngine;
 namespace SCOM.CoreSystem
 {
@@ -70,41 +69,14 @@ namespace SCOM.CoreSystem
         }
         private void SetFinalVelocity()
         {
-            if (PV != null && !PV.IsMine)
-            {
-                return;
-            }
-
             if (CanSetVelocity)
             {
                 Debug.Log($"{core.Unit.name} Movement Velocity Update");
                 core.Unit.RB.velocity = workspace;
                 CurrentVelocity = workspace;
             }
-            //if(core.Unit.isMulti)
-            //{
-            //    //PV.RPC("RPCSetFinalVelocity", RpcTarget.AllBuffered);
-            //}
-            //else
-            //if (PV != null && PV.IsMine) 
-            //{
-            //    if (CanSetVelocity)
-            //    {
-            //        RB.velocity = workspace;
-            //        CurrentVelocity = workspace;
-            //    }
-            //}
         }
 
-        [PunRPC]
-        private void RPCSetFinalVelocity()
-        {
-            if (CanSetVelocity)
-            {
-                core.Unit.RB.velocity = workspace;
-                CurrentVelocity = workspace;
-            }
-        }
         #endregion Set Func
 
         #region Flip
@@ -112,18 +84,10 @@ namespace SCOM.CoreSystem
         {
             if (xInput != 0 && xInput != FancingDirection)
             {
-                if (PV != null && core.Unit.isMulti && PV.IsMine)
-                {
-                    PV.RPC("Flip", RpcTarget.AllBuffered);
-                }
-                else
-                {
-                    Flip();
-                }
+                Flip();
             }
         }
 
-        [PunRPC]
         //2D Filp
         public void Flip()
         {
