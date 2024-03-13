@@ -5,26 +5,27 @@ using UnityEngine;
 
 public class SpawnStartItem : ActionEvent
 {
-    public List<GameObject> equipItems = new List<GameObject>();
+    public List<GameObject> EquipItems = new List<GameObject>();
     public Transform SpawnPos;
     public float interval = 2f;
     protected override void Action()
     {
-        if (equipItems?.Count == 0 && SpawnPos == null)
+        if (EquipItems?.Count == 0 && SpawnPos == null)
             return;
 
-        for (int i = 0; i < equipItems.Count; i++)
+        for (int i = 0; i < EquipItems.Count; i++)
         {
-            if (equipItems[i] == null)
+            if (EquipItems[i] == null)
                 continue;
-            GameObject obj = Instantiate(equipItems[i]);
+            GameObject obj = Instantiate(EquipItems[i]);
             obj.transform.position = SpawnPos.position + Vector3.right * interval * i;
         }
     }
-    public void SetEquipItem(List<GameObject> objects)
+    public bool SetEquipItem(List<GameObject> objects)
     {
         if (objects == null)
-            return;
-        equipItems = objects.ToList();
+            return false;
+        EquipItems = objects.ToList();
+        return true;
     }
 }
