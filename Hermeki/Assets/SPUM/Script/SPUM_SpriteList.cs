@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SPUM_SpriteList : MonoBehaviour
@@ -255,5 +256,69 @@ public class SPUM_SpriteList : MonoBehaviour
             return;
 
         _obj.sprite = _sprite;
+    }
+
+    public void SetHair(string Path)
+    {
+        if(Path == null)
+        {
+            _hairList[0].sprite = null;
+            _hairListString[0] = "";
+            return;
+        }
+        _hairListString[0] = Path;
+        string tPath = Path;
+        tPath = tPath.Replace("Assets/Resources/", "");
+        tPath = tPath.Replace(".png", "");
+        Sprite tSP = Resources.Load<Sprite>(tPath);
+        _hairList[0].sprite = tSP;
+    }
+
+    public void SetBody(string Path)
+    {
+        if (Path == null)
+        {
+            foreach (var cloth in _clothList)
+            {
+                cloth.sprite = null;
+            }
+            for (int i = 0; i < _clothListString.Count; i++)
+            {
+                _clothListString[i] = "";
+            }
+            _clothList[0].sprite = GlobalValue.Base_SPUM_Cloth;
+            _clothListString[0] = Path;
+            return;
+        }
+        string tPath = Path;
+        tPath = tPath.Replace("Assets/Resources/", "");
+        tPath = tPath.Replace(".png", "");
+        Sprite[] tSP = Resources.LoadAll<Sprite>(tPath);
+        for (int i = 0; i < _clothList.Count; i++)
+        {
+            if (i >= tSP.Length)
+            {
+                _clothList[i].sprite = null;
+                _clothListString[i] = "";
+                continue;
+            }
+            _clothList[i].sprite = tSP[i];
+            _clothListString[i] = tPath;
+        }
+    }
+    public void SetBack(string Path)
+    {
+        if (Path == null)
+        {
+            _backList[0].sprite = null;
+            _backListString[0] = "";
+            return;
+        }
+        string tPath = Path;
+        tPath = tPath.Replace("Assets/Resources/", "");
+        tPath = tPath.Replace(".png", "");
+        Sprite tSP = Resources.Load<Sprite>(tPath);
+        _backList[0].sprite = tSP;
+        _backListString[0] = tPath;
     }
 }
