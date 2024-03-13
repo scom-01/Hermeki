@@ -13,14 +13,15 @@ public class OpenGate : InteractiveObject
         base.Start();
     }
 
-    public override void Interactive()
+    public override bool Interactive()
     {
         if (isDone)
-            return;
+            return false;
 
         Debug.LogWarning("OpenGate");
         GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.Cfg, false);
         GameManager.Inst?.ClearScene();
         isDone = true;
+        return true;
     }
 }

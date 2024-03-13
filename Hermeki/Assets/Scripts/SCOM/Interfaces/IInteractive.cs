@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IInteractive
 {
-    public virtual void Interactive() {}
-    public virtual void UnInteractive() { }
+    public virtual bool Interactive() { return true; }
+    public virtual bool UnInteractive() { return true; }
 }

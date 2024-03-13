@@ -16,10 +16,10 @@ public class InstantCutScene : InteractiveObject
         base.Start();
     }
 
-    public override void Interactive()
+    public override bool Interactive()
     {
         if (isDone)
-            return;
+            return false;
 
         if (CutScene != null)
         {
@@ -28,5 +28,6 @@ public class InstantCutScene : InteractiveObject
             Instantiate(CutScene);
         }
         isDone = true;
+        return true;
     }
 }
