@@ -1,15 +1,19 @@
 ﻿using Cinemachine;
-using Photon.Pun;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviourPunCallbacks
+public class LevelManager : MonoBehaviour
 {
     [Header("Unit")]
     [Tooltip("플레이어")]
     public Unit player;
     public GameObject UserObject;
     public Transform StartPos;
+
+    public List<StageController> StageList = new List<StageController>();
+    public int CurrStageIdx = 0;
 
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
@@ -23,11 +27,10 @@ public class LevelManager : MonoBehaviourPunCallbacks
     }
     public virtual void Start()
     {
-        //GameStart();
+        StageList = GetComponentsInChildren<StageController>().ToList();
     }
     public void GameStart()
     {
-        PhotonNetwork.IsMessageQueueRunning = true;
         Vector3 _Pos = Vector3.zero;
         if (StartPos != null)
         {
@@ -40,22 +43,41 @@ public class LevelManager : MonoBehaviourPunCallbacks
         if (VirtualCamera != null && player != null)
             VirtualCamera.Follow = player.transform;
     }
-    //private void SpawnPlayer()
-    //{
-    //    Vector3 _Pos = StartPos.position;
-    //    GameObject obj = PhotonNetwork.Instantiate(PhotonUserObjectPath, _Pos, Quaternion.identity);
-    //    obj.name = PhotonNetwork.NickName;
-    //    player = obj.GetComponent<Unit>();
-    //}
 
     public void GoLobby()
     {
         SceneManager.LoadSceneAsync(0);
-        PhotonNetwork.Disconnect();
+        
     }
-    public override void OnJoinedRoom()
+
+    public void StartStage()
     {
-        base.OnJoinedRoom();
-        Debug.Log("LeveleManager Room Join");
+        if (StageList.Count == 0)
+            return;
+
+        if (!StageList[CurrStageIdx].StartStage())
+        {
+            return;
+        }
+
+        return;
+    }
+    public bool GoNextStage(Player player)
+    {
+        if (player == null)
+            return false;
+
+        CurrStageIdx++;
+        if (CurrStageIdx >= StageList.Count)
+        {
+            CurrStageIdx = StageList.Count - 1;
+            return false;
+        }
+        player.transform.position = StageList[CurrStageIdx].StartPos.position;
+        if (!StageList[CurrStageIdx].StartStage())
+        {
+            return false;
+        }
+        return true;
     }
 }

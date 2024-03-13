@@ -49,6 +49,24 @@ public class GameManager : MonoBehaviour
     }
     private PlayerInputHandler _inputHandler;
 
+    public LevelManager LevelManager
+    {
+        get
+        {
+            if (Inst == null)
+                return null;
+
+            if (_levelManager == null)
+                return null;
+
+            return _levelManager;
+        }
+        set
+        {
+            _levelManager = value;
+        }
+    }
+private LevelManager _levelManager;
     public StageManager StageManager
     {
         get
