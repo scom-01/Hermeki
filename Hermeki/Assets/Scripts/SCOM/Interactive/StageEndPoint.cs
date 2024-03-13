@@ -11,18 +11,15 @@ public class StageEndPoint : InteractiveObject
     {
         if (!this.CompareTag(Tag))
             return false;
+        
         return true;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer != Interactive_Layer)
-        {
-            return;
-        }
-
         if (!Interactive())
-        {
+        {            
             return;
         }
+        this.GetComponentInParent<StageController>().EnterEndpos(collision.GetComponent<Player>());
     }
 }
