@@ -12,9 +12,18 @@ public class LevelManager : MonoBehaviour
     public GameObject UserObject;
     public Transform StartPos;
 
+    [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
+    public List<SelectStartLevel> SelectUIList = new List<SelectStartLevel>();
+    
+    [Tooltip("현재 진행중인 스테이지")]
     public int CurrStageIdx = 0;
+    [Tooltip("스테이지 난이도")]
+    public int StageLevel = 0;
+    public int MaxLevel = 5;
 
+    [Header("UI")]
+    public Canvas SelectLevelCanvas;
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
     private void Awake()
@@ -28,6 +37,10 @@ public class LevelManager : MonoBehaviour
     public virtual void Start()
     {
         StageList = GetComponentsInChildren<StageController>().ToList();
+        if (SelectLevelCanvas != null)
+        {
+            SelectUIList = SelectLevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
+        }
     }
     public void GameStart()
     {
@@ -46,10 +59,9 @@ public class LevelManager : MonoBehaviour
 
     public void GoLobby()
     {
-        SceneManager.LoadSceneAsync(0);
-        
+        SceneManager.LoadSceneAsync(0);        
     }
-
+    #region Stage Func
     public void StartStage()
     {
         if (StageList.Count == 0)
@@ -74,10 +86,37 @@ public class LevelManager : MonoBehaviour
             return false;
         }
         player.transform.position = StageList[CurrStageIdx].StartPos.position;
+        if (VirtualCamera != null)
+        {
+            VirtualCamera.transform.position = player.transform.position;
+        }
         if (!StageList[CurrStageIdx].StartStage())
         {
             return false;
         }
         return true;
     }
+    public bool ChangeLevel(int idx)
+    {
+        if (idx >= MaxLevel) 
+        {
+            idx = MaxLevel;            
+        }
+        StageLevel = idx;
+        return true;
+    }
+
+    public void SelectStart(int idx)
+    {
+        for (int i = 0; i < SelectUIList.Count; i++)
+        {
+            if(i == idx)
+            {
+                SelectUIList[idx].isSelect = true;
+                continue;
+            }
+            SelectUIList[i].isSelect = false;
+        }
+    }
+    #endregion
 }
