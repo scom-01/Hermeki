@@ -23,6 +23,13 @@ public class StageController : MonoBehaviour
         {
             ControllTM(false);
         }
+
+
+        if (this.TryGetComponent(out ActionEventHandler _action))
+        {
+            _action.EndAction();
+        }
+
         return true;
     }
 
@@ -41,7 +48,7 @@ public class StageController : MonoBehaviour
 
         if (this.TryGetComponent(out ActionEventHandler _action))
         {
-            _action.Action();
+            _action.StartAction();
         }
         return true;
     }

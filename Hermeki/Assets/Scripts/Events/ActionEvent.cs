@@ -9,7 +9,6 @@ public class ActionEvent : MonoBehaviour
         actionEventHandler = this.GetComponentInParent<ActionEventHandler>();
         if (actionEventHandler == null)
             return;
-        actionEventHandler.EventAction += Action;
     }
     protected virtual void Action() { }
 }

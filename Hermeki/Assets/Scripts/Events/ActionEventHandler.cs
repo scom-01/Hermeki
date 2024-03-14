@@ -5,6 +5,18 @@ using UnityEngine;
 
 public class ActionEventHandler : MonoBehaviour
 {
-    public event Action EventAction;
-    public void Action() => EventAction?.Invoke();
+    private event Action StartEventAction;
+    private event Action EndEventAction;
+    public void StartAction() => StartEventAction?.Invoke();
+    public void AddStartAction(Action action)
+    {
+        StartEventAction -= action;
+        StartEventAction += action;
+    }
+    public void EndAction() => EndEventAction?.Invoke();
+    public void AddEndAction(Action action)
+    {
+        EndEventAction -= action;
+        EndEventAction += action;
+    }
 }

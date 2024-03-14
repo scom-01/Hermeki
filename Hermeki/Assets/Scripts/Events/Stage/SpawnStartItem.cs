@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpawnStartItem : ActionEvent
+public class SpawnStartItem : StartActionEvent
 {
     public List<GameObject> EquipItems = new List<GameObject>();
     public Transform SpawnPos;
