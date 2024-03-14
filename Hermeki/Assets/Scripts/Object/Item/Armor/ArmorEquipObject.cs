@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class ArmorEquipObject : EquipObject
 {
-    //public PhotonView PV;
     public Unit targetUnit;
     public ArmorEquipObject(EquipItemData data) : base(data)
     {
@@ -13,9 +12,7 @@ public class ArmorEquipObject : EquipObject
     {
         Debug.Log($"Armor Equip Interactive {unit.name}");
         unit.ItemManager?.AddArmorItem(Data);
-        this.transform.root.gameObject.SetActive(false);
-
-        //PV?.RPC("RPC_Interactive", RpcTarget.AllBuffered, unit.PV.ViewID);
+        this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
     }
     public override void UnInteractive(Unit unit)
     {
@@ -27,12 +24,12 @@ public class ArmorEquipObject : EquipObject
     {
         if (SpriteRenderers == null || Data.dataSO == null || Data.CurrentDurability == 0)
         {
-            this.transform.root.gameObject.SetActive(false);
+            this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
             return;
         }
 
-        if (!this.transform.root.gameObject.activeSelf)
-            this.transform.root.gameObject.SetActive(true);
+        if (!this.GetComponentInParent<Rigidbody2D>().gameObject.activeSelf)
+            this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(true);
 
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
 
@@ -41,18 +38,4 @@ public class ArmorEquipObject : EquipObject
             SpriteRenderers[i].sprite = Data.dataSO.Sprite[idx].sprites[i];
         }
     }
-
-    #region RPC
-    //[PunRPC]
-    //private void RPC_Interactive(int idx)
-    //{
-    //    PhotonView.Find(idx).GetComponent<Unit>()?.ItemManager?.AddArmorItem(Data);
-    //    this.transform.root.gameObject.SetActive(false);
-    //}
-    //[PunRPC]
-    //private void RPC_UnInteractive()
-    //{
-
-    //}
-    #endregion
 }

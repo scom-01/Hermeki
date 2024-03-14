@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class WeaponEquipObject : EquipObject
 {
-    //public PhotonView PV;
     public Unit targetUnit;
     public WeaponEquipObject(EquipItemData data) : base(data)
     {
@@ -13,42 +12,25 @@ public class WeaponEquipObject : EquipObject
     {
         Debug.Log($"Weapon Equip Interactive {unit.name}");
         unit.ItemManager?.AddWeaponItem(Data);
-        this.transform.root.gameObject.SetActive(false);
-        //PV?.RPC("RPC_Interactive", RpcTarget.AllBuffered, unit.PV.ViewID);
+        this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
     }
 
     public override void UnInteractive(Unit unit)
     {
-        Debug.Log($"Weapon Equip UnInteractive {unit.name}");        
-        //PV?.RPC("RPC_UnInteractive", RpcTarget.AllBuffered);
+        Debug.Log($"Weapon Equip UnInteractive {unit.name}");  
     }
     [ContextMenu("SetSpriteRenderer")]
     public override void SetSpriteRenderer()
     {
         if (itemObject == null || Data.dataSO == null || Data.CurrentDurability == 0)
         {
-            this.transform.root.gameObject.SetActive(false);
+            this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
             return;
         }
 
-        if (!this.transform.root.gameObject.activeSelf)
-            this.transform.root.gameObject.SetActive(true);
+        if (!this.GetComponentInParent<Rigidbody2D>().gameObject.activeSelf)
+            this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(true);
 
         itemObject.SetSpriteRenderer(Data);
     }
-
-    #region RPC
-    //[PunRPC]
-    //private void RPC_Interactive(int idx)
-    //{
-    //    PhotonView.Find(idx).GetComponent<Unit>()?.ItemManager?.AddWeaponItem(Data);
-    //    this.transform.root.gameObject.SetActive(false);
-    //}
-    //[PunRPC]
-    //private void RPC_UnInteractive()
-    //{
-
-    //}
-
-    #endregion
 }

@@ -71,7 +71,6 @@ namespace SCOM.CoreSystem
         {
             if (CanSetVelocity)
             {
-                Debug.Log($"{core.Unit.name} Movement Velocity Update");
                 core.Unit.RB.velocity = workspace;
                 CurrentVelocity = workspace;
             }

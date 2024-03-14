@@ -1,11 +1,10 @@
-using Photon.Pun;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
-public class PlayerInputHandler : MonoBehaviourPunCallbacks
+public class PlayerInputHandler : MonoBehaviour
 {
     private Unit unit;
     public PlayerInput playerInput
