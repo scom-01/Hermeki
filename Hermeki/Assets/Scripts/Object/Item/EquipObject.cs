@@ -20,7 +20,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     }
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag(this.tag))
+        if (collision.CompareTag(this.tag)|| !collision.CompareTag("Player"))
             return;
 
         //Ground
