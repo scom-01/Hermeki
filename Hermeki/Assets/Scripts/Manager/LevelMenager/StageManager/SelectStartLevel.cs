@@ -76,7 +76,7 @@ public class SelectStartLevel : MonoBehaviour
             StartItems.SetEquipItem(StartingItem);
         }
 
-        GameManager.Inst.LevelManager.ChangeLevel(SelectedLevel);
+        GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel);
     }
     public void SetStageLevel(int idx)
     {
@@ -107,6 +107,6 @@ public class SelectStartLevel : MonoBehaviour
     {
         SelectedLevel++;
         SetStageLevel(SelectedLevel);
-        GameManager.Inst.LevelManager.SelectStart(currIdx);
+        GameManager.Inst?.LevelManager?.SelectStart(currIdx);
     }
 }
