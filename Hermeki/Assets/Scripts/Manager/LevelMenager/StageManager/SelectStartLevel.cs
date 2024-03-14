@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,13 +13,13 @@ public class SelectStartLevel : MonoBehaviour
 
     [Header("Setting")]
     public List<GameObject> StartingItem;
-    public SpawnStartItem StartItems;    
+    public SpawnStartItem StartItems;
     public int SelectedLevel
     {
         get => _currLevel;
         set
         {
-            if(value > MaxLevel)
+            if (value > MaxLevel)
             {
                 value = 0;
             }
@@ -29,6 +28,7 @@ public class SelectStartLevel : MonoBehaviour
     }
     [SerializeField]
     private int _currLevel;
+    private int currIdx;
     /// <summary>
     /// 난이도를 표현할 UI Image
     /// </summary>
@@ -50,6 +50,18 @@ public class SelectStartLevel : MonoBehaviour
     }
     private bool _isSelect;
     private int MaxLevel = 5;
+    private void Awake()
+    {
+        var list = this.transform.parent.GetComponentsInChildren<SelectStartLevel>();
+        for (int i = 0; i < list.Length; i++)
+        {
+            if (list[i] == this)
+            {
+                currIdx = i;
+                return;
+            }
+        }
+    }
 
     private void Start()
     {
@@ -63,7 +75,7 @@ public class SelectStartLevel : MonoBehaviour
         {
             StartItems.SetEquipItem(StartingItem);
         }
-            
+
         GameManager.Inst.LevelManager.ChangeLevel(SelectedLevel);
     }
     public void SetStageLevel(int idx)
@@ -95,5 +107,6 @@ public class SelectStartLevel : MonoBehaviour
     {
         SelectedLevel++;
         SetStageLevel(SelectedLevel);
+        GameManager.Inst.LevelManager.SelectStart(currIdx);
     }
 }
