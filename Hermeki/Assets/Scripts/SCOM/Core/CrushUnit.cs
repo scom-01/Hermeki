@@ -27,7 +27,8 @@ public class CrushUnit : CoreComponent
                 if (unit.Core.CoreCollisionSenses.GroundCenterPos.y >= ((core.CoreCollisionSenses.HeaderCenterPos.y + core.CoreCollisionSenses.UnitCenterPos.y) / 2))
                 {
                     core.CoreDamageReceiver.Damage(unit, 1, 1);
-                    unit.Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(0, 1f), 10, false);
+                    unit.Core.CoreMovement.SetVelocityY(10);
+                    //unit.Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(0, 1f), 10, false);
                 }
                 else
                 {
