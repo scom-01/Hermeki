@@ -1,8 +1,6 @@
-using System;
 using SCOM;
-using SCOM.Weapons.Components;
+using System;
 using UnityEngine;
-using UnityEngine.Localization;
 
 [Serializable]
 public class ItemEventSet

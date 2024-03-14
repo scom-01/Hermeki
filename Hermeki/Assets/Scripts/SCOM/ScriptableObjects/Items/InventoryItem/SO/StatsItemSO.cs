@@ -1,16 +1,13 @@
+using SCOM;
 using System;
 using System.Collections.Generic;
-using SCOM;
-using SCOM.Weapons.Components;
 using UnityEngine;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 
 [Serializable]
 public struct Write_StatsData_item
 {
     public Stats_TYPE type;
-    public LocalizedString StatsLocalizeString;
+    //public LocalizedString StatsLocalizeString;
     [Tooltip("부가 조건")]
     public float variable;
     [Tooltip("아이템 효과의 값")]
@@ -49,33 +46,33 @@ public class StatsItemSO : ItemDataSO
     /// <summary>
     /// 아이템의 스탯 설명
     /// </summary>
-    public string StatsData_Descripts
-    {
-        get
-        {
-            string temp = "";
-            for (int i = 0; i < StatsItems.Count; i++)
-            {
-                temp += (LocalizationSettings.StringDatabase.GetTableEntry("Stats_Table", (StatsItems[i].StatsLocalizeString.TableEntryReference.KeyId == 0) ?
-                    StatsItems[i].type.ToString() :
-                    StatsItems[i].StatsLocalizeString.TableEntryReference).Entry.Value)
-                    + (StatsItems[i].HideMark ? " " : ((StatsItems[i].value >= 0) ? (" +") : " -")) + Mathf.Abs(StatsItems[i].value);
-                string var = "{variable}";
-                if (temp.Contains(var))
-                {
-                    temp = temp.Replace(var, StatsItems[i].variable.ToString());
-                }   
+    //public string StatsData_Descripts
+    //{
+    //    get
+    //    {
+    //        string temp = "";
+    //        for (int i = 0; i < StatsItems.Count; i++)
+    //        {
+    //            //temp += (LocalizationSettings.StringDatabase.GetTableEntry("Stats_Table", (StatsItems[i].StatsLocalizeString.TableEntryReference.KeyId == 0) ?
+    //                StatsItems[i].type.ToString() :
+    //                StatsItems[i].StatsLocalizeString.TableEntryReference).Entry.Value)
+    //                + (StatsItems[i].HideMark ? " " : ((StatsItems[i].value >= 0) ? (" +") : " -")) + Mathf.Abs(StatsItems[i].value);
+    //            string var = "{variable}";
+    //            if (temp.Contains(var))
+    //            {
+    //                temp = temp.Replace(var, StatsItems[i].variable.ToString());
+    //            }   
 
-                if (StatsItems[i].ShowPercent)
-                {
-                    temp += "%";
-                }
+    //            if (StatsItems[i].ShowPercent)
+    //            {
+    //                temp += "%";
+    //            }
 
-                temp += "\n";
-            }
-            return temp;
-        }
-    }
+    //            temp += "\n";
+    //        }
+    //        return temp;
+    //    }
+    //}
     [Tooltip("최대체력이 아닌 현재 체력 증가값")]
     public int Health;
 
@@ -86,8 +83,8 @@ public class StatsItemSO : ItemDataSO
     public List<EffectPrefab> InfinityEffectObjects = new List<EffectPrefab>();
     [Header("--ItemEvent--")]
     [field: SerializeField] public List<ItemEventSO> ItemEvents = new List<ItemEventSO>();
-    [field: SerializeField] public LocalizedString EventNameLocal { get; private set; }
-    [field: SerializeField] public LocalizedString EventDescriptionLocal { get; private set; }
+    //[field: SerializeField] public LocalizedString EventNameLocal { get; private set; }
+    //[field: SerializeField] public LocalizedString EventDescriptionLocal { get; private set; }
 
     public virtual ItemEventSet ExeEvent(ITEM_TPYE type, Unit unit,Unit enemy,ItemEventSO _itemEvent, ItemEventSet itemEventSet)
     {

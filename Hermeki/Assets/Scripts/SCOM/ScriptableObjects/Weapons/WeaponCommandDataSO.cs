@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using SCOM;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "newWeaponCommandData", menuName = "Data/Weapon Data/WeaponCommand Data")]
 public class WeaponCommandDataSO : ScriptableObject
@@ -12,7 +11,7 @@ public class WeaponCommandDataSO : ScriptableObject
     [field: SerializeField] public Sprite WeaponImg { get; private set; }
     [Tooltip("Weapon Name")]
     [field: SerializeField] public string WeaponName { get; private set; }
-    [field: SerializeField] public LocalizedString WeaponNameLocal { get; private set; }
+    //[field: SerializeField] public LocalizedString WeaponNameLocal { get; private set; }
     [Tooltip("Weapon Elemental Power")]
     [field: SerializeField] public E_Power Elelemental_Power { get; private set; }
     [Tooltip("Weapon ClassLevel")]

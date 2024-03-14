@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Localization.Settings;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -141,7 +140,7 @@ private LevelManager _levelManager;
             return;
         }
 
-        LocalizationSettings.StringDatabase.MissingTranslationState = MissingTranslationBehavior.PrintWarning;
+        //LocalizationSettings.StringDatabase.MissingTranslationState = MissingTranslationBehavior.PrintWarning;
 
         _Inst = this;
         DontDestroyOnLoad(this.gameObject);

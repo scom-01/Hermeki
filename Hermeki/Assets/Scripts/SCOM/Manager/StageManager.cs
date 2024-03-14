@@ -1,6 +1,7 @@
 using Cinemachine;
 using SCOM;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,8 @@ public class StageManager : MonoBehaviour
     public LightProbeProxyVolume StageVolume;
     public List<Transform> MasterManagerList;
 
+    public List<StageController> StageList = new List<StageController>();
+    public int CurrStageIdx = 0;
     [Header("----Scene----")]
     /// <summary>
     /// Stage 시작 시 Stage이름 Fade
@@ -131,26 +134,6 @@ public class StageManager : MonoBehaviour
     /// Item Spawn Interval
     /// </summary>
     public float ItemSpawnInterval;
-    [Tooltip("가져갈 수 있는 아이템 수")]
-    /// <summary>
-    /// Number of items you can get
-    /// 가져갈 수 있는 아이템 수
-    /// </summary>
-    public int ChoiceItemAmount;
-    [Tooltip("미해금 아이템 스폰 확률")]
-    public float UnlockItemSpawnPer;
-    //public ChoiceItemManager ChoiceItemManager
-    //{
-    //    get
-    //    {
-    //        if (choiceItemManager == null)
-    //        {
-    //            choiceItemManager = GetComponentInChildren<ChoiceItemManager>();
-    //        }
-    //        return choiceItemManager;
-    //    }
-    //}
-    //private ChoiceItemManager choiceItemManager;
 
     [Header("----Sounds----")]
     public AudioSource BGM;
@@ -163,29 +146,29 @@ public class StageManager : MonoBehaviour
         {
             GameManager.Inst.StageManager = this;
         }
-        playerGO = Instantiate(PlayerPrefab, SpawnPoint);
-        player = playerGO.GetComponent<Player>();
+        //playerGO = Instantiate(PlayerPrefab, SpawnPoint);
+        //player = playerGO.GetComponent<Player>();
 
-        if (Cam == null)
-            Cam = this.GetComponentsInChildren<Camera>()[0];
+        //if (Cam == null)
+        //    Cam = this.GetComponentsInChildren<Camera>()[0];
 
-        var FadeIn = Resources.Load<GameObject>(GlobalValue.FadeInCutScene);
-        if (FadeIn != null)
-        {
-            Instantiate(FadeIn);
-        }
+        //var FadeIn = Resources.Load<GameObject>(GlobalValue.FadeInCutScene);
+        //if (FadeIn != null)
+        //{
+        //    Instantiate(FadeIn);
+        //}
     }
 
     // Start is called before the first frame update
     public virtual void Start()
     {
-        CVC = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
+        //CVC = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
+        StageList = GetComponentsInChildren<StageController>().ToList();
         if (CVC != null)
         {
             CVC.Follow = player.transform;
             CVC.m_Lens.OrthographicSize = (Cam_Distance <= 0) ? 5 : Cam_Distance;
         }
-        //GameManager.Inst.ChangeUI(UI_State.GamePlay);
         isStageClear = false;
     }
 
@@ -196,74 +179,25 @@ public class StageManager : MonoBehaviour
 
     private void Init()
     {
-        //if (DataManager.Inst != null)
+
+        //if (StageVolume == null)
+        //    StageVolume = this.GetComponentInChildren<LightProbeProxyVolume>();
+
+        //if (SpawnPoint == null)
+        //    SpawnPoint = GameObject.Find("SpawnPoint").GetComponent<Transform>();
+
+        //if (BGM == null)
+        //    BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
+        //if (BGM_source.Clip != null)
         //{
-        //    for (int i = 0; i < MasterManagerList.Count; i++)
-        //    {
-        //        if (MasterManagerList[i] == null)
-        //        {
-        //            MasterManagerList.RemoveAt(i);
-        //        }
-        //    }
-        //    if (MasterManagerList.Count > 0)
-        //    {                
-        //        int idx = 0;
-        //        if (DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.SceneDataIdxs.Count != 0)
-        //        {
-        //            idx = DataManager.Inst.JSON_DataParsing.m_JSON_SceneData.SceneDataIdxs[0] % MasterManagerList.Count;
-        //        }
-
-        //        if (idx == MasterManagerList.Count)
-        //        {
-        //            MasterManagerList[idx - 1].gameObject.SetActive(true);
-        //            IM = MasterManagerList[idx - 1].GetComponentInChildren<ItemManager>();
-        //            SPM = MasterManagerList[idx - 1].GetComponentInChildren<SpawnManager>();
-        //        }
-        //        else
-        //        {
-        //            MasterManagerList[idx].gameObject.SetActive(true);
-        //            IM = MasterManagerList[idx].GetComponentInChildren<ItemManager>();
-        //            SPM = MasterManagerList[idx].GetComponentInChildren<SpawnManager>();
-        //        }
-        //    }
-
-        //    if (IM == null)
-        //        IM = GameObject.Find("ItemManager").GetComponent<ItemManager>();
-
-        //    if (SPM == null)
-        //        SPM = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        //    BGM.clip = BGM_source.Clip;
+        //    BGM.volume = BGM_source.Volume;
+        //    BGM.loop = true;
+        //    BGM.playOnAwake = false;
+        //    BGM.Play();
         //}
 
-        if (StageVolume == null)
-            StageVolume = this.GetComponentInChildren<LightProbeProxyVolume>();
-
-        if (SpawnPoint == null)
-            SpawnPoint = GameObject.Find("SpawnPoint").GetComponent<Transform>();
-
-        if (BGM == null)
-            BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
-        if (BGM_source.Clip != null)
-        {
-            BGM.clip = BGM_source.Clip;
-            BGM.volume = BGM_source.Volume;
-            BGM.loop = true;
-            BGM.playOnAwake = false;
-            BGM.Play();
-        }
-
-        GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.GamePlay, false);
-
-        //GameManager.Inst.SetSaveData();
-
-        //GameManager.Inst.ChangeUI(Start_UIState);
-        ////Loading시 ESC를 눌러서 Pause가 됐을 때 생기는 오류 방지
-        //GameManager.Inst.Continue();
-        //GameManager.Inst.LoadData();
-        //GameManager.Inst.SaveData();
-
-        //씬 이름 애니메이션 Instantiate
-        if (SceneNameFade != null)
-            Instantiate(SceneNameFade);
+        //GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.GamePlay, false);
 
         if (player != null)
         {
@@ -271,44 +205,25 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    public void OpenGate(bool isClear)
+    public void StartStage()
     {
-        if (!isClear)
+        if (StageList.Count == 0)
             return;
-        //DataManager.Inst?.NextStage(NextStageNumber);
 
-        //if (ChoiceItemManager != null)
-        //    ChoiceItemManager.ChoiceItemAmount = ChoiceItemAmount;
-
-        //아이템 스폰
-        if (ItemSpawnPoint != null)
+        if(!StageList[0].StartStage())
         {
-            //if (DataManager.Inst != null)
-            //{
-            //    DataManager.Inst.RandomUnLockItemSpawn(ItemSpawnPoint.position, UnlockItemSpawnPer, ItemSpawnAmount, ItemSpawnInterval);
-            //}
+            return;
         }
 
-        //End 애니메이션
-        if (EndPoint.GetComponentInChildren<Animator>() != null)
-        {
-            if (GlobalValue.ContainParam(EndPoint.GetComponentInChildren<Animator>(), "Action"))
-            {
-                EndPoint.GetComponentInChildren<Animator>()?.SetBool("Action", true);
-            }
-        }
-        if (EndPoint.GetComponent<BoxCollider2D>() != null)
-            EndPoint.GetComponent<BoxCollider2D>().enabled = true;
+        return;
     }
-
-
-    public void CutSceneStart()
+    public bool GoNextStage(Player player)
     {
-        GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.Cfg, false);
-    }
+        if (player == null)
+            return false;
 
-    public void CutSceneEnd()
-    {
-        GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.GamePlay, false);
+        CurrStageIdx++;
+        player.transform.position = StageList[CurrStageIdx].StartPos.position;
+        return true;
     }
 }

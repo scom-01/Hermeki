@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "newUnitData",menuName ="Data/Unit Data")]
 public class UnitData : ScriptableObject
@@ -9,7 +8,7 @@ public class UnitData : ScriptableObject
     public StatsData statsStats;
 
     public string UnitName;
-    public LocalizedString UnitNameLocal;
+    //public LocalizedString UnitNameLocal;
 
     [Header("RigidBody2D")]
     public float UnitGravity;
