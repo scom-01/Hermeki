@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     [Header("Unit")]
     [Tooltip("플레이어")]
     public Unit player;
-    public GameObject UserObject;
     public Transform StartPos;
+    public AssetReferenceGameObject SpawnUnit;
 
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
     public List<SelectStartLevel> SelectUIList = new List<SelectStartLevel>();
-    
+
     [Tooltip("현재 진행중인 스테이지")]
     public int CurrStageIdx = 0;
     [Tooltip("스테이지 난이도")]
@@ -40,6 +43,10 @@ public class LevelManager : MonoBehaviour
         if (SelectLevelCanvas != null)
         {
             SelectUIList = SelectLevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
+            if (SelectUIList != null && SelectUIList.Count > 0)
+            {
+                SelectStart(0);
+            }
         }
     }
     public void GameStart()
@@ -49,17 +56,22 @@ public class LevelManager : MonoBehaviour
         {
             _Pos = StartPos.position;
         }
-        
-        GameObject obj = Instantiate(UserObject, StartPos);
-        player = obj.GetComponent<Unit>();
-        
-        if (VirtualCamera != null && player != null)
-            VirtualCamera.Follow = player.transform;
+
+        if (SpawnUnit != null)
+        {
+            SpawnUnit.InstantiateAsync().Completed += (AsyncOperationHandle<GameObject> _obj) =>
+            {
+                player = _obj.Result.GetComponent<Unit>();
+                if (VirtualCamera != null && player != null)
+                    VirtualCamera.Follow = player.transform;
+
+            };
+        }
     }
 
     public void GoLobby()
     {
-        SceneManager.LoadSceneAsync(0);        
+        SceneManager.LoadSceneAsync(0);
     }
     #region Stage Func
     public void StartStage()
@@ -98,9 +110,9 @@ public class LevelManager : MonoBehaviour
     }
     public bool ChangeLevel(int idx)
     {
-        if (idx >= MaxLevel) 
+        if (idx >= MaxLevel)
         {
-            idx = MaxLevel;            
+            idx = MaxLevel;
         }
         StageLevel = idx;
         return true;
@@ -110,7 +122,7 @@ public class LevelManager : MonoBehaviour
     {
         for (int i = 0; i < SelectUIList.Count; i++)
         {
-            if(i == idx)
+            if (i == idx)
             {
                 SelectUIList[idx].isSelect = true;
                 continue;

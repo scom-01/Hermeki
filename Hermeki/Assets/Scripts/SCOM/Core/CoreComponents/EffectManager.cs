@@ -41,7 +41,8 @@ namespace SCOM.CoreSystem
                 if (_isFollow)
                     return (CheckObject(ObjectPooling_TYPE.Effect, effectPrefab, size) as EffectPooling).GetObejct(pos, rot, size);
                 else
-                    return (GameManager.Inst.StageManager.EffectContainer?.CheckObject(ObjectPooling_TYPE.Effect, effectPrefab, size, GameManager.Inst.StageManager.EffectContainer.transform) as EffectPooling).GetObejct(pos, rot, size);
+                    return (FindObjectOfType<EffectContainer>()?.CheckObject(ObjectPooling_TYPE.Effect, effectPrefab, size, FindObjectOfType<EffectContainer>().transform) as EffectPooling).GetObejct(pos, rot, size);
+                    //return (GameManager.Inst.StageManager.EffectContainer?.CheckObject(ObjectPooling_TYPE.Effect, effectPrefab, size, GameManager.Inst.StageManager.EffectContainer.transform) as EffectPooling).GetObejct(pos, rot, size);
             }
         }
         public GameObject StartEffectsPos(GameObject effectPrefab, Vector2 pos, bool _isFollow = false)
@@ -126,7 +127,8 @@ namespace SCOM.CoreSystem
 
         public GameObject StartProjectileCheck(Unit _unit, ProjectileActionData _projectileActionData)
         {
-            return GameManager.Inst.StageManager.EffectContainer?.CheckProjectile(_projectileActionData.Projectile).GetObejct(_unit, _projectileActionData.ProjectileData);
+            return FindObjectOfType<EffectContainer>().CheckProjectile(_projectileActionData.Projectile).GetObejct(_unit, _projectileActionData.ProjectileData);
+            //return GameManager.Inst.StageManager.EffectContainer?.CheckProjectile(_projectileActionData.Projectile).GetObejct(_unit, _projectileActionData.ProjectileData);
         }
         #endregion
 

@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 [Serializable]
-public struct SpawnPos
+public struct AddressabelSpawnPos
 {
-    public GameObject Obj;
+    public AssetReferenceGameObject AddressObj;
     public Transform Pos;
 }
 
 public class SpawnStartObject : EndActionEvent
 {
-    public List<SpawnPos> SpawnObjList = new List<SpawnPos>();
+    public List<AddressabelSpawnPos> AddressableSpawnObjList = new List<AddressabelSpawnPos>();
     public List<GameObject> SpawnedObject = new List<GameObject>();
     private bool isSpawned = false;
 
@@ -29,7 +30,7 @@ public class SpawnStartObject : EndActionEvent
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(!collision.CompareTag(this.tag) || isSpawned)
+        if (!collision.CompareTag(this.tag) || isSpawned)
         {
             return;
         }
@@ -40,13 +41,16 @@ public class SpawnStartObject : EndActionEvent
 
     private void SpawnObj()
     {
-        for (int i = 0; i < SpawnObjList.Count; i++)
+        for (int i = 0; i < AddressableSpawnObjList.Count; i++)
         {
-            if (SpawnObjList[i].Obj == null)
-                continue;
-            GameObject _obj = Instantiate(SpawnObjList[i].Obj);
-            _obj.transform.position = SpawnObjList[i].Pos.position;
-            SpawnedObject.Add(_obj);
+            //if (AddressableSpawnObjList[i].AddressObj == null)
+            //    continue;
+
+            AddressableSpawnObjList[i].AddressObj.InstantiateAsync(AddressableSpawnObjList[i].Pos).Completed +=
+                (AsyncOperationHandle<GameObject> _obj) =>
+                {
+                    SpawnedObject.Add(_obj.Result);
+                };
         }
     }
 
@@ -54,7 +58,10 @@ public class SpawnStartObject : EndActionEvent
     {
         for (int i = 0; i < SpawnedObject.Count; i++)
         {
-            Destroy(SpawnedObject[i].gameObject);
+            if (!Addressables.ReleaseInstance(SpawnedObject[i]))
+            {
+                Destroy(SpawnedObject[i].gameObject);
+            }
         }
         SpawnedObject = new List<GameObject>();
     }
