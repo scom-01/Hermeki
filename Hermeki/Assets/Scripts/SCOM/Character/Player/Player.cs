@@ -95,11 +95,7 @@ public class Player : Unit
     {
         base.DieEffect();
 
-        //CutSceneActionMap
-        //GameManager.Inst.InputHandler.ChangeCurrentActionMap(InputEnum.CutScene, false);
         FSM.ChangeState(DeathState);
-        //ZoomIn PlayableDirector
-        //GameManager.Inst?.PlayerDieCutScene?.GetComponent<DirectorController>()?.PlayDirector();        
     }
 
     public override void HitEffect()

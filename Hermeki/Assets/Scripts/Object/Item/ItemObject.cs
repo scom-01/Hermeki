@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,8 +11,6 @@ public class ItemObject : MonoBehaviour
     private EquipItemData data;
     private void Awake()
     {
-        //SR = this.GetComponent<SpriteRenderer>();
-        //rb2d = this.GetComponent<Rigidbody2D>();
         SetPolygon();
     }
 

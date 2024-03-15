@@ -18,6 +18,11 @@ public class UnitFSM
     //State 변경 시 호출되는 함수
     public void ChangeState(UnitState newState)
     {
+        if (CurrentState == newState) 
+        {
+            Debug.Log($"이전 상태와 동일하여 반환");
+            return;
+        }
         CurrentState.Exit();
         CurrentState = newState;
         CurrentState.Enter();

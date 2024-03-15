@@ -26,6 +26,8 @@ public class GlobalValue : MonoBehaviour
     public static GameObject Base_SoundPooling = Resources.Load<GameObject>("Prefabs/Sounds/Base_SoundPooling");
     public static GameObject Base_SpawnGoodsItem = Resources.Load<GameObject>("Prefabs/Item/Goods/GoodsItem");
     public static GameObject Base_GoodsChunk = Resources.Load<GameObject>("Prefabs/Item/Goods/GoodsChunk");
+
+    public static Sprite Base_SPUM_Cloth = Resources.Load<Sprite>("SPUM/SPUM_Sprites/Items/2_Cloth/Cloth_9");
     //public static GoodsSO Goods_Gold = Resources.Load<GoodsSO>("Prefabs/Item/Goods/Gold");
     //public static GoodsSO Goods_Fire = Resources.Load<GoodsSO>("Prefabs/Item/Goods/FireGoods");
     //public static GoodsSO Goods_Water = Resources.Load<GoodsSO>("Prefabs/Item/Goods/WaterGoods");

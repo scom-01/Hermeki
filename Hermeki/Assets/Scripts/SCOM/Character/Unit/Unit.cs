@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public bool isMulti = false;
     #region Component
     public Core Core
     {
