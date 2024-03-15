@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class SelectStartLevel : MonoBehaviour
@@ -12,8 +13,8 @@ public class SelectStartLevel : MonoBehaviour
     public Button SelectBtn;
 
     [Header("Setting")]
-    public List<GameObject> StartingItem;
-    public SpawnStartItem StartItems;
+    public List<AssetReferenceGameObject> AddressableStartingItem;
+    public SpawnStartObject StartAction;
     public int SelectedLevel
     {
         get => _currLevel;
@@ -65,15 +66,24 @@ public class SelectStartLevel : MonoBehaviour
 
     private void Start()
     {
-        SetStageLevel(SelectedLevel);
-        SelectBtn.onClick.AddListener(SetStartingItem);
-    }
+        for (int i = 0; i < LevelImgList.Count; i++)
+        {
+            if (LevelImgList[i] == null)
+                continue;
 
+            if (SelectedLevel > i)
+            {
+                LevelImgList[i].enabled = true;
+                continue;
+            }
+            LevelImgList[i].enabled = false;
+        }
+    }
     public void SetStartingItem()
     {
-        if (StartItems != null)
+        if (StartAction != null)
         {
-            StartItems.SetEquipItem(StartingItem);
+            StartAction?.SetSpawnObjList(AddressableStartingItem);            
         }
 
         GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel);
