@@ -5,6 +5,7 @@ public class EquipItem : MonoBehaviour
     protected Unit unit;
     protected AnimationEventHandler eventHandler;
     public EquipItemData Data;
+    public EquipItemEventSet ItemEvent;
     // Start is called before the first frame update
     protected virtual void Awake()
     {
@@ -29,9 +30,11 @@ public class EquipItem : MonoBehaviour
     {
         if (_data == null || _data.dataSO == null || _data.CurrentDurability == 0)
         {
+            ItemEvent = null;
             return false;
         }
         Data = _data;
+        ItemEvent = new EquipItemEventSet(Data.dataSO);
         return true;
     }
 

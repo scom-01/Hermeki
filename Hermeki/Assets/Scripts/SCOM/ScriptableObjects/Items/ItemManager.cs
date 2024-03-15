@@ -45,12 +45,13 @@ public class ItemManager : MonoBehaviour
     /// <summary>
     /// 현재 아이템
     /// </summary>
-    public List<EquipItemEventSet> ItemEventList = new List<EquipItemEventSet>();
     public SPUM_SpriteList SPUM_SpriteList;
 
+    //현재 장착 
     public List<WeaponItem> WeaponItemList = new List<WeaponItem>();
     public List<ArmorItem> ArmorItemList = new List<ArmorItem>();
 
+    //대기 인벤토리
     public List<EquipItemData> WeaponDataList = new List<EquipItemData>();
     public List<EquipItemData> ArmorDataList = new List<EquipItemData>();
 
@@ -100,7 +101,6 @@ public class ItemManager : MonoBehaviour
                 continue;
             }
             _weaponitem.SetItemData(data);
-            ItemEventList.Add(new EquipItemEventSet(_weaponitem.Data.dataSO as WeaponItemDataSO));
             return true;
         }
         Debug.Log($"무기 DB에 저장");
@@ -120,7 +120,9 @@ public class ItemManager : MonoBehaviour
     public bool DamagedArmor(int _damage = 1)
     {
         if (CurrentArmorPower() == 0)
+        {            
             return false;
+        }
 
         for (int i = 0; i < _damage; i++)
         {
@@ -135,44 +137,25 @@ public class ItemManager : MonoBehaviour
         }
         return true;
     }
-    #region Add, Remove
-    public bool AddItemEvent(EquipItemEventSet item)
-    {
-        if (item == null)
-            return false;
-
-        if (ItemEventList.Contains(item))
-        {
-            Debug.Log($"Contains {item.EquipItemData.name}");
-            return false;
-        }
-        ItemEventList.Add(item);
-
-        return true;
-    }
-    public bool RemoveItemEvent(EquipItemEventSet item)
-    {
-        if (item == null)
-            return false;
-
-        ItemEventList.Remove(item);
-        return true;
-    }
-    #endregion
 
     #region Event
+    public bool ExeItemEvent(EquipItemEventSet _ItemEvent = null, ITEM_TPYE type = ITEM_TPYE.None, Unit enemy = null)
+    {
+        if (_ItemEvent == null)
+        {
+            return false;
+        }
+        for (int j = 0; j < _ItemEvent.itemEffectSets.Count; j++)
+        {
+            _ItemEvent.itemEffectSets[j] = _ItemEvent.EquipItemData.ExeEvent(type, Unit, enemy, _ItemEvent.EquipItemData.ItemEvents[j], _ItemEvent.itemEffectSets[j]);
+        }
+        return true;
+    }
     public bool ExeItemEvent(List<EquipItemEventSet> _ItemEventList = null, ITEM_TPYE type = ITEM_TPYE.None, Unit enemy = null)
     {
         if (_ItemEventList == null)
         {
-            for (int i = 0; i < ItemEventList.Count; i++)
-            {
-                for (int j = 0; j < ItemEventList[i].itemEffectSets.Count; j++)
-                {
-                    ItemEventList[i].itemEffectSets[j] = ItemEventList[i].EquipItemData.ExeEvent(type, Unit, enemy, ItemEventList[i].EquipItemData.ItemEvents[j], ItemEventList[i].itemEffectSets[j]);
-                }
-            }
-            return true;
+            return false;
         }
         for (int i = 0; i < _ItemEventList.Count; i++)
         {

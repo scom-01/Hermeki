@@ -20,7 +20,7 @@ public class ArmorItem : EquipItem
     public override void DecreaseDurability()
     {
         base.DecreaseDurability();
-
+        unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnDamaged);
         if (Data.CurrentDurability > 0)
         {
             SetItemData(Data);

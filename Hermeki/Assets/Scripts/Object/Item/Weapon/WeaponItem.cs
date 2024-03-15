@@ -108,10 +108,8 @@ public class WeaponItem : EquipItem
             DestroyItem();
             Data.dataSO = null;
             SetWeaponSprite(null);
-            ItemEventList = new List<EquipItemEventSet>();
             return false;
         }
-        ItemEventList.Add(new EquipItemEventSet(Data.dataSO));
         CalculateWeaponSprite();
         SetWeaponStyle((Data.dataSO as WeaponItemDataSO).Style);
         return false;
@@ -152,7 +150,6 @@ public class WeaponItem : EquipItem
         Debug.Log($"Effect transform = {_transform}");
     }
 
-    public List<EquipItemEventSet> ItemEventList = new List<EquipItemEventSet>();
     #region Action
     private void Action()
     {
@@ -174,7 +171,7 @@ public class WeaponItem : EquipItem
             Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
         else
             Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
-        unit.ItemManager?.ItemActionExecute(ItemEventList);
+        unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnAction);
     }
 
     private void FinishAction()
@@ -214,7 +211,7 @@ public class WeaponItem : EquipItem
             {
                 eventHandler.FinishRightAction();
             }
-            unit.ItemManager?.ItemOnHitGround(ItemEventList);
+            unit.ItemManager?.ExeItemEvent(ItemEvent,ITEM_TPYE.OnHitGround);
             DecreaseDurability();
             if (Data?.dataSO != null)
             {
@@ -244,7 +241,7 @@ public class WeaponItem : EquipItem
                 {
                     eventHandler.FinishRightAction();
                 }
-                unit.ItemManager.ItemOnHitExecute(ItemEventList, coll.GetComponentInParent<Unit>());
+                unit.ItemManager.ExeItemEvent(ItemEvent, ITEM_TPYE.OnHitEnemy, coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
                 if (Data?.dataSO != null)
                     Effect(coll.transform, (Data.dataSO as WeaponItemDataSO).Unit_effectData, (Data.dataSO as WeaponItemDataSO).Unit_audioData);
