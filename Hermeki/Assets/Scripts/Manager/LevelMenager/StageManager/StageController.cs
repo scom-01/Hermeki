@@ -15,6 +15,19 @@ public class StageController : MonoBehaviour
         TM_Renderer = GetComponentInChildren<TilemapRenderer>();
         TM_Renderer.enabled = false;
     }
+    public bool ResetStage()
+    {
+        if (!ControllTM(false))
+        {
+            return false;
+        }
+
+        if (this.TryGetComponent(out ActionEventHandler _action))
+        {
+            _action.EndAction();
+        }
+        return true;
+    }
     public bool EnterEndpos(Player player)
     {
         if (player == null)
