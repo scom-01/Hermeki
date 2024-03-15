@@ -9,6 +9,10 @@ public class ActionEvent : MonoBehaviour
         actionEventHandler = this.GetComponentInParent<ActionEventHandler>();
         if (actionEventHandler == null)
             return;
+
+        actionEventHandler.AddStartAction(Action);
+        actionEventHandler.AddEndAction(UnAction);
     }
     protected virtual void Action() { }
+    protected virtual void UnAction() { }
 }
