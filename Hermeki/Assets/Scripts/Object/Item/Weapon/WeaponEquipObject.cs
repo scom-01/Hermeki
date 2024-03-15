@@ -7,7 +7,7 @@ public class WeaponEquipObject : EquipObject
     {
     }
 
-    public ItemObject itemObject => this.transform.root.GetComponent<ItemObject>();
+    public ItemObject itemObject => this.transform.GetComponentInParent<ItemObject>();
     public override void Interactive(Unit unit)
     {
         Debug.Log($"Weapon Equip Interactive {unit.name}");
