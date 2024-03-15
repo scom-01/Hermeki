@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using TMPro;
+using System.Collections;
 
 public class LevelManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class LevelManager : MonoBehaviour
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
     public List<SelectStartLevel> SelectUIList = new List<SelectStartLevel>();
-
+    public bool isPlaying = false;
     [Tooltip("현재 진행중인 스테이지")]
     public int CurrStageIdx = 0;
     [Tooltip("스테이지 난이도")]
@@ -26,6 +27,7 @@ public class LevelManager : MonoBehaviour
     public int MaxLevel = 5;
 
     [Header("UI")]
+    public Canvas RootCanvas;
     public Canvas SelectLevelCanvas;
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
@@ -49,8 +51,20 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    private void Update()
+    {
+        if (player == null)
+            return;
+
+        if(!player.IsAlive && isPlaying)
+        {
+            isPlaying = false;
+            Invoke("GameOver", 2f);
+        }
+    }
     public void GameStart()
     {
+        isPlaying = true;
         Vector3 _Pos = Vector3.zero;
         if (StartPos != null)
         {
@@ -63,9 +77,28 @@ public class LevelManager : MonoBehaviour
             {
                 player = _obj.Result.GetComponent<Unit>();
                 if (VirtualCamera != null && player != null)
+                {
                     VirtualCamera.Follow = player.transform;
-
+                    VirtualCamera.transform.position = player.transform.position;
+                }
             };
+        }
+    }
+    public void GameOver()
+    {
+        isPlaying = false;
+        if (player == null || RootCanvas == null)
+            return;
+
+        CurrStageIdx = 0;
+        RootCanvas.gameObject.SetActive(true);
+        Addressables.ReleaseInstance(player.gameObject);
+        player = null;
+        if (VirtualCamera != null && player != null)
+            VirtualCamera.Follow = null;
+        for (int i = 0; i < StageList.Count; i++)
+        {
+            StageList[i].ResetStage();
         }
     }
 
@@ -100,13 +133,24 @@ public class LevelManager : MonoBehaviour
         player.transform.position = StageList[CurrStageIdx].StartPos.position;
         if (VirtualCamera != null)
         {
+            VirtualCamera.Follow = null;
+            //VirtualCamera.PreviousStateIsValid = false;
+            VirtualCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = null;
             VirtualCamera.transform.position = player.transform.position;
+            StartCoroutine(UpdateCameraFrameLater());
         }
         if (!StageList[CurrStageIdx].StartStage())
         {
             return false;
         }
         return true;
+    }
+    private IEnumerator UpdateCameraFrameLater()
+    {
+        yield return null;
+
+        if (player != null)
+            VirtualCamera.Follow = player.transform;
     }
     public bool ChangeLevel(int idx)
     {
@@ -125,6 +169,7 @@ public class LevelManager : MonoBehaviour
             if (i == idx)
             {
                 SelectUIList[idx].isSelect = true;
+                SelectUIList[idx].SetStageLevel(SelectUIList[idx].SelectedLevel);
                 continue;
             }
             SelectUIList[i].isSelect = false;
