@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour
     [Header("UI")]
     public Canvas RootCanvas;
     public Canvas SelectLevelCanvas;
+    public SPUM_SpriteList SettingSpriteList;
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
     private void Awake()
@@ -76,6 +77,7 @@ public class LevelManager : MonoBehaviour
             SpawnUnit.InstantiateAsync().Completed += (AsyncOperationHandle<GameObject> _obj) =>
             {
                 player = _obj.Result.GetComponent<Unit>();
+                SetUnitSprite();
                 if (VirtualCamera != null && player != null)
                 {
                     VirtualCamera.Follow = player.transform;
@@ -102,10 +104,21 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public bool SetUnitSprite()
+    {
+        if (player == null || SettingSpriteList == null)
+            return false;
+        player.GetComponentInChildren<SPUM_SpriteList>()?.SetSpriteList(SettingSpriteList);
+        player.GetComponentInChildren<SPUM_SpriteList>()?.ResyncData();
+        return true;
+    }
+
     public void GoLobby()
     {
         SceneManager.LoadSceneAsync(0);
     }
+
+
     #region Stage Func
     public void StartStage()
     {

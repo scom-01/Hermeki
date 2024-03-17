@@ -212,13 +212,13 @@ public class SPUM_SpriteList : MonoBehaviour
         }
     }
     public void SyncPath(List<SpriteRenderer> _objList, string _path, bool _order)
-    {        
+    {
         string tPath = _path;
         tPath = tPath.Replace("Assets/Resources/", "");
         tPath = tPath.Replace(".png", "");
 
         Sprite[] tSP = Resources.LoadAll<Sprite>(tPath);
-        if(_order)
+        if (_order)
         {
             for (var i = 0; i < _objList.Count; i++)
             {
@@ -246,7 +246,7 @@ public class SPUM_SpriteList : MonoBehaviour
                         _objList[i].sprite = null;
                     }
                 }
-            } 
+            }
         }
     }
 
@@ -260,7 +260,7 @@ public class SPUM_SpriteList : MonoBehaviour
 
     public void SetHair(string Path)
     {
-        if(Path == null)
+        if (Path == null)
         {
             _hairList[0].sprite = null;
             _hairListString[0] = "";
@@ -320,5 +320,19 @@ public class SPUM_SpriteList : MonoBehaviour
         Sprite tSP = Resources.Load<Sprite>(tPath);
         _backList[0].sprite = tSP;
         _backListString[0] = tPath;
+    }
+
+    public bool SetSpriteList(SPUM_SpriteList _spritelist)
+    {
+        if (_spritelist == null)
+            return false;
+
+        this._hairListString = _spritelist._hairListString;
+        this._clothListString = _spritelist._clothListString;
+        this._armorListString = _spritelist._armorListString;
+        this._pantListString = _spritelist._pantListString;
+        this._weaponListString = _spritelist._weaponListString;
+        this._backListString = _spritelist._backListString;
+        return true;
     }
 }
