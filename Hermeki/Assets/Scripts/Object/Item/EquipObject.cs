@@ -30,6 +30,9 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         //Unit
         if (collision.gameObject.layer == LayerMask.NameToLayer("Unit"))
         {
+            if (!collision.GetComponent<Unit>().IsAlive)
+                return;
+
             Interactive(collision.GetComponent<Unit>());
             Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");
         }
