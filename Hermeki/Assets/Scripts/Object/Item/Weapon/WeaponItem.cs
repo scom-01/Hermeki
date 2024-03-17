@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+
 public enum WeaponStyle
 {
     Sword = 0,
@@ -28,7 +29,7 @@ public class WeaponItem : EquipItem
         base.DecreaseDurability();
 
         if (Data.CurrentDurability > 0)
-        {            
+        {
             CalculateWeaponSprite();
             return;
         }
@@ -57,7 +58,7 @@ public class WeaponItem : EquipItem
     {
         if (Data.CurrentDurability <= 0 || Data?.dataSO == null)
             return;
-                
+
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
 
         //무기의 Sprite는 1개 이므로 sprites[0]으로 고정
@@ -102,12 +103,13 @@ public class WeaponItem : EquipItem
     #endregion
 
     public override bool SetItemData(EquipItemData _data)
-    {        
+    {
         if (!base.SetItemData(_data))
         {
             DestroyItem();
             Data.dataSO = null;
             SetWeaponSprite(null);
+            SetWeaponStyle(WeaponStyle.Sword);
             return false;
         }
         CalculateWeaponSprite();
@@ -136,7 +138,7 @@ public class WeaponItem : EquipItem
         }
     }
 
-    
+
     private void Effect(Vector2 _pos, EffectPrefab effectData, AudioData audioData)
     {
         effectData.SpawnObject(_pos);
@@ -154,6 +156,14 @@ public class WeaponItem : EquipItem
     private void Action()
     {
         isAction = true;
+        
+        if (isLeft)
+            Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
+        else
+            Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
+        
+        unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnAction);
+        
         if (Data?.dataSO != null)
         {
             switch ((Data.dataSO as WeaponItemDataSO).Style)
@@ -161,17 +171,12 @@ public class WeaponItem : EquipItem
                 case WeaponStyle.Sword:
                     break;
                 case WeaponStyle.Staff:
+                    DecreaseDurability();
                     break;
                 default:
                     break;
             }
         }
-        
-        if (isLeft)
-            Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
-        else
-            Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
-        unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnAction);
     }
 
     private void FinishAction()
@@ -197,12 +202,16 @@ public class WeaponItem : EquipItem
     #endregion
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (!isAction)
+        if (!isAction || Data?.dataSO == null)
             return;
 
         //Ground
         if (coll.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
+            ///지형 충돌 무시
+            if (!(Data.dataSO as WeaponItemDataSO).isPhysicsCheck_Ground)
+                return;
+            
             if (isLeft)
             {
                 eventHandler.FinishLeftAction();
@@ -211,7 +220,7 @@ public class WeaponItem : EquipItem
             {
                 eventHandler.FinishRightAction();
             }
-            unit.ItemManager?.ExeItemEvent(ItemEvent,ITEM_TPYE.OnHitGround);
+            unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnHitGround);
             DecreaseDurability();
             if (Data?.dataSO != null)
             {
@@ -224,6 +233,10 @@ public class WeaponItem : EquipItem
         if (coll.gameObject.layer == LayerMask.NameToLayer("Damageable"))
         {
             if (coll.CompareTag(this.gameObject.tag))
+                return;
+
+            ///지형 충돌 무시
+            if (!(Data.dataSO as WeaponItemDataSO).isPhysicsCheck_Unit)
                 return;
 
             //Hit시 효과
