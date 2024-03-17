@@ -34,7 +34,7 @@ public class PlayerInAirState : PlayerState
             StartWallJumpCoyoteTime();
         }
 
-        //CheckCoyoteTime();
+        CheckCoyoteTime();
         //CheckWallJumpCoyoteTime();
 
         CheckJumpMultiplier();
@@ -91,8 +91,8 @@ public class PlayerInAirState : PlayerState
         //    player.FSM.ChangeState(player.WallJumpState);
         //    return;
         //}
-        else if (JumpInput && player.JumpState.CanJump() && !player.CC2D.isTrigger)
-        {
+        else if (coyoteTime && JumpInput && player.JumpState.CanJump() && !player.CC2D.isTrigger)
+        {            
             coyoteTime = false;
             player.FSM.ChangeState(player.JumpState);
             return;
@@ -140,8 +140,8 @@ public class PlayerInAirState : PlayerState
     {
         if (coyoteTime && Time.time > startTime + player.playerData.coyeteTime)
         {
-            coyoteTime = false;
-            player.JumpState.DecreaseAmountOfJumpsLeft();
+            coyoteTime = false;            
+            //player.JumpState.DecreaseAmountOfJumpsLeft();
         }
     }
 

@@ -158,7 +158,7 @@ public class PlayerInputHandler : MonoBehaviour
         //CheckHoldTime(ref attackInputs, ref ActionInputsStartTime);
         //CheckHoldTime(ref interacInput, ref interactionInputStartTime);
 
-        //JumpInput = jumpInput;
+        JumpInput = jumpInput;
         DashInput = dashInput;
         PrimarySkillInput = skill1Input;
         SecondarySkillInput = skill2Input;
