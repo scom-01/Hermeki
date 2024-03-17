@@ -52,9 +52,4 @@ public class PlayerData : UnitData
     public float dashEndYMultiplier = 0.2f;
     [Tooltip("잔상 간의 거리")]
     public float distBetweenAfterImages = 0.5f;
-
-    //WeaponData로 옮길 예정
-    [Header("Block State")]
-    public float blockTime = 1f;
-    public float blockCooldown = 2f;
 }

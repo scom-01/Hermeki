@@ -32,6 +32,7 @@ public class AnimationEventHandler : MonoBehaviour
     public event Action OnRushActionRectOff;
     public event Action OnShootProjectile;
 
+    //Action_Arms
     public event Action OnLeftAction;
     public event Action OnRightAction;
     public event Action OnLeftActionFinish;
@@ -86,6 +87,7 @@ public class AnimationEventHandler : MonoBehaviour
     public void StopRushActionRectTrigger() { if (isAction) OnRushActionRectOff?.Invoke(); }
     public void ShootProjectileTrigger() { if (isAction) OnShootProjectile?.Invoke(); }
 
+    //Action_Arms
     public void StartLeftAction() { OnLeftAction?.Invoke(); }
     public void StartRightAction() { OnRightAction?.Invoke(); }
     public void FinishLeftAction() { OnLeftActionFinish?.Invoke(); }

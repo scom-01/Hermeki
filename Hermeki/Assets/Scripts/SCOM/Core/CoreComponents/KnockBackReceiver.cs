@@ -4,8 +4,9 @@ namespace SCOM.CoreSystem
 {
     public class KnockBackReceiver : CoreComponent, IKnockBackable
     {
-        [SerializeField] private float maxKnockBackTime = 0.2f;
-
+        /// <summary>
+        /// true = 넉백 중인 상태
+        /// </summary>
         private bool isKnockBackActive;
         private float knockBackStartTime;
 
@@ -66,6 +67,9 @@ namespace SCOM.CoreSystem
 
         private void SetKnockBack(Vector2 angle, float strength, int direction)
         {
+            if (isKnockBackActive)
+                return;
+
             movement.Comp?.SetVelocity(strength, angle, direction);
             movement.Comp.CanSetVelocity = false;
             core.Unit.isFixedMovement = true;
@@ -74,13 +78,16 @@ namespace SCOM.CoreSystem
         }
         private void CheckKnockBack()
         {
-            if (isKnockBackActive
-                && ((movement.Comp?.CurrentVelocity.y <= 0.01f && (collisionSenses.Comp.CheckIfGrounded)/*collisionSenses.Comp.GroundCheck*/)
-                    || Time.time >= knockBackStartTime + maxKnockBackTime)
-               )
+            if (!isKnockBackActive)
+                return;
+
+            if(movement.Comp?.CurrentVelocity.y <= 0.01f && (collisionSenses.Comp.CheckIfGrounded))
+            {
+                movement.Comp.CanSetVelocity = true;
+            }
+            if (Time.time >= knockBackStartTime + core.Unit.UnitData.touchDamageinvincibleTime)
             {
                 isKnockBackActive = false;
-                movement.Comp.CanSetVelocity = true;
             }
         }
 

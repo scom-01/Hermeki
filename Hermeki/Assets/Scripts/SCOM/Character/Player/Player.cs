@@ -47,7 +47,7 @@ public class Player : Unit
         InAirState = new PlayerInAirState(this, "inAir");
         LandState = new PlayerLandState(this, "idle");
         DeathState = new PlayerDeathState(this, "death");       
-        Inventory?.Weapon.SetCore(Core);
+        //Inventory?.Weapon.SetCore(Core);
     }
 
     protected void Init()
