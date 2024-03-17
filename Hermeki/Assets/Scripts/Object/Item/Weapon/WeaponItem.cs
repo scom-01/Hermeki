@@ -242,7 +242,7 @@ public class WeaponItem : EquipItem
             //Hit시 효과
             if (coll.TryGetComponent(out IDamageable victim))
             {
-                if (victim.Damage(unit, 1, 1) == 0)
+                if (victim.Damage(unit, 1) == 0)
                 {
                     return;
                 }

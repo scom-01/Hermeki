@@ -46,7 +46,7 @@ namespace SCOM.CoreSystem
         }
         private bool istouch = false;
 
-        public float Damage(Unit attacker, float amount, int repeat)
+        public float Damage(Unit attacker, float amount, int repeat = 1)
         {
             if (death.Comp.isDead)
             {
@@ -54,11 +54,22 @@ namespace SCOM.CoreSystem
                 return 0f;
             }
 
-            float temp = 0f;
-            for (int i = 0; i < repeat; i++)
+            if (CheckHitImmunity(attacker))
             {
-                temp += TrueDamage(attacker, amount);
+                return 0f;
             }
+
+            if (CheckHit(attacker))
+            {
+                return 0f;
+            }
+
+            //for (int i = 0; i < repeat; i++)
+            //{
+            //    temp += TrueDamage(attacker, amount);
+            //}
+            float temp = stats.Comp.DecreaseHealth(attacker, amount);
+            stats.Comp.invincibleTime = core.Unit.UnitData.invincibleTime;
             isHit = true;
             return temp;
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    public float Damage(Unit attacker, float amount, int repeat);
+    public float Damage(Unit attacker, float amount, int repeat = 1);
     public float TypeCalDamage(Unit attacker, float AttackerDmg, int RepeatAmount = 1);
     public float FixedDamage(int amount, bool isTrueHit = false, int RepeatAmount = 1);
     public float FixedDamage(Unit attacker, int amount, bool isTrueHit = false, int RepeatAmount = 1);
