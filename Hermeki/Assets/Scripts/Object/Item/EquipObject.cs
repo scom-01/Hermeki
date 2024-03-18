@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class EquipObject : MonoBehaviour, IInteractive
@@ -8,6 +6,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     public abstract void UnInteractive(Unit unit);
     public abstract void SetSpriteRenderer();
     public EquipItemData Data;
+    public Item_Type Type;
 
     public EquipObject(EquipItemData data)
     {
@@ -18,39 +17,52 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     {
         SetSpriteRenderer();
     }
+
+    public virtual bool SetData(EquipItemData _data)
+    {
+        if (_data == null)
+            return false;
+        Data = _data;
+        SetSpriteRenderer();
+        return true;
+    }
+
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag(this.tag)|| !collision.CompareTag("Player"))
+        if (!CheckUnit(collision.gameObject))
+            return;
+        
+        if (!collision.GetComponent<Unit>().IsAlive)
             return;
 
-        //Ground
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            return;
-
-        //Unit
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Unit"))
-        {
-            if (!collision.GetComponent<Unit>().IsAlive)
-                return;
-
-            Interactive(collision.GetComponent<Unit>());
-            Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");
-        }
+        Interactive(collision.GetComponent<Unit>());
+        Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");        
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag(this.tag))
+        if (!CheckUnit(collision.gameObject))
             return;
+        
+        if (!collision.GetComponent<Unit>().IsAlive)
+            return;
+
+        UnInteractive(collision.GetComponent<Unit>());
+        Debug.Log($"TriggerExit Unit name = {collision.gameObject.name}");
+    }
+
+    private bool CheckUnit(GameObject _obj)
+    {
+        if (_obj.CompareTag(this.tag) || !_obj.CompareTag("Player"))
+            return false;
 
         //Ground
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            return;
+        if (_obj.layer == LayerMask.NameToLayer("Ground"))
+            return false;
 
         //Unit
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Unit"))
-        {
-            UnInteractive(collision.GetComponent<Unit>());
-            Debug.Log($"TriggerExit Unit name = {collision.gameObject.name}");
-        }
+        if (_obj.layer != LayerMask.NameToLayer("Unit"))
+            return false;
+
+        return true;
     }
 }

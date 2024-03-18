@@ -3,8 +3,11 @@ using UnityEngine;
 public class ArmorEquipObject : EquipObject
 {
     public Unit targetUnit;
+    public Rect rect;
+
     public ArmorEquipObject(EquipItemData data) : base(data)
     {
+        Type = Item_Type.Armor;
     }
 
     public SpriteRenderer[] SpriteRenderers => GetComponentsInChildren<SpriteRenderer>();
@@ -30,6 +33,12 @@ public class ArmorEquipObject : EquipObject
 
         if (!this.GetComponentInParent<Rigidbody2D>().gameObject.activeSelf)
             this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(true);
+
+        if (GetComponentInParent<BoxCollider2D>() != null && (Data?.dataSO as ArmorItemDataSO) != null)
+        {
+            GetComponentInParent<BoxCollider2D>().offset = (Data?.dataSO as ArmorItemDataSO).Collider_Rect.position;
+            GetComponentInParent<BoxCollider2D>().size = (Data?.dataSO as ArmorItemDataSO).Collider_Rect.size;
+        }
 
         int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
 

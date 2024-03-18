@@ -1,26 +1,19 @@
 using UnityEngine;
 
-public class WeaponEquipObject : EquipObject
+public class RuneEquipObject : EquipObject
 {
-    public Unit targetUnit;
-    public WeaponEquipObject(EquipItemData data) : base(data)
+    public RuneEquipObject(EquipItemData data) : base(data)
     {
-        Type = Item_Type.Weapon;
+        Type = Item_Type.Rune;
     }
 
     public ItemObject itemObject => this.transform.parent.GetComponentInChildren<ItemObject>();
     public override void Interactive(Unit unit)
     {
-        Debug.Log($"Weapon Equip Interactive {unit.name}");
-        unit.ItemManager?.AddWeaponItem(Data);
-        this.transform.parent.GetComponentInChildren<Rigidbody2D>().gameObject.SetActive(false);
     }
-
     public override void UnInteractive(Unit unit)
     {
-        Debug.Log($"Weapon Equip UnInteractive {unit.name}");  
     }
-    [ContextMenu("SetSpriteRenderer")]
     public override void SetSpriteRenderer()
     {
         if (Data.dataSO == null || Data.CurrentDurability == 0)
