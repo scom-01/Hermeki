@@ -139,7 +139,7 @@ public class ItemManager : MonoBehaviour
     }
 
     #region Event
-    public bool ExeItemEvent(EquipItemEventSet _ItemEvent = null, ITEM_TPYE type = ITEM_TPYE.None, Unit enemy = null)
+    public bool ExeItemEvent(EquipItemEventSet _ItemEvent = null, ItemEvent_Type type = ItemEvent_Type.None, Unit enemy = null)
     {
         if (_ItemEvent == null)
         {
@@ -151,7 +151,7 @@ public class ItemManager : MonoBehaviour
         }
         return true;
     }
-    public bool ExeItemEvent(List<EquipItemEventSet> _ItemEventList = null, ITEM_TPYE type = ITEM_TPYE.None, Unit enemy = null)
+    public bool ExeItemEvent(List<EquipItemEventSet> _ItemEventList = null, ItemEvent_Type type = ItemEvent_Type.None, Unit enemy = null)
     {
         if (_ItemEventList == null)
         {
@@ -176,7 +176,7 @@ public class ItemManager : MonoBehaviour
     {
         for (int i = 0; i < itemSet.itemEffectSets.Count; i++)
         {
-            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ITEM_TPYE.OnInit, Unit, Unit?.GetTarget(), itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
+            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ItemEvent_Type.OnInit, Unit, Unit?.GetTarget(), itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
         }
         return true;
 
@@ -194,7 +194,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return false;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnHitEnemy, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnHitEnemy, enemy);
         return true;
     }
 
@@ -203,7 +203,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return false;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnHitGround, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnHitGround, enemy);
         return true;
     }
 
@@ -217,7 +217,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return false;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnAction, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnAction, Unit?.GetTarget());
         return true;
     }
 
@@ -231,7 +231,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return false;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnUpdate, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnUpdate, Unit?.GetTarget());
         return true;
     }
 
@@ -244,7 +244,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnMoveMap, Unit?.GetTarget());
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnMoveMap, Unit?.GetTarget());
     }
 
     /// <summary>
@@ -257,7 +257,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnDamaged, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnDamaged, enemy);
     }
 
 
@@ -271,7 +271,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnJump, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnJump, enemy);
     }
 
     /// <summary>
@@ -284,7 +284,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnLand, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnLand, enemy);
     }
 
     /// <summary>
@@ -297,7 +297,7 @@ public class ItemManager : MonoBehaviour
         if (Unit == null)
             return;
 
-        ExeItemEvent(_ItemEventList, ITEM_TPYE.OnKilled, enemy);
+        ExeItemEvent(_ItemEventList, ItemEvent_Type.OnKilled, enemy);
     }
     #endregion
 }

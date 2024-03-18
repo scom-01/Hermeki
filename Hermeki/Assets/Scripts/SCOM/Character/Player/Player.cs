@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class Player : Unit
 {
@@ -27,7 +26,7 @@ public class Player : Unit
     #endregion
 
     #region Components
-        
+
     public PlayerInputHandler InputHandler;// { get; private set; }
     [HideInInspector]
     public PlayerData playerData;
@@ -46,7 +45,7 @@ public class Player : Unit
         JumpState = new PlayerJumpState(this, "inAir");    //점프하는 순간 공중상태이므로
         InAirState = new PlayerInAirState(this, "inAir");
         LandState = new PlayerLandState(this, "idle");
-        DeathState = new PlayerDeathState(this, "death");       
+        DeathState = new PlayerDeathState(this, "death");
         //Inventory?.Weapon.SetCore(Core);
     }
 
@@ -101,7 +100,7 @@ public class Player : Unit
     public override void HitEffect()
     {
         base.HitEffect();
-        Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(-1 * Core.CoreMovement.FancingDirection, 1f) , 10, false);
+        Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(-1 * Core.CoreMovement.FancingDirection, 1f), 10, false);
         //GameManager.Inst.MainUI.animator?.Play("Action", -1, 0f);
     }
     #endregion

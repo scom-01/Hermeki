@@ -25,7 +25,7 @@ public enum UI_State
 #endregion
 
 #region Item
-public enum UIItemState 
+public enum UIItemState
 {
     Current = 0,
     Old,
@@ -55,7 +55,7 @@ public enum EVENT_BUFF_STATS
 /// <summary>
 /// 아이템의 보유 효과가 적용될 상태 
 /// </summary>
-public enum ITEM_TPYE
+public enum ItemEvent_Type
 {
     None = 0,
     OnAction = 1,
@@ -68,9 +68,15 @@ public enum ITEM_TPYE
     OnDamaged = 8,
     OnJump = 9,
     OnLand = 10,
-    OnKilled = 11,    
+    OnKilled = 11,
 }
 
+public enum Item_Type
+{
+    Armor = 0,
+    Weapon = 1,
+    Rune = 2,
+}
 public enum ITEM_Level
 {
     Common = 1,

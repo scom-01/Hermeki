@@ -25,9 +25,9 @@ public class ItemSpawnEventSO : ItemEventSO
         }
         return true;
     }
-    public override ItemEventSet ExcuteEvent(ITEM_TPYE type, StatsItemSO parentItem, Unit unit, Unit enemy, ItemEventSet itemEventSet)
+    public override ItemEventSet ExcuteEvent(ItemEvent_Type type, StatsItemSO parentItem, Unit unit, Unit enemy, ItemEventSet itemEventSet)
     {
-        if (Item_Type != type || Item_Type == ITEM_TPYE.None || itemEventSet == null)
+        if (Item_Type != type || Item_Type == ItemEvent_Type.None || itemEventSet == null)
             return itemEventSet;
 
         if (!itemEventSet.init)

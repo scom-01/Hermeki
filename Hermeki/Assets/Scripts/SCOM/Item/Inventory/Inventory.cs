@@ -114,7 +114,7 @@ public class Inventory : MonoBehaviour
 
     #region 아이템 Event함수
 
-    public bool ExeItemEvent(ITEM_TPYE type, Unit _unit, Unit enemy = null)
+    public bool ExeItemEvent(ItemEvent_Type type, Unit _unit, Unit enemy = null)
     {
         for (int i = 0; i < Items.Count; i++)
         {
@@ -135,7 +135,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < itemSet.itemEffectSets.Count; i++)
         {
-            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ITEM_TPYE.OnInit, Unit, Unit.GetTarget(), itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
+            itemSet.itemEffectSets[i] = itemSet.item.ExeEvent(ItemEvent_Type.OnInit, Unit, Unit.GetTarget(), itemSet.item.ItemEvents[i], itemSet.itemEffectSets[i]);
         }
         return true;
     }
@@ -148,7 +148,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemOnHitExecute(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnHitEnemy, _unit, enemy);
+        ExeItemEvent(ItemEvent_Type.OnHitEnemy, _unit, enemy);
         return true;
     }
 
@@ -159,7 +159,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemActionExecute(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnAction, _unit, _unit.GetTarget());
+        ExeItemEvent(ItemEvent_Type.OnAction, _unit, _unit.GetTarget());
         return true;
     }
 
@@ -170,7 +170,7 @@ public class Inventory : MonoBehaviour
     /// <returns></returns>
     public bool ItemExeUpdate(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnUpdate, _unit, _unit.GetTarget());
+        ExeItemEvent(ItemEvent_Type.OnUpdate, _unit, _unit.GetTarget());
         return true;
     }
 
@@ -183,7 +183,7 @@ public class Inventory : MonoBehaviour
     {
         if (!CanDash)
             return;
-        ExeItemEvent(ITEM_TPYE.OnDash, _unit, _unit.GetTarget());
+        ExeItemEvent(ItemEvent_Type.OnDash, _unit, _unit.GetTarget());
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class Inventory : MonoBehaviour
     /// <param name="_unit"></param>
     public void ItemExeOnMoveMap(Unit _unit)
     {
-        ExeItemEvent(ITEM_TPYE.OnMoveMap, _unit, _unit.GetTarget());
+        ExeItemEvent(ItemEvent_Type.OnMoveMap, _unit, _unit.GetTarget());
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public class Inventory : MonoBehaviour
     /// <param name="enemy"></param>
     public void ItemExeOnDamaged(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnDamaged, _unit, enemy);
+        ExeItemEvent(ItemEvent_Type.OnDamaged, _unit, enemy);
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class Inventory : MonoBehaviour
     /// <param name="enemy"></param>
     public void ItemExeOnJump(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnJump, _unit, enemy);
+        ExeItemEvent(ItemEvent_Type.OnJump, _unit, enemy);
     }
 
     /// <summary>
@@ -222,7 +222,7 @@ public class Inventory : MonoBehaviour
     /// <param name="enemy"></param>
     public void ItemExeOnLand(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnLand, _unit, enemy);
+        ExeItemEvent(ItemEvent_Type.OnLand, _unit, enemy);
     }
     /// <summary>
     /// 적 처치 시 호출
@@ -231,7 +231,7 @@ public class Inventory : MonoBehaviour
     /// <param name="enemy"></param>
     public void ItemExeOnKilled(Unit _unit, Unit enemy = null)
     {
-        ExeItemEvent(ITEM_TPYE.OnKilled, _unit, enemy);
+        ExeItemEvent(ItemEvent_Type.OnKilled, _unit, enemy);
     }
 
     #endregion

@@ -162,7 +162,7 @@ public class WeaponItem : EquipItem
         else
             Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
         
-        unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnAction);
+        unit.ItemManager?.ExeItemEvent(ItemEvent, ItemEvent_Type.OnAction);
         
         if (Data?.dataSO != null)
         {
@@ -220,7 +220,7 @@ public class WeaponItem : EquipItem
             {
                 eventHandler.FinishRightAction();
             }
-            unit.ItemManager?.ExeItemEvent(ItemEvent, ITEM_TPYE.OnHitGround);
+            unit.ItemManager?.ExeItemEvent(ItemEvent, ItemEvent_Type.OnHitGround);
             DecreaseDurability();
             if (Data?.dataSO != null)
             {
@@ -254,7 +254,7 @@ public class WeaponItem : EquipItem
                 {
                     eventHandler.FinishRightAction();
                 }
-                unit.ItemManager.ExeItemEvent(ItemEvent, ITEM_TPYE.OnHitEnemy, coll.GetComponentInParent<Unit>());
+                unit.ItemManager.ExeItemEvent(ItemEvent, ItemEvent_Type.OnHitEnemy, coll.GetComponentInParent<Unit>());
                 DecreaseDurability();
                 if (Data?.dataSO != null)
                     Effect(coll.transform, (Data.dataSO as WeaponItemDataSO).Unit_effectData, (Data.dataSO as WeaponItemDataSO).Unit_audioData);

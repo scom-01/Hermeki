@@ -86,7 +86,7 @@ public class StatsItemSO : ItemDataSO
     //[field: SerializeField] public LocalizedString EventNameLocal { get; private set; }
     //[field: SerializeField] public LocalizedString EventDescriptionLocal { get; private set; }
 
-    public virtual ItemEventSet ExeEvent(ITEM_TPYE type, Unit unit,Unit enemy,ItemEventSO _itemEvent, ItemEventSet itemEventSet)
+    public virtual ItemEventSet ExeEvent(ItemEvent_Type type, Unit unit,Unit enemy,ItemEventSO _itemEvent, ItemEventSet itemEventSet)
     {
         return _itemEvent.ExcuteEvent(type, this, unit, enemy, itemEventSet);
     }
