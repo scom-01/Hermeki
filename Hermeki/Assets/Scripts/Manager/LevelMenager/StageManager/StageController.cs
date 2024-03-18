@@ -9,11 +9,13 @@ public class StageController : MonoBehaviour
     private LevelManager LM;
     public TilemapRenderer TM_Renderer;
     public PolygonCollider2D PC2D;
+    public StageItemController SI_Controller;
     private void Awake()
     {
         LM = GetComponentInParent<LevelManager>();
         TM_Renderer = GetComponentInChildren<TilemapRenderer>();
         TM_Renderer.enabled = false;
+        SI_Controller = GetComponentInChildren<StageItemController>();
     }
     public bool ResetStage()
     {
@@ -25,6 +27,10 @@ public class StageController : MonoBehaviour
         if (this.TryGetComponent(out ActionEventHandler _action))
         {
             _action.EndAction();
+        }
+        if (SI_Controller != null)
+        {
+            SI_Controller.ClearObject();
         }
         return true;
     }
@@ -43,6 +49,8 @@ public class StageController : MonoBehaviour
             _action.EndAction();
         }
 
+        ResetStage();
+
         return true;
     }
 
@@ -52,7 +60,7 @@ public class StageController : MonoBehaviour
         {
             return false;
         }
-        
+
         LM.VirtualCamera.GetComponent<CinemachineConfiner2D>().enabled = true;
         if (PC2D != null)
         {

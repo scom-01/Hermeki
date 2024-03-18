@@ -132,6 +132,14 @@ public class LevelManager : MonoBehaviour
 
         return;
     }
+
+    public StageController CurrStage()
+    {
+        if (StageList?.Count == 0)
+            return null;
+        return StageList[CurrStageIdx];
+    }
+
     public bool GoNextStage(Player player)
     {
         if (player == null)
