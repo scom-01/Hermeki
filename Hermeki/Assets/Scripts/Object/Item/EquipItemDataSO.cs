@@ -1,13 +1,44 @@
 ﻿using SCOM;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 [Serializable]
 public class EquipItemData
 {
     public EquipItemDataSO dataSO;
-    public int CurrentDurability;
+    public int CurrentDurability
+    {
+        get
+        {
+            if (dataSO != null && currDurability >= dataSO.MaxDurability)
+            {
+                currDurability = dataSO.MaxDurability;
+            }
+            if (currDurability < 0)
+            {
+                currDurability = 0;
+            }
+            return currDurability;
+        }
+        set
+        {
+            if (dataSO != null && value >= dataSO.MaxDurability)
+            {
+                value = dataSO.MaxDurability;
+            }
+            if (value < 0)
+            {
+                value = 0;
+            }
+            currDurability = value;
+        }
+    }
+    [SerializeField]
+    [field: Range(0, 99)]
+    private int currDurability;
     public EquipItemData(EquipItemDataSO dataSO, int currentDurability)
     {
         this.dataSO = dataSO;
@@ -24,6 +55,7 @@ public struct ItemSpriteData
 [CreateAssetMenu(fileName = "newEquipItemDataSO", menuName = "Data/Equip Data/Equip Item Data")]
 public class EquipItemDataSO : ScriptableObject
 {
+    public Item_Type ItemType;
     [Header("Durability")]
     public ItemSpriteData[] Sprite;
     public int MaxDurability;
@@ -34,7 +66,16 @@ public class EquipItemDataSO : ScriptableObject
     [Header("Sounds")]
     [Tooltip("아이템 내구도 파괴 시 호출될 사운드")]
     public AudioData BrokenAudioData;
-    public virtual ItemEventSet ExeEvent(ITEM_TPYE type, Unit unit, Unit enemy, ItemEventSO _itemEvent, ItemEventSet itemEventSet)
+
+
+    [Header("Physics")]
+    public PhysicsMaterial2D PM2D;
+
+    public EquipItemDataSO(Item_Type _type)
+    {
+        ItemType = _type;
+    }
+    public virtual ItemEventSet ExeEvent(ItemEvent_Type type, Unit unit, Unit enemy, ItemEventSO _itemEvent, ItemEventSet itemEventSet)
     {
         return _itemEvent.ExcuteEvent(type, this, unit, enemy, itemEventSet);
     }
