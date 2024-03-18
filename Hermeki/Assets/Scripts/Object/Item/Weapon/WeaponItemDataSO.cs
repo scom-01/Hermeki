@@ -4,6 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newWeaponItemDataSO", menuName = "Data/Equip Data/Weapon Item Data")]
 public class WeaponItemDataSO : EquipItemDataSO
 {
+    public WeaponItemDataSO(Item_Type type) : base(type)
+    {
+        ItemType = Item_Type.Weapon;
+    }
     public WeaponStyle Style;
     /// <summary>
     /// 지형 충돌 여부
@@ -11,8 +15,6 @@ public class WeaponItemDataSO : EquipItemDataSO
     public bool isPhysicsCheck_Ground = true;
     public bool isPhysicsCheck_Unit = true;
 
-    [Header("Physics")]
-    public PhysicsMaterial2D PM2D;
     [Header("Effect")]
     [Header("VFX")]
     public EffectPrefab Grounded_effectData;

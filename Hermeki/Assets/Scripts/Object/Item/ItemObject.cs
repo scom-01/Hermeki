@@ -26,7 +26,7 @@ public class ItemObject : MonoBehaviour
 
     private void SetPolygon()
     {
-        if (SR == null && pc2d == null)
+        if (SR?.sprite == null)
             return;
 
         if (pc2d == null)
@@ -42,9 +42,9 @@ public class ItemObject : MonoBehaviour
             polygon.SetPath(i, points);
         }
         polygon.isTrigger = false;
-        if (data != null)
+        if (data?.dataSO != null)
         {
-            polygon.sharedMaterial = (data.dataSO as WeaponItemDataSO).PM2D;
+            polygon.sharedMaterial = data.dataSO.PM2D;
         }
     }
 
