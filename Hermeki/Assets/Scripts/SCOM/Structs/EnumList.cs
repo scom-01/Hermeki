@@ -220,6 +220,15 @@ public enum Localization
     en,
     kr,
 }
+[Serializable]
+public enum InventoryState
+{
+    Table = 0,
+    Armor = 1,
+    Weapon = 2,
+    Item = 3,
+    Close = 4,
+}
 #endregion
 
 public enum ObjectPooling_TYPE

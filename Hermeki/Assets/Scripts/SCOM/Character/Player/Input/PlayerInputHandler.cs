@@ -489,6 +489,17 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnInteractive()
     {
         InteractionInput = true;
+        if (GameManager.Inst?.LevelManager?.InventoryTable != null)
+        {
+            if (GameManager.Inst.LevelManager.InventoryTable.State == InventoryState.Close)
+            {
+                GameManager.Inst.LevelManager.InventoryTable.SetState(InventoryState.Table);
+            }
+            else
+            {
+                GameManager.Inst.LevelManager.InventoryTable.SetState(InventoryState.Close);
+            }
+        }
     }
 
     #endregion

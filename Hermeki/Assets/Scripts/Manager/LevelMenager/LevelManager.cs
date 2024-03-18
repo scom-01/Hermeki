@@ -27,8 +27,9 @@ public class LevelManager : MonoBehaviour
     public int MaxLevel = 5;
 
     [Header("UI")]
-    public Canvas RootCanvas;
-    public Canvas SelectLevelCanvas;
+    public Canvas LevelCanvas;
+    public InventoryTable InventoryTable;
+
     public SPUM_SpriteList SettingSpriteList;
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
@@ -43,9 +44,9 @@ public class LevelManager : MonoBehaviour
     public virtual void Start()
     {
         StageList = GetComponentsInChildren<StageController>().ToList();
-        if (SelectLevelCanvas != null)
+        if (LevelCanvas != null)
         {
-            SelectUIList = SelectLevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
+            SelectUIList = LevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
             if (SelectUIList != null && SelectUIList.Count > 0)
             {
                 SelectStart(0);
@@ -72,6 +73,12 @@ public class LevelManager : MonoBehaviour
             _Pos = StartPos.position;
         }
 
+        if (LevelCanvas != null)
+            LevelCanvas.enabled = false;
+        
+        if (InventoryTable != null)
+            InventoryTable.SetState(InventoryState.Close);
+
         if (SpawnUnit != null)
         {
             SpawnUnit.InstantiateAsync().Completed += (AsyncOperationHandle<GameObject> _obj) =>
@@ -89,11 +96,16 @@ public class LevelManager : MonoBehaviour
     public void GameOver()
     {
         isPlaying = false;
-        if (player == null || RootCanvas == null)
+        if (player == null || LevelCanvas == null)
             return;
 
         CurrStageIdx = 0;
-        RootCanvas.gameObject.SetActive(true);
+        if (LevelCanvas != null)
+            LevelCanvas.enabled = true;
+
+        if (InventoryTable != null)
+            InventoryTable.SetState(InventoryState.Close);
+
         Addressables.ReleaseInstance(player.gameObject);
         player = null;
         if (VirtualCamera != null && player != null)
