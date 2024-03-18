@@ -70,8 +70,8 @@ public class ItemManager : MonoBehaviour
             return false;
 
         List<Sprite> sprites = new List<Sprite>();
-        int idx = data.dataSO.CalculateDurability(data.CurrentDurability);
-        foreach (var SR in data.dataSO.Sprite[idx].sprites)
+
+        foreach (var SR in data.CalculateSprite())
         {
             sprites.Add(SR);
         }

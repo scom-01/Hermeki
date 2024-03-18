@@ -44,6 +44,11 @@ public class EquipItemData
         this.dataSO = dataSO;
         CurrentDurability = currentDurability;
     }
+
+    public Sprite[] CalculateSprite()
+    {
+        return dataSO.Sprite[dataSO.CalculateDurability(CurrentDurability)].sprites;
+    }
 }
 [Serializable]
 public struct ItemSpriteData

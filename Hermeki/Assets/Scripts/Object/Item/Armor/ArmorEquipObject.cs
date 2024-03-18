@@ -40,11 +40,9 @@ public class ArmorEquipObject : EquipObject
             GetComponentInParent<BoxCollider2D>().size = (Data?.dataSO as ArmorItemDataSO).Collider_Rect.size;
         }
 
-        int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
-
         for (int i = 0; i < SpriteRenderers.Length; i++)
         {
-            SpriteRenderers[i].sprite = Data.dataSO.Sprite[idx].sprites[i];
+            SpriteRenderers[i].sprite = Data.CalculateSprite()[i];
         }
     }
 }

@@ -43,9 +43,8 @@ public class ArmorItem : EquipItem
             SetSprite(null);
             return false;
         }
-        int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
         List<UnityEngine.Sprite> spriteList = new List<UnityEngine.Sprite>();
-        foreach (var sprite in Data.dataSO.Sprite[idx].sprites)
+        foreach (var sprite in Data.CalculateSprite())
         {
             spriteList.Add(sprite);
         }

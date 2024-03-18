@@ -58,13 +58,11 @@ public class WeaponItem : EquipItem
     {
         if (Data.CurrentDurability <= 0 || Data?.dataSO == null)
             return;
-
-        int idx = Data.dataSO.CalculateDurability(Data.CurrentDurability);
-
+                
         //무기의 Sprite는 1개 이므로 sprites[0]으로 고정
-        if (Data.dataSO.Sprite[idx].sprites[0] != null && sr.sprite != Data.dataSO.Sprite[idx].sprites[0])
+        if (Data.CalculateSprite()[0] != null && sr.sprite != Data.CalculateSprite()[0])
         {
-            SetWeaponSprite(Data.dataSO.Sprite[idx].sprites[0]);
+            SetWeaponSprite(Data.CalculateSprite()[0]);
             SetCollider2D();
         }
     }

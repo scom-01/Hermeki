@@ -19,8 +19,7 @@ public class ItemObject : MonoBehaviour
         if (_data == null)
             return;
         this.data = _data;
-        int idx = data.dataSO.CalculateDurability(data.CurrentDurability);
-        SR.sprite = data.dataSO.Sprite[idx].sprites[0];
+        SR.sprite = data.CalculateSprite()[0];
         SetPolygon();
     }
 
