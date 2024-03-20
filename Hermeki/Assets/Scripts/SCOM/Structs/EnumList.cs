@@ -77,6 +77,30 @@ public enum Item_Type
     Weapon = 1,
     Rune = 2,
 }
+
+
+public enum AllItemStyle
+{
+    Helmet = ArmorStyle.Helmet,
+    Armor = ArmorStyle.Armor,
+    Boots = ArmorStyle.Boots,
+    Sword = WeaponStyle.Sword,
+    Staff = WeaponStyle.Staff,
+}
+
+public enum ArmorStyle
+{
+    Helmet = 0,
+    Armor = 1,
+    Boots = 2,
+}
+
+public enum WeaponStyle
+{
+    Sword = 10,
+    Staff = 11,
+}
+
 public enum ITEM_Level
 {
     Common = 1,
@@ -224,10 +248,11 @@ public enum Localization
 public enum InventoryState
 {
     Table = 0,
-    Armor = 1,
-    Weapon = 2,
-    Item = 3,
-    Close = 4,
+    EquipItem = 1,
+    ChoiceHand = 2,
+    Rune = 3,
+    Enchant = 4,
+    Close = 5
 }
 #endregion
 

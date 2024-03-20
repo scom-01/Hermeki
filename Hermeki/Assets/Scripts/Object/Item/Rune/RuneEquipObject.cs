@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RuneEquipObject : EquipObject
 {
@@ -10,6 +10,9 @@ public class RuneEquipObject : EquipObject
     public ItemObject itemObject => this.transform.parent.GetComponentInChildren<ItemObject>();
     public override void Interactive(Unit unit)
     {
+        Debug.Log($"Armor Equip Interactive {unit.name}");
+        unit?.ItemManager?.AddEquipItem(Data);
+        this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
     }
     public override void UnInteractive(Unit unit)
     {

@@ -4,8 +4,17 @@ public class EquipItem : MonoBehaviour
 {
     protected Unit unit;
     protected AnimationEventHandler eventHandler;
-    public EquipItemData Data;
+    public EquipItemData Data
+    {
+        get => GetData(out EquipItemData data);
+        set
+        {
+            SetItemData(value);
+        }
+    }
     public EquipItemEventSet ItemEvent;
+
+    public virtual EquipItemData GetData(out EquipItemData data){ data = new EquipItemData(); return data; }
     // Start is called before the first frame update
     protected virtual void Awake()
     {
@@ -23,7 +32,7 @@ public class EquipItem : MonoBehaviour
 
     public virtual void DecreaseDurability()
     {
-        Data.CurrentDurability--;
+        Data.DecreaseDurability();
     }
 
     public virtual bool SetItemData(EquipItemData _data)
@@ -33,8 +42,8 @@ public class EquipItem : MonoBehaviour
             ItemEvent = null;
             return false;
         }
-        Data = _data;
-        ItemEvent = new EquipItemEventSet(Data.dataSO);
+        Data.SetEquipItemData(_data);
+        ItemEvent = new EquipItemEventSet(Data.dataSO);        
         return true;
     }
 

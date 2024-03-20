@@ -1,12 +1,11 @@
 ﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using TMPro;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -58,7 +57,7 @@ public class LevelManager : MonoBehaviour
         if (player == null)
             return;
 
-        if(!player.IsAlive && isPlaying)
+        if (!player.IsAlive && isPlaying)
         {
             isPlaying = false;
             Invoke("GameOver", 2f);
@@ -75,9 +74,11 @@ public class LevelManager : MonoBehaviour
 
         if (LevelCanvas != null)
             LevelCanvas.enabled = false;
-        
+
         if (InventoryTable != null)
+        {
             InventoryTable.SetState(InventoryState.Close);
+        }
 
         if (SpawnUnit != null)
         {
@@ -89,6 +90,10 @@ public class LevelManager : MonoBehaviour
                 {
                     VirtualCamera.Follow = player.transform;
                     VirtualCamera.transform.position = player.transform.position;
+                }
+                if (InventoryTable != null)
+                {
+                    InventoryTable.unit = player;
                 }
             };
         }

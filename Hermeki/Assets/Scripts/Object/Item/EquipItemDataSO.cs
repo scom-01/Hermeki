@@ -1,27 +1,26 @@
 ﻿using SCOM;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 [Serializable]
 public class EquipItemData
 {
+    public string StringName;
     public EquipItemDataSO dataSO;
     public int CurrentDurability
     {
         get
         {
-            if (dataSO != null && currDurability >= dataSO.MaxDurability)
+            if (dataSO != null && _currDurability >= dataSO.MaxDurability)
             {
-                currDurability = dataSO.MaxDurability;
+                _currDurability = dataSO.MaxDurability;
             }
-            if (currDurability < 0)
+            if (_currDurability < 0)
             {
-                currDurability = 0;
+                _currDurability = 0;
             }
-            return currDurability;
+            return _currDurability;
         }
         set
         {
@@ -33,21 +32,47 @@ public class EquipItemData
             {
                 value = 0;
             }
-            currDurability = value;
+            if (dataSO != null) 
+                StringName = this.dataSO.name;
+            _currDurability = value;
         }
     }
     [SerializeField]
     [field: Range(0, 99)]
-    private int currDurability;
-    public EquipItemData(EquipItemDataSO dataSO, int currentDurability)
+    private int _currDurability;
+    public EquipItemData(EquipItemDataSO dataSO = null, int currentDurability = 0)
     {
         this.dataSO = dataSO;
+        StringName = (this.dataSO != null) ? this.dataSO.name : "";
         CurrentDurability = currentDurability;
     }
 
     public Sprite[] CalculateSprite()
     {
         return dataSO.Sprite[dataSO.CalculateDurability(CurrentDurability)].sprites;
+    }
+    public void DecreaseDurability(int amount = 1)
+    {
+        CurrentDurability -= amount;
+        if (CurrentDurability < 0)
+        {
+            CurrentDurability = 0;
+        }
+    }
+
+    public void SetEquipItemData(EquipItemData _data)
+    {
+        if (_data?.dataSO == null)
+        {
+            StringName = "";
+            dataSO = null;
+            CurrentDurability = 0;
+            return;
+        }
+
+        StringName = _data.StringName;
+        dataSO = _data.dataSO;
+        CurrentDurability = _data.CurrentDurability;
     }
 }
 [Serializable]
@@ -56,7 +81,6 @@ public struct ItemSpriteData
     public Sprite[] sprites;
     public int durability;
 }
-
 [CreateAssetMenu(fileName = "newEquipItemDataSO", menuName = "Data/Equip Data/Equip Item Data")]
 public class EquipItemDataSO : ScriptableObject
 {

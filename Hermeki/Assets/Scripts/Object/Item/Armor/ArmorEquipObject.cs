@@ -14,7 +14,7 @@ public class ArmorEquipObject : EquipObject
     public override void Interactive(Unit unit)
     {
         Debug.Log($"Armor Equip Interactive {unit.name}");
-        unit.ItemManager?.AddArmorItem(Data);
+        unit?.ItemManager?.AddEquipItem(Data);
         this.GetComponentInParent<Rigidbody2D>().gameObject.SetActive(false);
     }
     public override void UnInteractive(Unit unit)

@@ -12,7 +12,7 @@ public class WeaponEquipObject : EquipObject
     public override void Interactive(Unit unit)
     {
         Debug.Log($"Weapon Equip Interactive {unit.name}");
-        unit.ItemManager?.AddWeaponItem(Data);
+        unit?.ItemManager?.AddEquipItem(Data);
         this.transform.parent.GetComponentInChildren<Rigidbody2D>().gameObject.SetActive(false);
     }
 

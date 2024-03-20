@@ -1,15 +1,15 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum ArmorStyle
-{
-    Helmet = 0,
-    Armor = 1,
-    Boots = 2,
-}
+
 public class ArmorItem : EquipItem
 {
     public ArmorStyle Style;
+    public override EquipItemData GetData(out EquipItemData data)
+    {
+        data = unit?.ItemManager?.AllItemList[(int)Style];
+        return data;
+    }
 
     #region override
     protected override void Start()
@@ -19,7 +19,7 @@ public class ArmorItem : EquipItem
     }
     public override void DecreaseDurability()
     {
-        base.DecreaseDurability();
+        unit?.ItemManager.AllItemList[(int)Style].DecreaseDurability();
         unit.ItemManager?.ExeItemEvent(ItemEvent, ItemEvent_Type.OnDamaged);
         if (Data.CurrentDurability > 0)
         {
@@ -36,13 +36,17 @@ public class ArmorItem : EquipItem
 
     public override bool SetItemData(EquipItemData _data)
     {
-        if(!base.SetItemData(_data))
+        if (!base.SetItemData(_data))
         {
             DestroyItem();
             Data.dataSO = null;
             SetSprite(null);
             return false;
         }
+
+        //아이템 장착 배열에 위치
+        unit.ItemManager.AllItemList[(int)(Data.dataSO as ArmorItemDataSO).Style].SetEquipItemData(_data);
+
         List<UnityEngine.Sprite> spriteList = new List<UnityEngine.Sprite>();
         foreach (var sprite in Data.CalculateSprite())
         {

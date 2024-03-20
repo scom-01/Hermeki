@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -47,45 +48,76 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     public SPUM_SpriteList SPUM_SpriteList;
 
-    //현재 장착 
-    public List<WeaponItem> WeaponItemList = new List<WeaponItem>();
-    public List<ArmorItem> ArmorItemList = new List<ArmorItem>();
+    //전체 아이템 배열
+    /// <summary>
+    /// 0~19 장착 아이템, 20~29 방어구, 무기 아이템 배열, 30~39 룬 아이템 배열
+    /// </summary>
+    public EquipItemData[] AllItemList = new EquipItemData[39];
 
-    //대기 인벤토리
-    public List<EquipItemData> WeaponDataList = new List<EquipItemData>();
-    public List<EquipItemData> ArmorDataList = new List<EquipItemData>();
+    //현재 장착 
+    public List<WeaponItem> EquipWeaponItemList = new List<WeaponItem>();
+    public List<ArmorItem> EquipArmorItemList = new List<ArmorItem>();
 
     private void Start()
     {
-        ArmorItemList = this.GetComponentsInChildren<ArmorItem>().ToList();
-        WeaponItemList = this.GetComponentsInChildren<WeaponItem>().ToList();
+        EquipArmorItemList = this.GetComponentsInChildren<ArmorItem>().ToList();
+        EquipWeaponItemList = this.GetComponentsInChildren<WeaponItem>().ToList();
     }
     private void Update()
     {
         ItemExeUpdate();
     }
-    public bool AddArmorItem(EquipItemData data)
+
+    #region Add, Remove
+
+    public EquipItemData ResearchItem(EquipItemData data)
     {
-        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
-            return false;
-
-        List<Sprite> sprites = new List<Sprite>();
-
-        foreach (var SR in data.CalculateSprite())
+        if (data?.dataSO == null)
+            return null;
+        for (int i = 0; i < AllItemList.Length; i++)
         {
-            sprites.Add(SR);
-        }
+            if (AllItemList[i].dataSO == null)
+                continue;
 
-        foreach (var _armoritem in ArmorItemList)
-        {
-            if (_armoritem.Style == (data.dataSO as ArmorItemDataSO).Style)
+            if (AllItemList[i]==data)
             {
-                _armoritem.SetItemData(data);
-                return true;
+                return AllItemList[i];
             }
         }
-        Debug.Log($"방어구 DB에 저장");
-        ArmorDataList.Add(data);
+        return null;
+    }
+    public bool AddEquipItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+
+        switch (data.dataSO.ItemType)
+        {
+            case Item_Type.Armor:
+                AddArmorItem(data);
+                break;
+            case Item_Type.Weapon:
+                AddWeaponItem(data);
+                break;
+            case Item_Type.Rune:
+                AddRuneItem(data);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+    public bool AddArmorItem(EquipItemData data)
+    {
+        if (data?.dataSO == null || data.CurrentDurability == 0)
+            return false;
+
+        //현재 장착 가능한 부위에 장착
+        if(!Equip_ArmorItem(data))
+        {
+            Debug.Log($"{data.dataSO.name} DB에 저장");
+            Add_InventoryItem(data);
+        }        
         return true;
     }
 
@@ -94,23 +126,283 @@ public class ItemManager : MonoBehaviour
         if (data == null || data.dataSO == null || data.CurrentDurability == 0)
             return false;
 
-        foreach (var _weaponitem in WeaponItemList)
+        //현재 장착 가능한 손에 장착
+        if (!Equip_WeaponItem(data)) 
         {
-            if(_weaponitem.Data.dataSO != null)
+            Debug.Log($"{data.dataSO.name} DB에 저장");
+            Add_InventoryItem(data);
+        }        
+        return true;
+    }
+
+    public bool AddRuneItem(EquipItemData data)
+    {
+        if (data == null || data.dataSO == null || data.CurrentDurability == 0)
+            return false;
+
+        Debug.Log($"룬 DB에 저장");
+        Add_InventoryRuneItem(data);
+        return true;
+    }
+
+    /// <summary>
+    /// 아이템을 장착한다면 true를 반환
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public bool Equip_ArmorItem(EquipItemData data)
+    {
+        if (data?.dataSO == null || data.CurrentDurability == 0)
+            return false;
+
+        //현재 장착 가능한 부위에 장착
+        foreach (var _armoritem in EquipArmorItemList)
+        {
+            if (_armoritem.Data.dataSO != null)
+            {
+                continue;
+            }
+
+            //부위가 같고 장착 중이 아니라면
+            if (_armoritem.Style == (data.dataSO as ArmorItemDataSO).Style)
+            {
+                _armoritem.SetItemData(data);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 아이템을 장착한다면 true를 반환
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public bool Equip_WeaponItem(EquipItemData data)
+    {
+        if (data?.dataSO == null || data.CurrentDurability == 0)
+            return false;
+
+        //현재 장착 가능한 부위에 장착
+        foreach (var _weaponitem in EquipWeaponItemList)
+        {
+            if (_weaponitem.Data.dataSO != null)
             {
                 continue;
             }
             _weaponitem.SetItemData(data);
             return true;
         }
-        Debug.Log($"무기 DB에 저장");
-        WeaponDataList.Add(data);
+        return false;
+    }
+
+    public EquipItemData CheckEquipArmor(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return null;
+        for (int i = 0; i < EquipArmorItemList.Count; i++)
+        {            
+            if (EquipArmorItemList[i].Data == data) 
+            {
+                EquipArmorItemList[i].Data.SetEquipItemData(data);
+
+            }
+        }
+        return null;
+    }
+
+    public bool Add_InventoryItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+
+        for (int i = 20; i < 30; i++)
+        {
+            if (AllItemList[i].dataSO == null)
+            {
+                AllItemList[i].SetEquipItemData(data);
+                break;
+            }
+        }
+
         return true;
     }
+    public bool Add_InventoryRuneItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+
+        for (int i = 30; i < AllItemList.Length; i++)
+        {
+            if (AllItemList[i].dataSO == null)
+            {
+                AllItemList[i].SetEquipItemData(data);
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    public bool Remove_InventoryArmorItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+        for (int i = 0; i < AllItemList.Length; i++)
+        {
+            if (AllItemList[i].dataSO == null)
+                continue;
+            if (AllItemList[i] == data)
+            {
+                AllItemList[i].SetEquipItemData(null);
+                break;
+            }
+        }
+        return true;
+    }
+    public bool Remove_InventoryWeaponItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+        for (int i = 0; i < AllItemList.Length; i++)
+        {
+            if (AllItemList[i].dataSO == null)
+                continue;
+            if (AllItemList[i] == data)
+            {
+                AllItemList[i].SetEquipItemData(null);
+                break;
+            }
+        }
+        return true;
+    }
+    public bool Remove_InventoryRuneItem(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+        for (int i = 0; i < AllItemList.Length; i++)
+        {
+            if (AllItemList[i].dataSO == null)
+                continue;
+            if (AllItemList[i] == data)
+            {
+                AllItemList[i].SetEquipItemData(null);
+                break;
+            }
+        }
+        return true;
+    }
+    #endregion
+
+    #region Change
+
+    public bool ChangeArmor(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+        for (int i = 0; i < EquipArmorItemList.Count; i++)
+        {
+            if (EquipArmorItemList[i]?.Style == (data.dataSO as ArmorItemDataSO)?.Style)
+            {
+                //장착 중이던 아이템 인벤토리로 이동
+                EquipItemData temp = new EquipItemData(EquipArmorItemList[i].Data.dataSO, EquipArmorItemList[i].Data.CurrentDurability);
+
+                //장착 아이템 교체
+                EquipArmorItemList[i].SetItemData(data);
+
+                ResearchItem(data)?.SetEquipItemData(temp);
+            }
+        }
+        return true;
+    }
+
+    public bool ChangeWeapon(EquipItemData data, bool isLeft = true)
+    {
+        if (data?.dataSO == null)
+            return false;
+        for (int i = 0; i < EquipWeaponItemList.Count; i++)
+        {
+            if (EquipWeaponItemList[i].isLeft == isLeft)
+            {
+                //장착 중이던 아이템 인벤토리로 이동
+                EquipItemData temp = new EquipItemData(EquipWeaponItemList[i].Data.dataSO, EquipWeaponItemList[i].Data.CurrentDurability);
+                
+                //장착 아이템 교체
+                EquipWeaponItemList[i]?.SetItemData(data);
+
+                ResearchItem(data)?.SetEquipItemData(temp);
+                break;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 룬 아이템과 합성
+    /// </summary>
+    /// <param name="data">Rune 타입 아이템</param>
+    /// <returns></returns>
+    public bool EnchantArmor(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+        EquipItemData temp = new EquipItemData(data.dataSO, data.dataSO.MaxDurability);
+        for (int i = 0; i < EquipArmorItemList.Count; i++)
+        {
+            if (EquipArmorItemList[i]?.Style == (temp.dataSO as ArmorItemDataSO)?.Style)
+            {
+                //장착 아이템 교체
+                EquipArmorItemList[i].SetItemData(temp);
+            }
+        }
+        return true;
+    }
+    /// <summary>
+    /// 룬 아이템과 합성
+    /// </summary>
+    /// <param name="data">Rune 타입 아이템</param>
+    /// <param name="isLeft"></param>
+    /// <returns></returns>
+    public bool EnchantWeapon(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return false;
+
+        EquipItemData temp = ResearchItem(data);
+
+        for (int i = 0; i < EquipWeaponItemList.Count; i++)
+        {
+            if (EquipWeaponItemList[i].Data == data)
+            {
+                //장착 아이템 교체
+                EquipWeaponItemList[i]?.SetItemData(data);
+                break;
+            }
+        }
+        return true;
+    }
+    public bool EnchantWeapon(EquipItemData data, bool isLeft)
+    {
+        if (data?.dataSO == null)
+            return false;
+
+        EquipItemData temp = new EquipItemData(data.dataSO, data.dataSO.MaxDurability);
+        for (int i = 0; i < EquipWeaponItemList.Count; i++)
+        {
+            if (EquipWeaponItemList[i].isLeft == isLeft)
+            {
+                //장착 아이템 교체
+                EquipWeaponItemList[i]?.SetItemData(temp);
+                break;
+            }
+        }
+        return true;
+    }
+    #endregion
     private int CurrentArmorPower()
     {
         int result = 0;
-        foreach (var _armoritem in ArmorItemList)
+        foreach (var _armoritem in EquipArmorItemList)
         {
             result += _armoritem.Data.CurrentDurability;
         }
@@ -120,13 +412,13 @@ public class ItemManager : MonoBehaviour
     public bool DamagedArmor(int _damage = 1)
     {
         if (CurrentArmorPower() == 0)
-        {            
+        {
             return false;
         }
 
         for (int i = 0; i < _damage; i++)
         {
-            foreach (var _armorItem in ArmorItemList)
+            foreach (var _armorItem in EquipArmorItemList)
             {
                 if (_armorItem.Data.CurrentDurability > 0)
                 {
@@ -137,6 +429,7 @@ public class ItemManager : MonoBehaviour
         }
         return true;
     }
+
 
     #region Event
     public bool ExeItemEvent(EquipItemEventSet _ItemEvent = null, ItemEvent_Type type = ItemEvent_Type.None, Unit enemy = null)

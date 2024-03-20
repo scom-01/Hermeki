@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum WeaponStyle
-{
-    Sword = 0,
-    Staff = 1,
-}
+
 public class WeaponItem : EquipItem
 {
     private SpriteRenderer sr => GetComponent<SpriteRenderer>();
@@ -15,6 +11,11 @@ public class WeaponItem : EquipItem
 
     public bool isLeft;
     public bool isAction;
+    public override EquipItemData GetData(out EquipItemData data)
+    {
+        data = unit?.ItemManager?.AllItemList[10 + (isLeft ? 0 : 1)];
+        return data;
+    }
     protected override void Start()
     {
         base.Start();
@@ -110,6 +111,10 @@ public class WeaponItem : EquipItem
             SetWeaponStyle(WeaponStyle.Sword);
             return false;
         }
+
+        //아이템 장착 배열에 위치
+        unit.ItemManager.AllItemList[10 + (isLeft ? 0 : 1)].SetEquipItemData(_data);
+
         CalculateWeaponSprite();
         SetWeaponStyle((Data.dataSO as WeaponItemDataSO).Style);
         return false;
