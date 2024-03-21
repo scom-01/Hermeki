@@ -8,9 +8,12 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     public EquipItemData Data;
     public Item_Type Type;
 
+    public bool isEquipable = true;
+
     public EquipObject(EquipItemData data)
     {
         Data = data;
+        isEquipable = true;
     }
 
     protected virtual void Start()
@@ -18,11 +21,12 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         SetSpriteRenderer();
     }
 
-    public virtual bool SetData(EquipItemData _data)
+    public virtual bool SetData(EquipItemData _data, bool _isEquipable = false)
     {
         if (_data == null)
             return false;
         Data = _data;
+        isEquipable = _isEquipable;
         SetSpriteRenderer();
         return true;
     }
@@ -35,8 +39,11 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         if (!collision.GetComponent<Unit>().IsAlive)
             return;
 
-        Interactive(collision.GetComponent<Unit>());
-        Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");        
+        if(isEquipable)
+        {
+            Interactive(collision.GetComponent<Unit>());
+            Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");        
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -46,6 +53,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         if (!collision.GetComponent<Unit>().IsAlive)
             return;
 
+        isEquipable = true;
         UnInteractive(collision.GetComponent<Unit>());
         Debug.Log($"TriggerExit Unit name = {collision.gameObject.name}");
     }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEditor.Progress;
 
 
 public class InventoryTable : MonoBehaviour
@@ -21,11 +23,11 @@ public class InventoryTable : MonoBehaviour
         canvas = this.GetComponent<Canvas>();
         TableList = this.GetComponentsInChildren<UI_Canvas>().ToList();
     }
-
-    public void SetState(int idx)
+    private void Start()
     {
-        SetState((InventoryState)idx);
+        SetState(InventoryState.Close);
     }
+    
     public void SetState(InventoryState _state)
     {
         State = _state;
@@ -37,6 +39,10 @@ public class InventoryTable : MonoBehaviour
         else if (State == InventoryState.Close)
         {
             canvas.enabled = false;
+            foreach (var _canvas in TableList)
+            {
+                _canvas.Canvas_Disable();
+            }
             CurrItem = null;
             return;
         }
@@ -161,6 +167,14 @@ public class InventoryTable : MonoBehaviour
     }
     #endregion
 
+    #region Event
+
+    //Event
+    public void SetState(int idx)
+    {
+        SetState((InventoryState)idx);
+    }
+
     //Event
     public void SetEquipWeaponHand(bool isLeft)
     {
@@ -186,4 +200,65 @@ public class InventoryTable : MonoBehaviour
         GameManager.Inst.LevelManager.player.ItemManager.EnchantWeapon(CurrItem, isLeft);
         SetState(InventoryState.Close);
     }
+
+    //Event
+    public void SetChoiceEquip(bool isEquip)
+    {
+        if (CurrItem?.dataSO == null || GameManager.Inst?.LevelManager?.player?.ItemManager == null)
+        {
+            SetState(InventoryState.Close);
+            return;
+        }
+        if(isEquip)
+        {
+            switch (CurrItem.dataSO.ItemType)
+            {
+                case Item_Type.Armor:
+                    unit?.ItemManager?.ChangeArmor(CurrItem);
+                    break;
+                case Item_Type.Weapon:
+                    SetState(InventoryState.ChoiceHand);
+                    return;
+                case Item_Type.Rune:
+                    break;
+                default:
+                    break;
+            }
+        }
+        //드랍
+        else
+        {
+            EquipItemData temp = new EquipItemData(CurrItem.dataSO, CurrItem.CurrentDurability);
+            unit.ItemManager.ResearchItem(CurrItem).SetEquipItemData(null);
+            GameManager.Inst.LevelManager.CurrStage()?.SI_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
+        }
+        
+        SetState(InventoryState.Close);
+    }
+
+    //Event
+    public void SetChoiceEnchant(bool isEnchant)
+    {
+        if (CurrItem?.dataSO == null || GameManager.Inst?.LevelManager?.player?.ItemManager == null)
+        {
+            SetState(InventoryState.Close);
+            return;
+        }
+
+        if (isEnchant)
+        {
+            SetState(InventoryState.Enchant);
+            return;
+        }
+        //드랍
+        else
+        {
+            EquipItemData temp = new EquipItemData(CurrItem.dataSO, CurrItem.CurrentDurability);
+            unit.ItemManager.ResearchItem(CurrItem).SetEquipItemData(null);
+            GameManager.Inst.LevelManager.CurrStage()?.SI_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
+        }
+
+        SetState(InventoryState.Close);
+    }
+    #endregion
 }

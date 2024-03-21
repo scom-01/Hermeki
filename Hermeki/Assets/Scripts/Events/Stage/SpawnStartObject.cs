@@ -78,6 +78,10 @@ public class SpawnStartObject : ActionEvent
             AddressableSpawnObjList[i].AddressObj.InstantiateAsync(AddressableSpawnObjList[i].Pos).Completed +=
                 (AsyncOperationHandle<GameObject> _obj) =>
                 {
+                    if (_obj.Result.CompareTag("Item") && _obj.Result.GetComponentInChildren<EquipObject>() != null)
+                    {
+                        _obj.Result.GetComponentInChildren<EquipObject>().isEquipable = true;
+                    }
                     SpawnedObject.Add(_obj.Result);
                 };
         }
