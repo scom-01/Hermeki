@@ -204,8 +204,20 @@ public class ItemManager : MonoBehaviour
         {            
             if (EquipArmorItemList[i].Data == data) 
             {
-                EquipArmorItemList[i].Data.SetEquipItemData(data);
-
+                return EquipArmorItemList[i].Data;
+            }
+        }
+        return null;
+    }
+    public EquipItemData CheckEquipWeapon(EquipItemData data)
+    {
+        if (data?.dataSO == null)
+            return null;
+        for (int i = 0; i < EquipWeaponItemList.Count; i++)
+        {            
+            if (EquipWeaponItemList[i].Data == data) 
+            {
+                return EquipWeaponItemList[i].Data;
             }
         }
         return null;
