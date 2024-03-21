@@ -8,6 +8,25 @@ public enum UI_Type
     Grid = 2,
 }
 
+public enum UI_RectTransform_Anchor
+{
+    Top_Left = 0,
+    Top_Center = 1,
+    Top_Right = 2,
+    Top_Stretch = 4,
+    Middle_Left = 5,
+    Middle_Center = 6,
+    Middle_Right = 7,
+    Middle_Stretch = 8,
+    Bottom_Left = 9,
+    Bottom_Center = 10,
+    Bottom_Right = 11,
+    Bottom_Stretch = 12,
+    Stretch_Left = 13,
+    Stretch_Center = 14,
+    Stretch_Right = 15,
+    Stretch_Stretch = 16,
+}
 //UI에 관한 동작을 EventSystem에서 손쉽게 호출하도록 함수들을 모아놓은 클래스
 public class UIController : MonoBehaviour
 {
@@ -87,8 +106,20 @@ public class UIController : MonoBehaviour
     {
         if (_data?.dataSO == null)
             return false;
-        GameObject obj = AddChild(Base_ContentObject);
-        obj.GetComponent<InventoryItemUI>().SetData(_data);
+        switch (_data.dataSO.ItemType)
+        {
+            case Item_Type.Armor:
+                AddChild(Base_ContentObject)?.GetComponent<InventoryItemUI>()?.SetData(_data);
+                break;
+            case Item_Type.Weapon:
+                AddChild(Base_ContentObject)?.GetComponent<InventoryItemUI>()?.SetData(_data);
+                break;
+            case Item_Type.Rune:
+                AddChild(Base_ContentObject)?.GetComponent<InventoryItemUI>()?.SetData(_data);
+                break;
+            default:
+                break;
+        }
         return true;
     }
     public GameObject AddChild(GameObject obj)
@@ -199,8 +230,8 @@ public class UIController : MonoBehaviour
                 for (int i = 0; i < childList.Count; i++)
                 {
                     //Anchors Top Center
-                    childList[i].anchorMin = new Vector2(0.5f, 1);
-                    childList[i].anchorMax = new Vector2(0.5f, 1);
+                    childList[i].anchorMin = new Vector2(0, 1);
+                    childList[i].anchorMax = new Vector2(1f, 1);
                     childList[i].anchoredPosition = new Vector2(0, -(childList[i].sizeDelta.y / 2) - (i * Spacing) - temp);
                     temp += childList[i].sizeDelta.y;
                 }

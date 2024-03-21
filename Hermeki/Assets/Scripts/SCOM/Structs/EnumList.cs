@@ -76,6 +76,7 @@ public enum Item_Type
     Armor = 0,
     Weapon = 1,
     Rune = 2,
+    Count = 3,
 }
 
 
@@ -250,9 +251,11 @@ public enum InventoryState
     Table = 0,
     EquipItem = 1,
     ChoiceHand = 2,
-    Rune = 3,
-    Enchant = 4,
-    Close = 5
+    ChoiceEquip = 3,
+    ChoiceEnchant = 4,
+    Rune = 5,
+    Enchant = 6,
+    Close = 7
 }
 #endregion
 

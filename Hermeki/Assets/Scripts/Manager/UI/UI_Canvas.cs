@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,10 +48,14 @@ public class UI_Canvas : MonoBehaviour
 
     private InventoryTable _inventoryTable;
 
+    [Header("AutoSize")]
+    [SerializeField] private AutoSize autoSize;
+    private RectTransform rectTransform;
     private void Awake()
     {
         UI_Controller = this.GetComponentInChildren<UIController>();
         _inventoryTable = this.GetComponentInParent<InventoryTable>();
+        autoSize = this.GetComponent<AutoSize>();
     }
     public virtual void Canvas_Enable()
     {
@@ -110,7 +113,12 @@ public class UI_Canvas : MonoBehaviour
 
     private void ContentReSizing()
     {
-        SizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(this.GetComponent<RectTransform>());
+        if (autoSize != null)
+        {
+            autoSize.SetChild();
+            autoSize.ReSize();
+        }
+        //SizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(this.GetComponent<RectTransform>());
     }
 }
