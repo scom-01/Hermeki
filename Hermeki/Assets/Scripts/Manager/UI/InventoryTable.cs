@@ -230,7 +230,7 @@ public class InventoryTable : MonoBehaviour
         {
             EquipItemData temp = new EquipItemData(CurrItem.dataSO, CurrItem.CurrentDurability);
             unit.ItemManager.ResearchItem(CurrItem).SetEquipItemData(null);
-            GameManager.Inst.LevelManager.CurrStage()?.SI_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
+            GameManager.Inst.LevelManager.CurrStage()?.SO_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
         }
         
         SetState(InventoryState.Close);
@@ -255,7 +255,7 @@ public class InventoryTable : MonoBehaviour
         {
             EquipItemData temp = new EquipItemData(CurrItem.dataSO, CurrItem.CurrentDurability);
             unit.ItemManager.ResearchItem(CurrItem).SetEquipItemData(null);
-            GameManager.Inst.LevelManager.CurrStage()?.SI_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
+            GameManager.Inst.LevelManager.CurrStage()?.SO_Controller?.SpawnItem(temp, unit.Core.CoreCollisionSenses.UnitCenterPos);
         }
 
         SetState(InventoryState.Close);

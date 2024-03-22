@@ -9,13 +9,13 @@ public class StageController : MonoBehaviour
     private LevelManager LM;
     public TilemapRenderer TM_Renderer;
     public PolygonCollider2D PC2D;
-    public StageItemController SI_Controller;
+    public StageObjectController SO_Controller;
     private void Awake()
     {
         LM = GetComponentInParent<LevelManager>();
         TM_Renderer = GetComponentInChildren<TilemapRenderer>();
         TM_Renderer.enabled = false;
-        SI_Controller = GetComponentInChildren<StageItemController>();
+        SO_Controller = GetComponentInChildren<StageObjectController>();
     }
     public bool ResetStage()
     {
@@ -28,9 +28,9 @@ public class StageController : MonoBehaviour
         {
             _action.EndAction();
         }
-        if (SI_Controller != null)
+        if (SO_Controller != null)
         {
-            SI_Controller.ClearObject();
+            SO_Controller.ClearObject();
         }
         return true;
     }

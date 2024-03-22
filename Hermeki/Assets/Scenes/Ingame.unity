@@ -457,27 +457,22 @@ MonoBehaviour:
   SelectBorderImg: {fileID: 814727741}
   NickName: {fileID: 324472912}
   SelectBtn: {fileID: 807917080}
-  AddressableStartingItem:
-  - m_AssetGUID: 75eb939b2b438fc4e9c4f763659d0903
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 602c42ffac22bb44ea76ec7315dc704b
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 45d001210627c4b47804681cb1c3fa43
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 75eb939b2b438fc4e9c4f763659d0903
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 75eb939b2b438fc4e9c4f763659d0903
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  EquipStartingItem:
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: eb91cd39ee01ec14d8822fa3a10e970f, type: 2}
+    _currDurability: 99
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: f4ac5a94768ce3941a5f3c9f6f90290a, type: 2}
+    _currDurability: 99
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: eb91cd39ee01ec14d8822fa3a10e970f, type: 2}
+    _currDurability: 99
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: eb91cd39ee01ec14d8822fa3a10e970f, type: 2}
+    _currDurability: 99
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: eb91cd39ee01ec14d8822fa3a10e970f, type: 2}
+    _currDurability: 99
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
@@ -678,15 +673,7 @@ MonoBehaviour:
   SelectBorderImg: {fileID: 1805883441}
   NickName: {fileID: 404679147}
   SelectBtn: {fileID: 773117773}
-  AddressableStartingItem:
-  - m_AssetGUID: 71b81b79a2368f844b2a437e96d8fc5b
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 71b81b79a2368f844b2a437e96d8fc5b
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  EquipStartingItem: []
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
@@ -4887,7 +4874,7 @@ GameObject:
   - component: {fileID: 524100406}
   - component: {fileID: 524100407}
   m_Layer: 0
-  m_Name: StageItemController
+  m_Name: StageObjectController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6529,7 +6516,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 681565232}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 83.4, y: 0, z: 0}
+  m_LocalPosition: {x: 410.4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6570,7 +6557,7 @@ MonoBehaviour:
   EndPos: {fileID: 23563930}
   TM_Renderer: {fileID: 0}
   PC2D: {fileID: 355597113}
-  SI_Controller: {fileID: 0}
+  SO_Controller: {fileID: 0}
 --- !u!1 &691656827
 GameObject:
   m_ObjectHideFlags: 0
@@ -6918,7 +6905,7 @@ MonoBehaviour:
   SelectBorderImg: {fileID: 1233273574}
   NickName: {fileID: 233687370}
   SelectBtn: {fileID: 980105278}
-  AddressableStartingItem: []
+  EquipStartingItem: []
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
@@ -15092,7 +15079,7 @@ MonoBehaviour:
   EndPos: {fileID: 1357839765}
   TM_Renderer: {fileID: 0}
   PC2D: {fileID: 1032689361}
-  SI_Controller: {fileID: 0}
+  SO_Controller: {fileID: 0}
 --- !u!1 &1259785803
 GameObject:
   m_ObjectHideFlags: 0
@@ -18911,7 +18898,7 @@ MonoBehaviour:
   SelectBorderImg: {fileID: 642985531}
   NickName: {fileID: 1364554838}
   SelectBtn: {fileID: 2131631750}
-  AddressableStartingItem: []
+  EquipStartingItem: []
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
@@ -21316,11 +21303,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1689978977}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4086c85f4d1d46c41bba0cae9a2bcfb9, type: 3}
+  m_Script: {fileID: 11500000, guid: ecb552f47dd54ed47b5dbe387b11f24a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   actionEventHandler: {fileID: 0}
-  AddressableSpawnObjList: []
+  EquipSpawnObjList: []
   SpawnedObject: []
 --- !u!1 &1692051382
 GameObject:
@@ -23930,7 +23917,7 @@ MonoBehaviour:
   SelectBorderImg: {fileID: 1981969869}
   NickName: {fileID: 1111016076}
   SelectBtn: {fileID: 761775908}
-  AddressableStartingItem: []
+  EquipStartingItem: []
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
@@ -25140,7 +25127,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2011912921}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.16, y: 0, z: 0}
+  m_LocalPosition: {x: 174.1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25181,7 +25168,7 @@ MonoBehaviour:
   EndPos: {fileID: 356391071}
   TM_Renderer: {fileID: 0}
   PC2D: {fileID: 318003941}
-  SI_Controller: {fileID: 0}
+  SO_Controller: {fileID: 0}
 --- !u!1 &2022982514
 GameObject:
   m_ObjectHideFlags: 0

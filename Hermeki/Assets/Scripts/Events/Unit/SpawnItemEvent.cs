@@ -12,7 +12,7 @@ public class SpawnItemEvent : UnitEvent
 
         foreach (var item in equipItems)
         {
-            GameManager.Inst.LevelManager.CurrStage()?.SI_Controller?.SpawnItem(item, unit.Core.CoreCollisionSenses.UnitCenterPos);
+            GameManager.Inst.LevelManager.CurrStage()?.SO_Controller?.SpawnItem(item, unit.Core.CoreCollisionSenses.UnitCenterPos);
         }
     }
 }

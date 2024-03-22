@@ -24,15 +24,15 @@ public class SpawnStartObject : ActionEvent
     private bool isSpawned = false;
     private List<Transform> ChildTransformList = new List<Transform>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         ChildTransformList = this.GetComponentsInChildren<Transform>().ToList();
         ChildTransformList.Remove(this.transform);
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         this.gameObject.layer = LayerMask.NameToLayer("Area");
     }
 

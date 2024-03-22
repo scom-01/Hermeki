@@ -13,8 +13,8 @@ public class SelectStartLevel : MonoBehaviour
     public Button SelectBtn;
 
     [Header("Setting")]
-    public List<AssetReferenceGameObject> AddressableStartingItem;
-    public SpawnStartObject StartAction;
+    public List<EquipItemData> EquipStartingItem;
+    public SpawnStartEquipItem StartAction;
     public int SelectedLevel
     {
         get => _currLevel;
@@ -83,7 +83,7 @@ public class SelectStartLevel : MonoBehaviour
     {
         if (StartAction != null)
         {
-            StartAction?.SetSpawnObjList(AddressableStartingItem);            
+            StartAction?.SetSpawnObjList(EquipStartingItem);            
         }
 
         GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel);

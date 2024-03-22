@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class StageItemController : MonoBehaviour
+public class StageObjectController : MonoBehaviour
 {
     public AssetReferenceGameObject Base_ArmorEquipObject, Base_WeaponEquipObject, Base_RuneEquipObject;
     public List<GameObject> ObjectList;
@@ -52,6 +52,19 @@ public class StageItemController : MonoBehaviour
         return true;
     }
 
+    public bool SpawnUnit(AssetReferenceGameObject obj, Vector3 pos)
+    {
+        if (obj == null)
+            return false;
+        obj.InstantiateAsync(this.transform).Completed +=
+            (AsyncOperationHandle<GameObject> _obj) =>
+            {
+                _obj.Result.transform.position = pos;
+                ObjectList.Add(_obj.Result);
+            };
+
+        return true;
+    }
     public bool ClearObject()
     {
         foreach (var item in ObjectList)
