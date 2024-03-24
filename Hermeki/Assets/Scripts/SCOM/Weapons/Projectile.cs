@@ -1,4 +1,5 @@
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace SCOM
@@ -413,12 +414,16 @@ namespace SCOM
             //Damagable.cs를 가지고있는 collision이랑 부딪쳤을 때
             if (coll.TryGetComponent(out IDamageable damageable))
             {
+                Unit tempUnit = coll.GetComponentInParent<Unit>();
                 if (ProjectileData.isOnHit)
                 {
                     //히트 시 효과
-                    unit.ItemManager?.ItemOnHitExecute(null, coll.GetComponentInParent<Unit>());
+                    unit.ItemManager?.ItemOnHitExecute(null, tempUnit);
                     //unit.Inventory.ItemOnHitExecute(unit, coll.GetComponentInParent<Unit>());
                 }
+                ComponentUtility.CopyComponent(this.GetComponent<UnitInteractive>());
+                ComponentUtility.PasteComponentAsNew(tempUnit.gameObject);
+                tempUnit.GetComponent<UnitInteractive>()?.Interactive(tempUnit);
 
                 Debug.Log($"Projectile Touch {coll.name}");
                 //Impact EffectPrefab

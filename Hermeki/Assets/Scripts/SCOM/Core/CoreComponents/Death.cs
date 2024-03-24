@@ -32,6 +32,7 @@ namespace SCOM.CoreSystem
                 return;
             core.Unit.IsAlive = false;
             isDead = true;
+            core.Unit.Anim.speed = 1;
             foreach (var effect in deathChunk)
             {
                 var particleObject = EffectManager.StartEffectsWithRandomPos(effect, 0.5f, Vector3.one, core.Unit.transform.position);

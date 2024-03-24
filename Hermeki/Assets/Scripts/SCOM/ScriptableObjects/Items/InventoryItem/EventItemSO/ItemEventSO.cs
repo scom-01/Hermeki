@@ -34,7 +34,6 @@ public class ItemEventSet
     }
 }
 
-[CreateAssetMenu(fileName = "newItemEventData", menuName = "Data/Item Data/ItemEvent Data")]
 public abstract class ItemEventSO : ScriptableObject, IExecuteEvent
 {
     public ItemEvent_Type Item_Type;
