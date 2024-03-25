@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.U2D.IK;
 
 namespace SCOM.CoreSystem
 {
@@ -10,7 +11,7 @@ namespace SCOM.CoreSystem
         private CoreComp<EffectManager> effectManager;
         private CoreComp<Death> death;
         private BoxCollider2D BC2D;
-
+        private CapsuleCollider2D CC2D;
         //객체가 이미 Hit를 했는지 판별(ex. true면 이미 피격당했다고 생각함)
         public bool isHit
         {
@@ -90,7 +91,7 @@ namespace SCOM.CoreSystem
                 Debug.Log(core.Unit.name + "is Dead");
                 return 0f;
             }
-            
+
             if (CheckHitImmunity(attacker))
             {
                 return 0f;
@@ -123,11 +124,11 @@ namespace SCOM.CoreSystem
                 temp *= (1.0f + GlobalValue.Enemy_Size_WeakPer);
                 Debug.Log($"Attacker Unit Size Bigger than {core.Unit.name}, Calculate Befor Dmg = {attackerDmg}, after Dmg = {temp}");
             }
-            else if((int)attacker.UnitData.unit_size == (int)core.Unit.UnitData.unit_size)
+            else if ((int)attacker.UnitData.unit_size == (int)core.Unit.UnitData.unit_size)
             {
                 Debug.Log($"Attacker Unit Size equal to {core.Unit.name}");
             }
-            else if((int)attacker.UnitData.unit_size < (int)core.Unit.UnitData.unit_size)
+            else if ((int)attacker.UnitData.unit_size < (int)core.Unit.UnitData.unit_size)
             {
                 temp *= (1.0f - GlobalValue.Enemy_Size_WeakPer);
                 Debug.Log($"Attacker Unit Size smaller than {core.Unit.name}, Calculate Befor Dmg = {attackerDmg}, after Dmg = {temp}");
@@ -145,7 +146,7 @@ namespace SCOM.CoreSystem
             }
 
             if (CheckHitImmunity(attacker))
-            {                
+            {
                 return 0f;
             }
 
@@ -210,7 +211,7 @@ namespace SCOM.CoreSystem
             Debug.Log(core.transform.parent.name + " " + amount + " Damaged!");
             isTouch = true;
             var damage = stats.Comp.DecreaseHealth(AttackterCommonData.Elemental, AttackterCommonData.DamageAttiribute, amount);
-            if(damage > 0)
+            if (damage > 0)
             {
                 stats.Comp.TouchinvincibleTime = core.Unit.UnitData.touchDamageinvincibleTime;
             }
@@ -329,10 +330,20 @@ namespace SCOM.CoreSystem
         protected override void Awake()
         {
             base.Awake();
+            CC2D = GetComponent<CapsuleCollider2D>();
+            if (CC2D != null)
+            {
+                CC2D.isTrigger = true;
+                CC2D.offset = core.Unit.CC2D.offset;
+                CC2D.size = core.Unit.CC2D.size;
+            }
             BC2D = GetComponent<BoxCollider2D>();
-            BC2D.isTrigger = true;
-            BC2D.offset = core.Unit.CC2D.offset;
-            BC2D.size = core.Unit.CC2D.size;
+            if (BC2D != null)
+            {
+                BC2D.isTrigger = true;
+                BC2D.offset = core.Unit.CC2D.offset;
+                BC2D.size = core.Unit.CC2D.size;
+            }
             stats = new CoreComp<UnitStats>(core);
             effectManager = new CoreComp<EffectManager>(core);
             death = new CoreComp<Death>(core);
