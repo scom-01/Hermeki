@@ -1,5 +1,6 @@
 using SCOM.CoreSystem;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -216,6 +217,21 @@ public class Unit : MonoBehaviour
             }
         }
 
+        foreach (var item in interactives)
+        {
+            if (item.ElapsedTime > item.DurationTime)
+            {
+                item.UnInteractive(this);
+                interactives.Remove(item);
+                if(interactives.Count == 0)
+                {
+                    break;
+                }
+                continue;
+            }
+            item.LogicUpdate(this);
+        }
+
         FSM.CurrentState.LogicUpdate();
     }
 
@@ -292,5 +308,37 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Platform"), false);
     }
+
+    public List<UnitInteractive> interactives = new List<UnitInteractive>();
+    public virtual void ApplyEffect(UnitInteractive _unit_interactive)
+    {
+        if (_unit_interactive == null)
+            return;
+        for (int i = 0; i < interactives.Count; i++)
+        {
+            if (interactives[i].GetType() == _unit_interactive.GetType() && interactives[i].isDuration)
+            {
+                interactives[i].Init();
+                return;
+            }
+        }
+        _unit_interactive.Interactive(this);
+        interactives.Add(_unit_interactive);
+        //StartCoroutine(RemoveEffect(_unit_interactive));
+    }
+
+    //IEnumerator RemoveEffect(UnitInteractive _unit_interactive)
+    //{
+    //    float elapsedTime = 0f;
+    //    while (_unit_interactive.DurationTime > elapsedTime)
+    //    {
+    //        elapsedTime += Time.deltaTime;
+    //        //_unit_interactive.LogicUpdate(this, elapsedTime);
+    //        yield return null;
+    //    }
+    //    _unit_interactive.UnInteractive(this);
+    //    interactives.Remove(_unit_interactive);
+    //}
+    
     #endregion Unity Callback Func
 }

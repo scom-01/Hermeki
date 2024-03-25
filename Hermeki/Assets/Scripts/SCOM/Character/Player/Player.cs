@@ -100,7 +100,8 @@ public class Player : Unit
     public override void HitEffect()
     {
         base.HitEffect();
-        Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(-1 * Core.CoreMovement.FancingDirection, 1f), 10, false);
+
+        Core.CoreKnockBackReceiver.TrapKnockBack(new Vector2(-1, 1f), 10, true);
         //GameManager.Inst.MainUI.animator?.Play("Action", -1, 0f);
     }
     #endregion

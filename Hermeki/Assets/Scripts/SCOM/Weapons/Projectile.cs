@@ -421,13 +421,7 @@ namespace SCOM
                     unit.ItemManager?.ItemOnHitExecute(null, tempUnit);
                     //unit.Inventory.ItemOnHitExecute(unit, coll.GetComponentInParent<Unit>());
                 }
-                if (this.GetComponent<UnitInteractive>() != null)
-                {
-                    ComponentUtility.CopyComponent(this.GetComponent<UnitInteractive>());
-                    ComponentUtility.PasteComponentAsNew(tempUnit.gameObject);
-                    tempUnit.GetComponent<UnitInteractive>()?.Interactive(tempUnit);
-                }
-
+                tempUnit.ApplyEffect(this.GetComponent<UnitInteractive>());
                 Debug.Log($"Projectile Touch {coll.name}");
                 //Impact EffectPrefab
                 #region EffectPrefab
