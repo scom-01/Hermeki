@@ -266,6 +266,7 @@ MonoBehaviour:
   - {fileID: 7686897063494957335, guid: a1c178027124fa247bbf2d52f8bc3138, type: 3}
   - {fileID: 7686897063494957335, guid: a1c178027124fa247bbf2d52f8bc3138, type: 3}
   - {fileID: 7686897063494957335, guid: a1c178027124fa247bbf2d52f8bc3138, type: 3}
+  - {fileID: 2239420662567515049, guid: df4092faabb6ce8468b3f3d7dd861b2c, type: 3}
   interval: 15
 --- !u!1 &832541400
 GameObject:
@@ -407,9 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112d87fda48e1ee4b9121a9f84c534fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemList:
-  - {fileID: 649886261194400079, guid: fea29e9f9086dda4eb345657c4c5fd00, type: 3}
-  - {fileID: 3337962671443413445, guid: 6c0abd1a493d12d4aa68a26a252fcb40, type: 3}
+  ItemList: []
   interval: 3
 --- !u!1 &1574410885
 GameObject:
@@ -455,9 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 112d87fda48e1ee4b9121a9f84c534fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemList:
-  - {fileID: 999864860191516493, guid: f6e790f3c79c88b41b776da653c2b589, type: 3}
-  - {fileID: 4728305563151243786, guid: e861e1349f19d9a4eb3ca5319a71ac5b, type: 3}
+  ItemList: []
   interval: 3
 --- !u!1 &1578942828
 GameObject:

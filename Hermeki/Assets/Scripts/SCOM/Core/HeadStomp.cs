@@ -36,8 +36,8 @@ public class HeadStomp : CoreComponent
 
             if (collision.TryGetComponent(out IDamageable victim))
             {
-                //머리 밟기(플레이어의 바닥 y좌표가 해당 유닛의 (머리 + 중앙)/2 보다 높거나 같을 때
-                if (core.CoreCollisionSenses.GroundCenterPos.y >= ((unit.Core.CoreCollisionSenses.HeaderCenterPos.y + unit.Core.CoreCollisionSenses.UnitCenterPos.y) / 2))
+                //머리 밟기(플레이어의 바닥 y좌표가 해당 유닛의 (머리 + 중앙) / 2 보다 높거나 같을 때
+                if (core.CoreCollisionSenses.GroundCenterPos.y >= ((unit.Core.CoreCollisionSenses.HeaderCenterPos.y + unit.Core.CoreCollisionSenses.UnitCenterPos.y) * 2 / 3))
                 {
                     //한 번에 여러 유닛 머리 밟기로 데미지 입히지 못하도록
                     if (!isHeadStomp)

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public class Grounded_Melee_Enemy : Enemy
 {
     [HideInInspector]
