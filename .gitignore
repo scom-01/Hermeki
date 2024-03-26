@@ -10,6 +10,11 @@
 **/[Ll]ogs/
 **/[Uu]ser[Ss]ettings/
 **/Resources_moved
+**/PlayFabSDK
+**/PlayFabEditorExtensions
+**/AddressableAssetsData
+**/Adaptive Performance
+**/ServerData
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
