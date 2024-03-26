@@ -23,7 +23,7 @@ public class PlayerJumpState : PlayerInAirState
     public override void Enter()
     {
         base.Enter();
-        unit.RB.gravityScale = unit.UnitData.UnitGravity;                
+        //unit.RB.gravityScale = unit.UnitData.UnitGravity;                
         Jump();
     }
 

@@ -11,7 +11,7 @@ public class TouchObject : MonoBehaviour, ITouch
     public GameObject EffectObject;
     private void Awake()
     {
-        effectContainer = GameObject.FindGameObjectWithTag("EffectContainer").transform;
+        //effectContainer = GameObject.FindGameObjectWithTag("EffectContainer").transform;
         //this.gameObject.layer = LayerMask.NameToLayer("Area");
     }
     public virtual void Touch(GameObject obj)
