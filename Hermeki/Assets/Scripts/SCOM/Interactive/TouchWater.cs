@@ -11,9 +11,19 @@ public class TouchWater : TouchLowGravity
         }
 
         Player tempUnit = collision.GetComponent<Player>();
-        if (tempUnit != null)
+        if (tempUnit != null && !tempUnit.JumpState.CanJump())
         {
             tempUnit.JumpState.ResetAmountOfJumpsLeft();
+        }
+    }
+
+    public override void UnTouch(GameObject obj)
+    {
+        base.UnTouch(obj);
+        Player tempUnit = obj.GetComponent<Player>();
+        if (tempUnit != null && tempUnit.JumpState.CanJump())
+        {
+            tempUnit.JumpState.DecreaseAmountOfJumpsLeft();
         }
     }
 }
