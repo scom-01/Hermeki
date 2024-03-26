@@ -1,4 +1,6 @@
 using Cinemachine;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,14 +9,19 @@ public class StageController : MonoBehaviour
     public Transform StartPos;
     public StageEndPoint EndPos;
     private LevelManager LM;
-    public TilemapRenderer TM_Renderer;
+    public List<Grid> GirdList = new List<Grid>();
+    public int CurrLevel = 0;
     public PolygonCollider2D PC2D;
     public StageObjectController SO_Controller;
     private void Awake()
     {
         LM = GetComponentInParent<LevelManager>();
-        TM_Renderer = GetComponentInChildren<TilemapRenderer>();
-        TM_Renderer.enabled = false;
+        GirdList = GetComponentsInChildren<Grid>().ToList();
+        foreach (var _grid in GirdList)
+        {
+            _grid.enabled = false;
+        }
+        //TM_RendererList.enabled = false;
         SO_Controller = GetComponentInChildren<StageObjectController>();
     }
     public bool ResetStage()
@@ -40,7 +47,7 @@ public class StageController : MonoBehaviour
             return false;
         if (LM.GoNextStage(player))
         {
-            ControllTM(false);
+            ResetStage();
         }
 
 
@@ -48,8 +55,6 @@ public class StageController : MonoBehaviour
         {
             _action.EndAction();
         }
-
-        ResetStage();
 
         return true;
     }
@@ -75,10 +80,10 @@ public class StageController : MonoBehaviour
     }
     private bool ControllTM(bool isTrue)
     {
-        if (TM_Renderer == null)
+        if (GirdList?.Count == 0 || GirdList.Count <= CurrLevel || GirdList[CurrLevel] == null)
             return false;
 
-        TM_Renderer.enabled = isTrue;
+        GirdList[CurrLevel].enabled = isTrue;
         return true;
     }
 }
