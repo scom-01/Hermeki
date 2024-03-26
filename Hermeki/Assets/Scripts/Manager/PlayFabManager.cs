@@ -1,9 +1,11 @@
-using PlayFab;
+ï»¿using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.Json;
+using PlayFab.MultiplayerModels;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayFabManager : MonoBehaviour
 {
@@ -65,10 +67,6 @@ public class PlayFabManager : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Congratulations, you made your first successful API call!");
-
-        GetStatAll();
-
-        StartCloudScriptString("helloWorld", "ÇÏÀ×");
     }
 
     private void OnLoginFailure(PlayFabError error)
@@ -90,8 +88,8 @@ public class PlayFabManager : MonoBehaviour
 
             }
         },
-        (result) => { print("°ª ÀúÀå ¼º°ø"); },
-        (error) => { print("°ª ÀúÀå ½ÇÆĞ"); });
+        (result) => { print("ê°’ ì €ì¥ ì„±ê³µ"); },
+        (error) => { print("ê°’ ì €ì¥ ì‹¤íŒ¨"); });
     }
     public void SetStat()
     {
@@ -103,12 +101,47 @@ public class PlayFabManager : MonoBehaviour
                 new StatisticUpdate{StatisticName = "Beggar",Value = 0},
             }
         },
-        (result) => { print("°ª ÀúÀå ¼º°ø"); },
-        (error) => { print("°ª ÀúÀå ½ÇÆĞ"); });
+        (result) => { print("ê°’ ì €ì¥ ì„±ê³µ"); },
+        (error) => { print("ê°’ ì €ì¥ ì‹¤íŒ¨"); });
+    }
+
+    [ContextMenu("Get ClearTime")]
+    public int GetClearTime()
+    {
+        int value = -1;
+        PlayFabClientAPI.GetPlayerStatistics(
+           new GetPlayerStatisticsRequest(),
+           (result) =>
+           {
+               if (result.Statistics.Count <= 0)
+               {
+                   print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
+                   return;
+               }
+
+               for (int i = 0; i < result.Statistics.Count; i++)
+               {
+                   if (result.Statistics[i].StatisticName == "ClearTime")
+                   {
+
+                       print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µ");
+                       value = result.Statistics[i].Value;
+                       Debug.Log(value);
+                       return;
+                   }
+               }
+               print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
+               return;
+           },
+           (error) =>
+           {
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨");
+           });
+        return value;
     }
 
     /// <summary>
-    /// result = -1ÀÏ ¶§ °ªÀÌ Á¸ÀçÇÏÁö¾ÊÀ½
+    /// result = -1ì¼ ë•Œ ê°’ì´ ì¡´ì¬í•˜ì§€ì•ŠìŒ
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
@@ -121,7 +154,7 @@ public class PlayFabManager : MonoBehaviour
            {
                if (result.Statistics.Count <= 0)
                {
-                   print("°ªÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+                   print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
                    return;
                }
 
@@ -130,22 +163,22 @@ public class PlayFabManager : MonoBehaviour
                    if (result.Statistics[i].StatisticName == key)
                    {
 
-                       print("°ª ºÒ·¯¿À±â ¼º°ø");
+                       print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µ");
                        value = result.Statistics[i].Value;
                        return;
                    }
                }
-               print("°ªÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+               print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
                return;
            },
            (error) =>
            {
-               print("°ª ºÒ·¯¿À±â ½ÇÆĞ");
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨");
            });
         return value;
     }
 
-    public Dictionary<string,int> GetStat()
+    public Dictionary<string, int> GetStat()
     {
         Dictionary<string, int> temp = new Dictionary<string, int>();
         PlayFabClientAPI.GetPlayerStatistics(
@@ -154,10 +187,10 @@ public class PlayFabManager : MonoBehaviour
            {
                if (result.Statistics.Count <= 0)
                {
-                   print("°ªÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+                   print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
                    return;
                }
-               print("°ª ºÒ·¯¿À±â ¼º°ø");
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µ");
                foreach (var eachStat in result.Statistics)
                {
                    temp.Add(eachStat.StatisticName, eachStat.Value);
@@ -166,7 +199,7 @@ public class PlayFabManager : MonoBehaviour
            },
            (error) =>
            {
-               print("°ª ºÒ·¯¿À±â ½ÇÆĞ");
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨");
            });
         return temp;
     }
@@ -178,11 +211,11 @@ public class PlayFabManager : MonoBehaviour
            {
                if (result.Statistics.Count <= 0)
                {
-                   print("°ªÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+                   print("ê°’ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
                    SetStat();
                    return;
                }
-               print("°ª ºÒ·¯¿À±â ¼º°ø");
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì„±ê³µ");
                foreach (var eachStat in result.Statistics)
                {
                    print($"{eachStat.StatisticName} : {eachStat.Value}");
@@ -190,40 +223,52 @@ public class PlayFabManager : MonoBehaviour
            },
            (error) =>
            {
-               print("°ª ºÒ·¯¿À±â ½ÇÆĞ");
+               print("ê°’ ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨");
                SetStat();
            });
     }
     #endregion
 
+    //í´ë¼ìš°ë“œ ìŠ¤í¬ë¦½íŠ¸ëŠ” ë¹„ë™ê¸° ì²˜ë¦¬ë˜ë©° ê·¸ ê°’ì„ ì €ì¥ ë° ë¶ˆëŸ¬ì˜¤ê³  ë°”ë¡œ ì ìš©ë˜ì§€ ì•ŠëŠ”ë‹¤ëŠ” ê±¸ ì¸ì§€í•´ì•¼í•¨
     #region Cloud Script Json
-    public object StartCloudScriptString(string FuncName, string FuncParam)
+    public void CS_GetStatistics(string Name)
     {
-        object temp = null;
         PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest()
         {
-            FunctionName = FuncName,
-            FunctionParameter = new { text = FuncParam },
-            //PlayStream Ç¥½Ã ¿©ºÎ
-            GeneratePlayStreamEvent = true
+            FunctionName = "getPlayerStatistic",
+            FunctionParameter = new { Name = Name }, // The parameter provided to your function
+            GeneratePlayStreamEvent = true,
         },
-        (result) =>
+        result =>
         {
-            temp = CallbackCloudScriptString(result);
-            return;
+            Debug.Log("Cloud Script call succeeded");
+            Debug.Log(result.FunctionResult.ToString());
         },
-        (error) =>
-        {
-            Debug.Log("Å¬¶ó¿ìµå ½ºÅ©¸³Æ® È£Ãâ ¿À·ù");
-        }) ;
-        return temp;
+        error =>
+            {
+                Debug.Log("Cloud Script call failed");
+                Debug.Log(error.GenerateErrorReport());
+            });
     }
 
-    string CallbackCloudScriptString(ExecuteCloudScriptResult _result)
+    public void CS_SetStatistics(string Name, int _value)
     {
-        JsonObject jsonResult = (JsonObject)_result.FunctionResult;
-        jsonResult.TryGetValue("messageValue", out object messageValue);
-        return (string)messageValue; 
+        PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest()
+        {
+            FunctionName = "setPlayerStatistic",
+            FunctionParameter = new { statsName = Name, setValue = _value }, // The parameter provided to your function
+            GeneratePlayStreamEvent = true,
+        },
+        result =>
+        {
+            Debug.Log("Cloud Script call succeeded");
+            CS_GetStatistics(Name);
+        },
+        error =>
+        {
+            Debug.Log("Cloud Script call failed");
+            Debug.Log(error.GenerateErrorReport());
+        });
     }
     #endregion
 }
