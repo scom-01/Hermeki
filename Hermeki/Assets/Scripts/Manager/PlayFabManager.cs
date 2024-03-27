@@ -1,11 +1,8 @@
 ﻿using PlayFab;
 using PlayFab.ClientModels;
-using PlayFab.Json;
-using PlayFab.MultiplayerModels;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayFabManager : MonoBehaviour
 {
@@ -30,6 +27,9 @@ public class PlayFabManager : MonoBehaviour
     }
     private static PlayFabManager _Inst = null;
 
+    public string currentPlayFabId;
+
+    public Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
 
     private void Awake()
     {
@@ -67,6 +67,9 @@ public class PlayFabManager : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Congratulations, you made your first successful API call!");
+        currentPlayFabId = result.PlayFabId;
+
+        GetUserData();
     }
 
     private void OnLoginFailure(PlayFabError error)
@@ -241,12 +244,12 @@ public class PlayFabManager : MonoBehaviour
         },
         result =>
         {
-            Debug.Log("Cloud Script call succeeded");
+            Debug.Log("Cloud Script (getPlayerStatistic) call succeeded");
             Debug.Log(result.FunctionResult.ToString());
         },
         error =>
             {
-                Debug.Log("Cloud Script call failed");
+                Debug.Log("Cloud Script (getPlayerStatistic) call failed");
                 Debug.Log(error.GenerateErrorReport());
             });
     }
@@ -261,14 +264,55 @@ public class PlayFabManager : MonoBehaviour
         },
         result =>
         {
-            Debug.Log("Cloud Script call succeeded");
+            Debug.Log("Cloud Script (setPlayerStatistic) call succeeded");
             CS_GetStatistics(Name);
         },
         error =>
         {
-            Debug.Log("Cloud Script call failed");
+            Debug.Log("Cloud Script (setPlayerStatistic) call failed");
             Debug.Log(error.GenerateErrorReport());
         });
+    }
+
+    public void CS_SetUserData(string _key, string _value)
+    {
+        PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest()
+        {
+            FunctionName = "setPlayerData",
+            FunctionParameter = new { userDataName = _key, userDataValue = _value }, // The parameter provided to your function
+            GeneratePlayStreamEvent = true,
+        },
+        result =>
+        {
+            Debug.Log("Cloud Script (setPlayerData) call succeeded");
+        },
+        error =>
+        {
+            Debug.Log("Cloud Script (setPlayerData) call failed");
+            Debug.Log(error.GenerateErrorReport());
+        });
+    }
+
+    public void GetUserData()
+    {
+        var request = new GetUserDataRequest() { PlayFabId = currentPlayFabId };
+        PlayFabClientAPI.GetUserData(request,
+            (result) =>
+            {
+                //초기화
+                UserDataDictionary = new Dictionary<string, string>();
+
+                //값 추가
+                foreach (var data in result.Data)
+                {
+                    UserDataDictionary.Add(data.Key, data.Value.Value);
+                }
+                Debug.Log(UserDataDictionary);
+            },
+            (error) =>
+            {
+
+            });
     }
     #endregion
 }

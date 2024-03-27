@@ -13,6 +13,7 @@ public class SelectStartLevel : MonoBehaviour
     public Button SelectBtn;
 
     [Header("Setting")]
+    public string CharacterName;
     public List<EquipItemData> EquipStartingItem;
     public SpawnStartEquipItem StartAction;
     public int SelectedLevel
@@ -78,18 +79,33 @@ public class SelectStartLevel : MonoBehaviour
             }
             LevelImgList[i].enabled = false;
         }
+        if (PlayFabManager.Inst.UserDataDictionary.ContainsKey(CharacterName)) 
+        {
+            _currLevel = int.Parse(PlayFabManager.Inst.UserDataDictionary[CharacterName]);
+            Debug.Log($"_currLevel = {_currLevel}");
+        }
+        else
+        {
+            PlayFabManager.Inst?.CS_SetUserData(CharacterName, 0.ToString());
+            _currLevel = 0;
+        }
     }
     public void SetStartingItem()
     {
         if (StartAction != null)
         {
-            StartAction?.SetSpawnObjList(EquipStartingItem);            
+            StartAction?.SetSpawnObjList(EquipStartingItem);
         }
 
         GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel);
     }
     public void SetStageLevel(int idx)
     {
+        if (GameManager.Inst?.LevelManager != null)
+        {
+            GameManager.Inst?.LevelManager?.SetCharacterLevel(CharacterName, idx);
+        }
+
         if (idx > MaxLevel)
         {
             idx = 0;
