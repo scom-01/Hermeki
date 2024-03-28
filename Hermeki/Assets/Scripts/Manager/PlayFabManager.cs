@@ -29,7 +29,8 @@ public class PlayFabManager : MonoBehaviour
 
     public string currentPlayFabId;
 
-    public Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
+    private Dictionary<string, int> UserStatisticsDictionary = new Dictionary<string, int>();
+    private Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
 
     private void Awake()
     {
@@ -68,8 +69,9 @@ public class PlayFabManager : MonoBehaviour
     {
         Debug.Log("Congratulations, you made your first successful API call!");
         currentPlayFabId = result.PlayFabId;
-
-        GetUserData();
+        
+        //유저 데이터 불러오기
+        CS_GetUserData();
     }
 
     private void OnLoginFailure(PlayFabError error)
@@ -82,105 +84,6 @@ public class PlayFabManager : MonoBehaviour
     #region Statistic 
 
     private List<StatisticUpdate> _statisticUpdates = new List<StatisticUpdate>();
-    public void SetStat(string key, int value)
-    {
-        PlayFabClientAPI.UpdatePlayerStatistics(new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-
-            }
-        },
-        (result) => { print("값 저장 성공"); },
-        (error) => { print("값 저장 실패"); });
-    }
-    public void SetStat()
-    {
-        PlayFabClientAPI.UpdatePlayerStatistics(new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-                new StatisticUpdate{StatisticName = "Wizard",Value = 0},
-                new StatisticUpdate{StatisticName = "Beggar",Value = 0},
-            }
-        },
-        (result) => { print("값 저장 성공"); },
-        (error) => { print("값 저장 실패"); });
-    }
-
-    [ContextMenu("Get ClearTime")]
-    public int GetClearTime()
-    {
-        int value = -1;
-        PlayFabClientAPI.GetPlayerStatistics(
-           new GetPlayerStatisticsRequest(),
-           (result) =>
-           {
-               if (result.Statistics.Count <= 0)
-               {
-                   print("값이 설정되어 있지 않습니다.");
-                   return;
-               }
-
-               for (int i = 0; i < result.Statistics.Count; i++)
-               {
-                   if (result.Statistics[i].StatisticName == "ClearTime")
-                   {
-
-                       print("값 불러오기 성공");
-                       value = result.Statistics[i].Value;
-                       Debug.Log(value);
-                       return;
-                   }
-               }
-               print("값이 설정되어 있지 않습니다.");
-               return;
-           },
-           (error) =>
-           {
-               print("값 불러오기 실패");
-           });
-        return value;
-    }
-
-    /// <summary>
-    /// result = -1일 때 값이 존재하지않음
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public int GetStat(string key)
-    {
-        int value = -1;
-        PlayFabClientAPI.GetPlayerStatistics(
-           new GetPlayerStatisticsRequest(),
-           (result) =>
-           {
-               if (result.Statistics.Count <= 0)
-               {
-                   print("값이 설정되어 있지 않습니다.");
-                   return;
-               }
-
-               for (int i = 0; i < result.Statistics.Count; i++)
-               {
-                   if (result.Statistics[i].StatisticName == key)
-                   {
-
-                       print("값 불러오기 성공");
-                       value = result.Statistics[i].Value;
-                       return;
-                   }
-               }
-               print("값이 설정되어 있지 않습니다.");
-               return;
-           },
-           (error) =>
-           {
-               print("값 불러오기 실패");
-           });
-        return value;
-    }
-
     public Dictionary<string, int> GetStat()
     {
         Dictionary<string, int> temp = new Dictionary<string, int>();
@@ -215,7 +118,7 @@ public class PlayFabManager : MonoBehaviour
                if (result.Statistics.Count <= 0)
                {
                    print("값이 설정되어 있지 않습니다.");
-                   SetStat();
+                   //SetStat();
                    return;
                }
                print("값 불러오기 성공");
@@ -227,7 +130,7 @@ public class PlayFabManager : MonoBehaviour
            (error) =>
            {
                print("값 불러오기 실패");
-               SetStat();
+               //SetStat();
            });
     }
     #endregion
@@ -254,18 +157,26 @@ public class PlayFabManager : MonoBehaviour
             });
     }
 
-    public void CS_SetStatistics(string Name, int _value)
+    public void CS_SetStatistics(string _key, int _value)
     {
         PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest()
         {
             FunctionName = "setPlayerStatistic",
-            FunctionParameter = new { statsName = Name, setValue = _value }, // The parameter provided to your function
+            FunctionParameter = new { statsName = _key, setValue = _value }, // The parameter provided to your function
             GeneratePlayStreamEvent = true,
         },
         result =>
         {
-            Debug.Log("Cloud Script (setPlayerStatistic) call succeeded");
-            CS_GetStatistics(Name);
+            //값 업데이트
+            if (UserStatisticsDictionary.ContainsKey(_key))
+            {
+                UserStatisticsDictionary[_key] = _value;
+            }
+            else
+            {
+                UserStatisticsDictionary.Add(_key, _value);
+            }
+            Debug.Log("Cloud Script (setPlayerStatistic) call succeeded");            
         },
         error =>
         {
@@ -284,6 +195,15 @@ public class PlayFabManager : MonoBehaviour
         },
         result =>
         {
+            //값 업데이트
+            if(UserDataDictionary.ContainsKey(_key))
+            {
+                UserDataDictionary[_key] = _value;
+            }
+            else
+            {
+                UserDataDictionary.Add(_key, _value);
+            }
             Debug.Log("Cloud Script (setPlayerData) call succeeded");
         },
         error =>
@@ -292,8 +212,43 @@ public class PlayFabManager : MonoBehaviour
             Debug.Log(error.GenerateErrorReport());
         });
     }
+    public void CS_SetUserData(string _key, float _value)
+    {
+        CS_SetUserData(_key, _value.ToString());
+    }
+    public void CS_SetUserData(string _key, int _value)
+    {
+        CS_SetUserData(_key, _value.ToString());
+    }
 
-    public void GetUserData()
+    public string GetUserData_Str(string _key)
+    {
+        string temp = "";
+        if (UserDataDictionary.ContainsKey(_key))
+        {
+            temp = UserDataDictionary[_key];
+        }
+        return temp;
+    }
+    public float GetUserData_Float(string _key)
+    {
+        float temp = -1f;
+        if (UserDataDictionary.ContainsKey(_key))
+        {
+            temp = float.Parse(UserDataDictionary[_key]);
+        }
+        return temp;
+    }
+    public int GetUserData_Int(string _key)
+    {
+        int temp = -1;
+        if(UserDataDictionary.ContainsKey(_key))
+        {
+            temp = int.Parse(UserDataDictionary[_key]);
+        }
+        return temp;
+    }
+    public void CS_GetUserData()
     {
         var request = new GetUserDataRequest() { PlayFabId = currentPlayFabId };
         PlayFabClientAPI.GetUserData(request,

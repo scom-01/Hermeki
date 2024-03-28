@@ -79,16 +79,13 @@ public class SelectStartLevel : MonoBehaviour
             }
             LevelImgList[i].enabled = false;
         }
-        if (PlayFabManager.Inst.UserDataDictionary.ContainsKey(CharacterName)) 
+        MaxLevel = PlayFabManager.Inst.GetUserData_Int(CharacterName);
+        if (MaxLevel == -1)
         {
-            _currLevel = int.Parse(PlayFabManager.Inst.UserDataDictionary[CharacterName]);
-            Debug.Log($"_currLevel = {_currLevel}");
+            PlayFabManager.Inst.CS_SetUserData(CharacterName, 0);
+            MaxLevel = 0;
         }
-        else
-        {
-            PlayFabManager.Inst?.CS_SetUserData(CharacterName, 0.ToString());
-            _currLevel = 0;
-        }
+        Debug.Log($"_currLevel = {_currLevel}");
     }
     public void SetStartingItem()
     {

@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
             _levelManager = value;
         }
     }
-private LevelManager _levelManager;
+    private LevelManager _levelManager;
     public StageManager StageManager
     {
         get
