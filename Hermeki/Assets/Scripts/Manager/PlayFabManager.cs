@@ -28,6 +28,7 @@ public class PlayFabManager : MonoBehaviour
     private static PlayFabManager _Inst = null;
 
     public string currentPlayFabId;
+    public bool isGetData = false;
 
     private Dictionary<string, int> UserStatisticsDictionary = new Dictionary<string, int>();
     private Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
@@ -263,6 +264,8 @@ public class PlayFabManager : MonoBehaviour
                     UserDataDictionary.Add(data.Key, data.Value.Value);
                 }
                 Debug.Log(UserDataDictionary);
+
+                isGetData = true;
             },
             (error) =>
             {
