@@ -26,7 +26,7 @@ public class TouchLowGravity : TouchObject
         {
             tempUnit.RB.drag = 0f;
             tempUnit.RB.angularDrag = 0.05f;
-            tempUnit.RB.gravityScale = 5f;
+            tempUnit.RB.gravityScale = tempUnit.UnitData.UnitGravity;
         }
     }
 
