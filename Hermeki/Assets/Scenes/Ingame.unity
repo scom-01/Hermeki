@@ -8861,6 +8861,7 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   StageList: []
   SelectUIList: []
+  CurrSelectUI: {fileID: 0}
   isPlaying: 0
   CurrStageIdx: 0
   CurrCharacterName: 

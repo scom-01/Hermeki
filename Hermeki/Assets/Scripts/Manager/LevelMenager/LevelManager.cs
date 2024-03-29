@@ -18,6 +18,10 @@ public class LevelManager : MonoBehaviour
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
     public List<SelectStartLevel> SelectUIList = new List<SelectStartLevel>();
+    /// <summary>
+    /// 현재 진행 중인 캐릭터 UI 클래스
+    /// </summary>
+    public SelectStartLevel CurrSelectUI;
     public bool isPlaying = false;
     [Tooltip("현재 진행중인 스테이지")]
     public int CurrStageIdx = 0;
@@ -206,7 +210,12 @@ public class LevelManager : MonoBehaviour
             CurrStageIdx = StageList.Count - 1;
             GameOver();
 
-            SetCharacterLevel(CurrCharacterName, StageLevel + 1);
+            //현재 최대 레벨 클리어 시
+            if (GetCharacterLevel(CurrCharacterName) < StageLevel + 1)
+            {
+                SetCharacterLevel(CurrCharacterName, StageLevel + 1);
+                CurrSelectUI.SetMaxLevel(StageLevel + 1);
+            }
             return false;
         }
 
@@ -272,8 +281,9 @@ public class LevelManager : MonoBehaviour
         {
             if (i == idx)
             {
-                SelectUIList[idx].isSelect = true;                
+                SelectUIList[idx].isSelect = true;
                 SelectUIList[idx].SetStageLevel(SelectUIList[idx].SelectedLevel);
+                CurrSelectUI = SelectUIList[idx];
                 continue;
             }
             SelectUIList[i].isSelect = false;

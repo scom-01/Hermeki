@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SelectStartLevel : MonoBehaviour
@@ -79,14 +79,38 @@ public class SelectStartLevel : MonoBehaviour
             }
             LevelImgList[i].enabled = false;
         }
+
+        if (PlayFabManager.Inst == null)
+        {
+            SceneManager.LoadSceneAsync(0);
+            return;
+        }
+
         MaxLevel = PlayFabManager.Inst.GetUserData_Int(CharacterName);
+
         if (MaxLevel == -1)
         {
             PlayFabManager.Inst.CS_SetUserData(CharacterName, 0);
             MaxLevel = 0;
         }
+        GameManager.Inst?.LevelManager?.SetCharacterLevel(CharacterName, MaxLevel);
         Debug.Log($"_currLevel = {_currLevel}");
     }
+
+    public void SetMaxLevel(int _value)
+    {
+        if (_value <= MaxLevel)
+        {
+            return;
+        }
+        MaxLevel = _value;
+        //플레이팹 저장
+        PlayFabManager.Inst?.CS_SetUserData(CharacterName, MaxLevel);
+    }
+
+    /// <summary>
+    /// 현재 캐릭터의 아이템 세팅
+    /// </summary>
     public void SetStartingItem()
     {
         if (StartAction != null)
@@ -94,15 +118,22 @@ public class SelectStartLevel : MonoBehaviour
             StartAction?.SetSpawnObjList(EquipStartingItem);
         }
 
-        GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel);
+        if (GameManager.Inst?.LevelManager?.ChangeName(CharacterName) == false)
+        {
+            return;
+        }
+        if (GameManager.Inst?.LevelManager?.ChangeLevel(SelectedLevel) == false)
+        {
+            return;
+        }
     }
+
+    /// <summary>
+    /// 현재 캐릭터 레벨 설정
+    /// </summary>
+    /// <param name="idx"></param>
     public void SetStageLevel(int idx)
     {
-        if (GameManager.Inst?.LevelManager != null)
-        {
-            GameManager.Inst?.LevelManager?.SetCharacterLevel(CharacterName, idx);
-        }
-
         if (idx > MaxLevel)
         {
             idx = 0;
@@ -129,7 +160,7 @@ public class SelectStartLevel : MonoBehaviour
     public void IncreaseStageLevel()
     {
         SelectedLevel++;
-        SetStageLevel(SelectedLevel);
+        //SetStageLevel(SelectedLevel);
         GameManager.Inst?.LevelManager?.SelectStart(currIdx);
     }
 }
