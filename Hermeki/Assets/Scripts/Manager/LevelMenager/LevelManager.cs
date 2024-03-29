@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,9 @@ public class LevelManager : MonoBehaviour
     [Tooltip("스테이지 난이도")]
     public int StageLevel = 0;
     public int MaxLevel = 5;
+
+    //-------Observer
+    public List<ILevelManagerObserver> Observers = new List<ILevelManagerObserver>();
 
     /// <summary>
     /// 캐릭터들의 해금 레벨값, string : 캐릭터이름, int : 캐릭터 해금 레벨
@@ -266,7 +270,16 @@ public class LevelManager : MonoBehaviour
         {
             idx = MaxLevel;
         }
+
         StageLevel = idx;
+                
+        notifyStageLevelObservers(StageLevel);
+
+        //스테이지 적용
+        foreach (var stage in StageList)
+        {
+            stage.CurrLevel = StageLevel;
+        }
         return true;
     }
 
@@ -330,6 +343,54 @@ public class LevelManager : MonoBehaviour
             print($"{_char.Key} = {_char.Value}");
         }
         return true;
+    }
+    #endregion
+
+    #region Observer
+    /// <summary>
+    /// 옵저버 리스트에 추가
+    /// </summary>
+    /// <param name="_observer"></param>
+    /// <returns></returns>
+    public bool registerObserver(ILevelManagerObserver _observer)
+    {
+        if (Observers == null)
+            return false;
+        Observers.Add(_observer);
+        return true;
+    }
+
+    /// <summary>
+    /// 옵저버 리스트에서 삭제
+    /// </summary>
+    /// <param name="_observer"></param>
+    /// <returns></returns>
+    public bool removeObserver(ILevelManagerObserver _observer)
+    {
+        if (Observers == null)
+            return false;
+        Observers.Remove(_observer);
+        return true;
+    }
+
+    /// <summary>
+    /// 옵저버들에게 스테이지 레벨 변경 사항 알림
+    /// </summary>
+    /// <param name="_value"></param>
+    public void notifyStageLevelObservers(int _value)
+    {
+        foreach (var _observer in Observers)
+        {
+            _observer.UpdateStageLevel(_value);
+        }
+    }
+
+    public void notifyStageIdxObservers(int _value)
+    {
+        foreach (var _observer in Observers)
+        {
+            _observer.UpdateStageIdx(_value);
+        }
     }
     #endregion
 }

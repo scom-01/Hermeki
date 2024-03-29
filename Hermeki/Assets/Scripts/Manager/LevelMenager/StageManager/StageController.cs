@@ -1,18 +1,26 @@
-using Cinemachine;
+﻿using Cinemachine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-public class StageController : MonoBehaviour
+public class StageController : MonoBehaviour, ILevelManagerObserver
 {
     public Transform StartPos;
     public StageEndPoint EndPos;
     private LevelManager LM;
     public List<Grid> GirdList = new List<Grid>();
+    /// <summary>
+    /// 스테이지 레벨에 따른 다른 맵 적용을 위한 리스트
+    /// </summary>
+    public List<GameObject> LevelObjectList = new List<GameObject>();   
+    /// <summary>
+    /// 스테이지 레벨
+    /// </summary>
     public int CurrLevel = 0;
     public PolygonCollider2D PC2D;
-    public StageObjectController SO_Controller;
+    [HideInInspector] public StageObjectController SO_Controller;
+    
+    private LevelManager _levelManager;
     private void Awake()
     {
         LM = GetComponentInParent<LevelManager>();
@@ -23,6 +31,9 @@ public class StageController : MonoBehaviour
         }
         //TM_RendererList.enabled = false;
         SO_Controller = GetComponentInChildren<StageObjectController>();
+
+        _levelManager = this.GetComponentInParent<LevelManager>();
+        _levelManager.registerObserver(this);
     }
     public bool ResetStage()
     {
@@ -86,4 +97,13 @@ public class StageController : MonoBehaviour
         GirdList[CurrLevel].enabled = isTrue;
         return true;
     }
+
+    #region interface
+    
+
+    public void UpdateStageLevel(int _value)
+    {
+        CurrLevel = _value;
+    }
+    #endregion
 }
