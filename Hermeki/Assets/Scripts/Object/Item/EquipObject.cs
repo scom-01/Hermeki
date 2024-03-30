@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class EquipObject : MonoBehaviour, IInteractive
 {
@@ -8,12 +8,14 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     public EquipItemData Data;
     public Item_Type Type;
 
-    public bool isEquipable = true;
+    /// <summary>
+    /// true : 장착가능, 아이템 드랍 후 바로 줍는 상황 방지
+    /// </summary>
+    private bool isEquipable = false;
 
     public EquipObject(EquipItemData data)
     {
         Data = data;
-        isEquipable = true;
     }
 
     protected virtual void Start()
@@ -21,15 +23,16 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         SetSpriteRenderer();
     }
 
-    public virtual bool SetData(EquipItemData _data, bool _isEquipable = false)
+    public virtual bool SetData(EquipItemData _data)
     {
         if (_data == null)
             return false;
         Data = _data;
-        isEquipable = _isEquipable;
+        Invoke("Setquipabletrue", 0.25f);
         SetSpriteRenderer();
         return true;
     }
+    private void Setquipabletrue() => isEquipable = true;
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -53,7 +56,6 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         if (!collision.GetComponent<Unit>().IsAlive)
             return;
 
-        isEquipable = true;
         UnInteractive(collision.GetComponent<Unit>());
         Debug.Log($"TriggerExit Unit name = {collision.gameObject.name}");
     }

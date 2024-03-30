@@ -25,12 +25,12 @@ public class ArmorEquipObject : EquipObject
         Debug.Log($"Armor Equip UnInteractive {unit.name}");
     }
 
-    public override bool SetData(EquipItemData _data, bool _isEquipable = false)
+    public override bool SetData(EquipItemData _data)
     {
         if (_data?.dataSO == null)
             return false;
         armorStyle = (_data.dataSO as ArmorItemDataSO).Style;
-        return base.SetData(_data, _isEquipable);
+        return base.SetData(_data);
     }
     [ContextMenu("SetSpriteRenderer")]
     public override void SetSpriteRenderer()
