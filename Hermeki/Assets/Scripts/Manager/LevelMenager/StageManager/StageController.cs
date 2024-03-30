@@ -8,7 +8,7 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     public Transform StartPos;
     public StageEndPoint EndPos;
     private LevelManager LM;
-    public List<Grid> GirdList = new List<Grid>();
+    public Grid Gird;
     /// <summary>
     /// 스테이지 레벨에 따른 다른 맵 적용을 위한 리스트
     /// </summary>
@@ -23,13 +23,9 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     private LevelManager _levelManager;
     private void Awake()
     {
-        LM = GetComponentInParent<LevelManager>();
-        GirdList = GetComponentsInChildren<Grid>().ToList();
-        foreach (var _grid in GirdList)
-        {
-            _grid.enabled = false;
-        }
-        //TM_RendererList.enabled = false;
+        LM = this.GetComponentInParent<LevelManager>();
+        Gird = this.GetComponentInChildren<Grid>();
+        Gird.enabled = false;
         SO_Controller = GetComponentInChildren<StageObjectController>();
 
         _levelManager = this.GetComponentInParent<LevelManager>();
@@ -91,10 +87,10 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     }
     private bool ControllTM(bool isTrue)
     {
-        if (GirdList?.Count == 0 || GirdList.Count <= CurrLevel || GirdList[CurrLevel] == null)
+        if (Gird == null)
             return false;
 
-        GirdList[CurrLevel].enabled = isTrue;
+        Gird.enabled = isTrue;
         return true;
     }
 
