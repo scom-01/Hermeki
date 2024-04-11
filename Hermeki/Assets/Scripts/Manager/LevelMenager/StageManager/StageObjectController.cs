@@ -14,6 +14,43 @@ public class StageObjectController : MonoBehaviour
     {
         _stageController = GetComponentInParent<StageController>();
     }
+    public GameObject GetSpawnItem(EquipItemData _data, Vector3 pos)
+    {
+        AsyncOperationHandle<GameObject> opHandle = new AsyncOperationHandle<GameObject>();
+        
+        EquipItemData temp = new EquipItemData(_data.dataSO, _data.CurrentDurability);
+        switch (temp.dataSO.ItemType)
+        {
+            case Item_Type.Armor:
+                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_ArmorEquipObject);//.LoadAssetAsync();
+                break;
+            case Item_Type.Weapon:
+                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_WeaponEquipObject);//.LoadAssetAsync();
+                break;
+            case Item_Type.Rune:
+                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_RuneEquipObject);//.LoadAssetAsync();
+                break;
+            default:
+                break;
+        }
+
+        opHandle.WaitForCompletion(); // Returns when operation is complete
+
+        if (opHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            GameObject result = Instantiate(opHandle.Result, transform);
+            result.GetComponentInChildren<EquipObject>().SetData(temp);
+            result.transform.position = pos;
+            ObjectList.Add(result);
+            return result;
+        }
+        else
+        {
+            Addressables.Release(opHandle);
+            return null;
+        }
+    }
+
     public bool SpawnItem(EquipItemData _data, Vector3 pos)
     {
         switch (_data.dataSO.ItemType)
@@ -64,6 +101,18 @@ public class StageObjectController : MonoBehaviour
             };
 
         return true;
+    }
+
+    public GameObject GetObjectContain(EquipItemData _data)
+    {
+        for (int i = 0; i < ObjectList.Count; i++)
+        {
+            if (ObjectList[i].GetComponentInChildren<EquipObject>().Data == _data)
+            {
+                return ObjectList[i];
+            }
+        }
+        return null;
     }
     public bool ClearObject()
     {
