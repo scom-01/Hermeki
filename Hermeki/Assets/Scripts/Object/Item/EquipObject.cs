@@ -28,7 +28,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
         if (_data == null)
             return false;
         Data = _data;
-        Invoke("Setquipabletrue", 0.25f);
+        Invoke(nameof(Setquipabletrue), 0.25f);
         SetSpriteRenderer();
         return true;
     }

@@ -12,7 +12,7 @@ public class Hidden_Area : TouchObject
 
     public override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag != "Player")
+        if (!collision.CompareTag("Player"))
             return;
 
         foreach (var TR in TRs)
@@ -22,7 +22,7 @@ public class Hidden_Area : TouchObject
     }
     public override void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag != "Player")
+        if (!collision.CompareTag("Player"))
             return;
 
         foreach (var TR in TRs)

@@ -90,7 +90,7 @@ public class LevelManager : MonoBehaviour
         if (!player.IsAlive && isPlaying)
         {
             isPlaying = false;
-            Invoke("GameOver", 2f);
+            Invoke(nameof(GameOver), 2f);
         }
     }
 

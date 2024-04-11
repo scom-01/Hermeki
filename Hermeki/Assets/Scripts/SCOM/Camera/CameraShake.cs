@@ -27,7 +27,7 @@ public class CameraShake : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U))
         {
             Shake(repeatRate, shakeRange, duration);
         }
@@ -39,14 +39,14 @@ public class CameraShake : MonoBehaviour
         cameraPos = mainCamera.transform.position;
         shakeRange = _shakeRange;
         duration = _duration;
-        InvokeRepeating("StartShake", 0f, _repeatRate);
-        Invoke("StopShake", _duration);
+        InvokeRepeating(nameof(StartShake), 0f, _repeatRate);
+        Invoke(nameof(StopShake), _duration);
     }
     void StartShake()
     {
         //경과시간
         float elapsed_time = (GameManager.Inst.PlayTime - startTime);
-        float _Range = Random.value * Mathf.Sin(Mathf.PI * (elapsed_time / duration))+ shakeRange;
+        float _Range = Random.value * Mathf.Sin(Mathf.PI * (elapsed_time / duration)) + shakeRange;
         float cameraPosX = _Range;
         float cameraPosY = _Range;
         Vector3 cameraPos = mainCamera.transform.position;
@@ -56,7 +56,7 @@ public class CameraShake : MonoBehaviour
     }
     void StopShake()
     {
-        CancelInvoke("StartShake");
+        CancelInvoke(nameof(StartShake));
         mainCamera.transform.position = cameraPos;
     }
 }

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -31,7 +30,7 @@ public class EffectController : MonoBehaviour
         get => _size;
         set
         {
-            if(isDrawModeTiled)
+            if (isDrawModeTiled)
             {
                 if (SR != null)
                 {
@@ -46,7 +45,7 @@ public class EffectController : MonoBehaviour
                 this.transform.localScale = _size;
             }
 
-            if(isFixedRotY)
+            if (isFixedRotY)
             {
                 Quaternion rot = this.transform.localRotation;
                 rot.y = 0;
@@ -86,10 +85,10 @@ public class EffectController : MonoBehaviour
     }
 
     public void Init()
-    {        
+    {
         if (isLoopDurationTime > 0.0f && isLoopDurationTime != 999f)
         {
-            Invoke("FinishAnim", isLoopDurationTime);
+            Invoke(nameof(FinishAnim), isLoopDurationTime);
         }
     }
     private void OnDisable()
@@ -101,7 +100,7 @@ public class EffectController : MonoBehaviour
     }
     public void FinishAnim()
     {
-        if(isDestroy)
+        if (isDestroy)
         {
             Destroy(this.gameObject);
         }
@@ -118,6 +117,6 @@ public class EffectController : MonoBehaviour
             {
                 this.gameObject.SetActive(false);
             }
-        }        
+        }
     }
 }
