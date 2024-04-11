@@ -8,11 +8,11 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 2
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: underthelampgames
   productName: Hermeki
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -157,8 +157,8 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.DefaultCompany.Hermeki
-    Standalone: com.DefaultCompany.Hermeki
+    Android: com.underthelampgames.Hermeki
+    Standalone: com.UnderTheLampGames.Hermeki
     iPhone: com.DefaultCompany.Hermeki
   buildNumber:
     Standalone: 0
@@ -253,8 +253,8 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{dedicated}: reuno.keystore'
-  AndroidKeyaliasName: reuno
+  AndroidKeystoreName: D:/Unity/Private/Hermeki/underthelamp.keystore
+  AndroidKeyaliasName: hermekikey
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
