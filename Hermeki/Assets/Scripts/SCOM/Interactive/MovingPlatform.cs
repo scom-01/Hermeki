@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -30,6 +31,12 @@ public class MovingPlatform : MonoBehaviour
     /// </summary>
     [SerializeField] float speed = 1.5f;
 
+    private void Awake()
+    {
+        currPointIdx = 0;
+        platform.position = currentMovementTarget();
+    }
+
     private void FixedUpdate()
     {
         if (platform == null || Points?.Count == 0) 
@@ -38,7 +45,7 @@ public class MovingPlatform : MonoBehaviour
         //목적지 위치 계산
         Vector2 target = currentMovementTarget();
 
-        platform.transform.position = Vector2.MoveTowards(platform.position, target, speed * Time.deltaTime);
+        platform.position = Vector2.MoveTowards(platform.position, target, speed * Time.deltaTime);
 
         //다음 목적지와의 거리
         float dist = Vector2.Distance(target, platform.position);
@@ -71,6 +78,11 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        currPointIdx = 0;
+        platform.position = currentMovementTarget();
+    }
 
     /// <summary>
     /// 현재 목적지 position
