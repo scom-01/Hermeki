@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public bool isPlaying = false;
     [Tooltip("현재 진행중인 스테이지")]
     public int CurrStageIdx = 0;
+    private int MaxIdx = 0;
     [Tooltip("현재 진행중인 캐릭터 이름")]
     public string CurrCharacterName;
     [Tooltip("스테이지 난이도")]
@@ -58,6 +59,7 @@ public class LevelManager : MonoBehaviour
     public virtual void Start()
     {
         StageList = GetComponentsInChildren<StageController>().ToList();
+        MaxIdx = StageList.Count;
         if (LevelCanvas != null)
         {
             SelectUIList = LevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
@@ -207,7 +209,7 @@ public class LevelManager : MonoBehaviour
             return false;
 
         CurrStageIdx++;
-
+        ChangeStageIdx(CurrStageIdx);
         //스테이지 모두 클리어 시
         if (CurrStageIdx >= StageList.Count)
         {
@@ -274,12 +276,19 @@ public class LevelManager : MonoBehaviour
         StageLevel = idx;
                 
         notifyStageLevelObservers(StageLevel);
+        return true;
+    }
 
-        //스테이지 적용
-        foreach (var stage in StageList)
+    public bool ChangeStageIdx(int idx)
+    {
+        if (idx >= MaxIdx)
         {
-            stage.CurrLevel = StageLevel;
+            idx = MaxIdx;
         }
+
+        CurrStageIdx = idx;
+
+        notifyStageIdxObservers(CurrStageIdx);
         return true;
     }
 
@@ -384,7 +393,10 @@ public class LevelManager : MonoBehaviour
             _observer.UpdateStageLevel(_value);
         }
     }
-
+    /// <summary>
+    /// 옵저버들에게 스테이지 Idx 변경 사항 알림
+    /// </summary>
+    /// <param name="_value"></param>
     public void notifyStageIdxObservers(int _value)
     {
         foreach (var _observer in Observers)

@@ -1,6 +1,4 @@
 ﻿using Cinemachine;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class StageController : MonoBehaviour, ILevelManagerObserver
@@ -10,13 +8,13 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     private LevelManager LM;
     public Grid Gird;
     /// <summary>
-    /// 스테이지 레벨에 따른 다른 맵 적용을 위한 리스트
-    /// </summary>
-    public List<GameObject> LevelObjectList = new List<GameObject>();   
-    /// <summary>
     /// 스테이지 레벨
     /// </summary>
     public int CurrLevel = 0;
+    /// <summary>
+    /// 스테이지 idx
+    /// </summary>
+    public int CurrIdx = 0;
     public PolygonCollider2D PC2D;
     [HideInInspector] public StageObjectController SO_Controller;
     
@@ -52,11 +50,12 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     {
         if (player == null)
             return false;
-        if (LM.GoNextStage(player))
-        {
-            ResetStage();
-        }
-
+        
+        LM.GoNextStage(player);
+        //if(LM.CurrStageIdx < LM.MaxLevel)
+        //{
+        //    //ResetStage();            
+        //}
 
         if (this.TryGetComponent(out ActionEventHandler _action))
         {
@@ -100,6 +99,16 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     public void UpdateStageLevel(int _value)
     {
         CurrLevel = _value;
+    }
+
+    public void UpdateStageIdx(int _value)
+    {
+        if(CurrIdx == _value)
+        {
+            StartStage();
+            return;
+        }
+        ResetStage();
     }
     #endregion
 }
