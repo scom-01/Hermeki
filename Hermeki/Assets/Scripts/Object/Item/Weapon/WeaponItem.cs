@@ -59,7 +59,7 @@ public class WeaponItem : EquipItem
     {
         if (Data.CurrentDurability <= 0 || Data?.dataSO == null)
             return;
-                
+
         //무기의 Sprite는 1개 이므로 sprites[0]으로 고정
         if (Data.CalculateSprite()[0] != null && sr.sprite != Data.CalculateSprite()[0])
         {
@@ -159,22 +159,26 @@ public class WeaponItem : EquipItem
     private void Action()
     {
         isAction = true;
-        
+
         if (isLeft)
             Debug.Log($"StartAction Left = {(unit as Player).InputHandler.PrimaryInput}");
         else
             Debug.Log($"StartAction Right = {(unit as Player).InputHandler.PrimaryInput}");
-        
+
         unit.ItemManager?.ExeItemEvent(ItemEvent, ItemEvent_Type.OnAction);
-        
+
         if (Data?.dataSO != null)
         {
             switch ((Data.dataSO as WeaponItemDataSO).Style)
             {
                 case WeaponStyle.Sword:
+                    (Data.dataSO as WeaponItemDataSO).Variety(new SwordVariety(), this).Action();
                     break;
                 case WeaponStyle.Staff:
-                    DecreaseDurability();
+                    (Data.dataSO as WeaponItemDataSO).Variety(new StaffVariety(), this).Action();
+                    break;
+                case WeaponStyle.Spear:
+                    (Data.dataSO as WeaponItemDataSO).Variety(new SpearVariety(), this).Action();                    
                     break;
                 default:
                     break;
@@ -214,7 +218,7 @@ public class WeaponItem : EquipItem
             ///지형 충돌 무시
             if (!(Data.dataSO as WeaponItemDataSO).isPhysicsCheck_Ground)
                 return;
-            
+
             if (isLeft)
             {
                 eventHandler.FinishLeftAction();

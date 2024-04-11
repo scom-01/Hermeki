@@ -9,6 +9,11 @@ public class WeaponItemDataSO : EquipItemDataSO
         ItemType = Item_Type.Weapon;
     }
     public WeaponStyle Style;
+    public T Variety<T>(T data, WeaponItem item) where T : WeaponVariety
+    {
+        data.WeaponItem = item;
+        return data;
+    }
     /// <summary>
     /// 지형 충돌 여부
     /// </summary>
