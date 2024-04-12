@@ -57,4 +57,6 @@ public class EquipItem : MonoBehaviour
         Debug.Log($"{unit.name} Play {Data.dataSO.name} Audioclip {Data.dataSO.BrokenAudioData}");
         return true;
     }
+
+    public Unit GetUnit() => unit;
 }

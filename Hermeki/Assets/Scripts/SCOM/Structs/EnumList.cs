@@ -100,6 +100,7 @@ public enum WeaponStyle
 {
     Sword = 10,
     Staff = 11,
+    Spear = 12,
 }
 
 public enum ITEM_Level

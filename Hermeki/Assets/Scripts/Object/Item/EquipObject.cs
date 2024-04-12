@@ -34,7 +34,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
     }
     private void Setquipabletrue() => isEquipable = true;
 
-    public virtual void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (!CheckUnit(collision.gameObject))
             return;
@@ -48,7 +48,7 @@ public abstract class EquipObject : MonoBehaviour, IInteractive
             Debug.Log($"TriggerEnter Unit name = {collision.gameObject.name}");        
         }
     }
-    private void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (!CheckUnit(collision.gameObject))
             return;

@@ -706,7 +706,10 @@ MonoBehaviour:
   NickName: {fileID: 404679147}
   SelectBtn: {fileID: 773117773}
   CharacterName: Wizard1
-  EquipStartingItem: []
+  EquipStartingItem:
+  - StringName: 
+    dataSO: {fileID: 11400000, guid: 2f1a9d38ea49fe446a2398b185c1f824, type: 2}
+    _currDurability: 99
   StartAction: {fileID: 1689978980}
   _currLevel: 0
   LevelImgList:
