@@ -22,13 +22,26 @@ public class StageObjectController : MonoBehaviour
         switch (temp.dataSO.ItemType)
         {
             case Item_Type.Armor:
-                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_ArmorEquipObject);//.LoadAssetAsync();
+                opHandle = Addressables.InstantiateAsync(Base_ArmorEquipObject, transform);//.LoadAssetAsync();
                 break;
             case Item_Type.Weapon:
-                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_WeaponEquipObject);//.LoadAssetAsync();
+
+                switch ((_data.dataSO as WeaponItemDataSO).Style)
+                {
+                    case WeaponStyle.Sword:
+                        opHandle = Addressables.InstantiateAsync(Base_WeaponEquipObject, transform);//.LoadAssetAsync();
+                        break;
+                    case WeaponStyle.Staff:
+                        break;
+                    case WeaponStyle.Spear:
+                        opHandle = Addressables.InstantiateAsync("SpearEquipObject", transform);//.LoadAssetAsync();
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case Item_Type.Rune:
-                opHandle = Addressables.LoadAssetAsync<GameObject>(Base_RuneEquipObject);//.LoadAssetAsync();
+                opHandle = Addressables.InstantiateAsync(Base_RuneEquipObject, transform);//.LoadAssetAsync();
                 break;
             default:
                 break;
@@ -38,11 +51,11 @@ public class StageObjectController : MonoBehaviour
 
         if (opHandle.Status == AsyncOperationStatus.Succeeded)
         {
-            GameObject result = Instantiate(opHandle.Result, transform);
-            result.GetComponentInChildren<EquipObject>().SetData(temp);
-            result.transform.position = pos;
-            ObjectList.Add(result);
-            return result;
+            opHandle.Result.AddComponent<SelfCleanup>();
+            opHandle.Result.GetComponentInChildren<EquipObject>().SetData(temp);
+            opHandle.Result.transform.position = pos;
+            ObjectList.Add(opHandle.Result);
+            return opHandle.Result;
         }
         else
         {
@@ -59,6 +72,7 @@ public class StageObjectController : MonoBehaviour
                 Base_ArmorEquipObject.InstantiateAsync(this.transform).Completed +=
             (AsyncOperationHandle<GameObject> _obj) =>
             {
+                _obj.Result.AddComponent<SelfCleanup>();
                 _obj.Result.GetComponentInChildren<EquipObject>().SetData(_data);
                 _obj.Result.transform.position = pos;
                 ObjectList.Add(_obj.Result);
@@ -68,6 +82,7 @@ public class StageObjectController : MonoBehaviour
                 Base_WeaponEquipObject.InstantiateAsync(this.transform).Completed +=
             (AsyncOperationHandle<GameObject> _obj) =>
             {
+                _obj.Result.AddComponent<SelfCleanup>();
                 _obj.Result.GetComponentInChildren<EquipObject>().SetData(_data);
                 _obj.Result.transform.position = pos;
                 ObjectList.Add(_obj.Result);
@@ -77,6 +92,7 @@ public class StageObjectController : MonoBehaviour
                 Base_RuneEquipObject.InstantiateAsync(this.transform).Completed +=
             (AsyncOperationHandle<GameObject> _obj) =>
             {
+                _obj.Result.AddComponent<SelfCleanup>();
                 _obj.Result.GetComponentInChildren<EquipObject>().SetData(_data);
                 _obj.Result.transform.position = pos;
                 ObjectList.Add(_obj.Result);
@@ -97,6 +113,7 @@ public class StageObjectController : MonoBehaviour
             (AsyncOperationHandle<GameObject> _obj) =>
             {
                 _obj.Result.transform.position = pos;
+                _obj.Result.AddComponent<SelfCleanup>();
                 ObjectList.Add(_obj.Result);
             };
 
@@ -118,9 +135,18 @@ public class StageObjectController : MonoBehaviour
     {
         foreach (var item in ObjectList)
         {
-            Addressables.ReleaseInstance(item);
+            Destroy(item);
+            //Addressables.ReleaseInstance(item);
         }
         ObjectList.Clear();
         return true;
+    }
+}
+
+public class SelfCleanup : MonoBehaviour
+{
+    void OnDestroy()
+    {
+        Addressables.ReleaseInstance(gameObject);
     }
 }
