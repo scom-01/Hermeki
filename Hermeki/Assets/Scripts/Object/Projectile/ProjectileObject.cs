@@ -44,7 +44,7 @@ public class ProjectileObject : ItemObject
     /// <returns></returns>
     public bool SetLayerMask(LayerMask LM)
     {
-        if (this.gameObject.layer == LM_Object)
+        if (this.gameObject.layer == LM)
             return false;
         this.gameObject.layer = LM;
         return true;
