@@ -5,12 +5,18 @@ using UnityEngine;
 public class ItemObject : MonoBehaviour
 {
     [HideInInspector]
-    public SpriteRenderer SR => this.GetComponent<SpriteRenderer>();
-    private Rigidbody2D rb2d => this.GetComponent<Rigidbody2D>();
-    private PolygonCollider2D pc2d => GetComponent<PolygonCollider2D>();
-    private EquipItemData data;
-    private void Awake()
+    public SpriteRenderer SR;
+    protected Rigidbody2D rb2d;
+    protected PolygonCollider2D pc2d => GetComponent<PolygonCollider2D>();
+    protected EquipItemData data;
+    [SerializeField]
+    protected bool isTrigger;
+    protected virtual void Awake()
     {
+        SR = this.GetComponent<SpriteRenderer>();
+        rb2d = this.GetComponent<Rigidbody2D>();
+        if (pc2d == null)
+            this.AddComponent<PolygonCollider2D>();
         SetPolygon();
     }
 
@@ -23,13 +29,16 @@ public class ItemObject : MonoBehaviour
         SetPolygon();
     }
 
-    private void SetPolygon()
+    /// <summary>
+    /// Sprite Polygon Update
+    /// </summary>
+    protected virtual void SetPolygon()
     {
         if (SR?.sprite == null)
             return;
 
         if (pc2d == null)
-            this.AddComponent<PolygonCollider2D>().isTrigger = false;
+            this.AddComponent<PolygonCollider2D>();
         PolygonCollider2D polygon = pc2d;
 
         int shapeCount = SR.sprite.GetPhysicsShapeCount();
@@ -40,7 +49,7 @@ public class ItemObject : MonoBehaviour
             SR.sprite.GetPhysicsShape(i, points);
             polygon.SetPath(i, points);
         }
-        polygon.isTrigger = false;
+        polygon.isTrigger = isTrigger;
         if (data?.dataSO != null)
         {
             polygon.sharedMaterial = data.dataSO.PM2D;
