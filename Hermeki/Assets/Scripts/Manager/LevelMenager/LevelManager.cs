@@ -1,5 +1,4 @@
 ﻿using Cinemachine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +14,7 @@ public class LevelManager : MonoBehaviour
     public Unit player;
     public Transform StartPos;
     public AssetReferenceGameObject SpawnUnit;
+    public PostProcessingManager PostProcessingManager;
 
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
@@ -78,7 +78,7 @@ public class LevelManager : MonoBehaviour
         //캐릭터 레벨 PlayFab 저장 
         for (int i = 0; i < CharacterLevel.Count; i++)
         {
-            PlayFabManager.Inst.CS_SetUserData(CharacterLevel.ElementAt(i).Key, CharacterLevel.ElementAt(i).Value);
+            PlayFabManager.Inst?.CS_SetUserData(CharacterLevel.ElementAt(i).Key, CharacterLevel.ElementAt(i).Value);
         }
     }
 
@@ -90,6 +90,7 @@ public class LevelManager : MonoBehaviour
         if (!player.IsAlive && isPlaying)
         {
             isPlaying = false;
+            PostProcessingManager?.SetVignette(0, 1f);
             Invoke(nameof(GameOver), 2f);
         }
     }
@@ -102,6 +103,7 @@ public class LevelManager : MonoBehaviour
     {
         isPlaying = true;
         Vector3 _Pos = Vector3.zero;
+        _Pos = CurrStage().StartPos.position;
         if (StartPos != null)
         {
             _Pos = StartPos.position;
@@ -121,11 +123,7 @@ public class LevelManager : MonoBehaviour
             {
                 player = _obj.Result.GetComponent<Unit>();
                 SetUnitSprite();
-                if (VirtualCamera != null && player != null)
-                {
-                    VirtualCamera.Follow = player.transform;
-                    VirtualCamera.transform.position = player.transform.position;
-                }
+                StartStage();
                 if (InventoryTable != null)
                 {
                     InventoryTable.unit = player;
@@ -133,7 +131,7 @@ public class LevelManager : MonoBehaviour
             };
         }
 
-        StartStage();
+        PostProcessingManager?.SetVignette(1f, 0);
     }
     public void GameOver()
     {
@@ -174,17 +172,27 @@ public class LevelManager : MonoBehaviour
 
 
     #region Stage Func
-    public void StartStage()
+    public bool StartStage()
     {
+        if (player == null)
+            return false;
+
+        player.transform.position = CurrStage().StartPos.position;
+        if (VirtualCamera != null && player != null)
+        {
+            VirtualCamera.Follow = player.transform;
+            VirtualCamera.transform.position = player.transform.position;
+        }
+
         if (StageList.Count == 0)
-            return;
+            return false;
 
         if (!StageList[CurrStageIdx].StartStage())
         {
-            return;
+            return false;
         }
 
-        return;
+        return true;
     }
 
     /// <summary>
@@ -224,17 +232,7 @@ public class LevelManager : MonoBehaviour
             }
             return false;
         }
-
-        player.transform.position = StageList[CurrStageIdx].StartPos.position;
-        if (VirtualCamera != null)
-        {
-            VirtualCamera.Follow = null;
-            //VirtualCamera.PreviousStateIsValid = false;
-            VirtualCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = null;
-            VirtualCamera.transform.position = player.transform.position;
-            StartCoroutine(UpdateCameraFrameLater());
-        }
-        if (!StageList[CurrStageIdx].StartStage())
+        if (!StartStage())
         {
             return false;
         }
@@ -274,7 +272,7 @@ public class LevelManager : MonoBehaviour
         }
 
         StageLevel = idx;
-                
+
         notifyStageLevelObservers(StageLevel);
         return true;
     }
