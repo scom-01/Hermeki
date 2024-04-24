@@ -182,6 +182,10 @@ public class SPUM_SpriteList : MonoBehaviour
                             }
                         }
                     }
+                    else
+                    {
+                        _objList[i].sprite = tSP[i];
+                    }
                 }
                 else if (tSP.Length > 0)
                 {

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ArmorItem : EquipItem
 {
+    /// <summary>
+    /// Item을 장착했을 때 가려져야할 Sprite
+    /// </summary>
+    public SpriteRenderer HideSprite;
     public ArmorStyle Style;
     public override EquipItemData GetData(out EquipItemData data)
     {
@@ -68,6 +72,14 @@ public class ArmorItem : EquipItem
 
     public void SetSprite(List<UnityEngine.Sprite> sprites)
     {
+        if (HideSprite != null)
+        {
+            if (sprites != null)
+                HideSprite.enabled = false;
+            else
+                HideSprite.enabled = true;
+        }
+
         switch (Style)
         {
             case ArmorStyle.Helmet:
