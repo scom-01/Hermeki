@@ -35,12 +35,12 @@ public class PlayerJumpState : PlayerInAirState
         player.InputHandler.UseInput(ref player.InputHandler.JumpInput);
         Movement.SetVelocityY(UnitStats.CalculStatsData.DefaultJumpVelocity * (100f + UnitStats.CalculStatsData.JumpVEL_Per) / 100f);
         SoundEffect.AudioSpawn(Jump_Sfx);
-        Debug.Log("JumpSFX");
-        if (amountOfJumpLeft < player.playerData.amountOfJumps)
-        {
-            player.Core.CoreEffectManager.StartEffectsPos(Jump_Effect, CollisionSenses.GroundCenterPos, Jump_Effect.transform.localScale);
-            player?.SetAnimParam("JumpFlip", true);
-        }
+        //Debug.Log("JumpSFX");
+        //if (amountOfJumpLeft < player.playerData.amountOfJumps)
+        //{
+        //    player.Core.CoreEffectManager.StartEffectsPos(Jump_Effect, CollisionSenses.GroundCenterPos, Jump_Effect.transform.localScale);
+        //    player?.SetAnimParam("JumpFlip", true);
+        //}
         //if (player.PrimaryAttackState.weapon != null)
         //{
         //    player.PrimaryAttackState.weapon.ChangeActionCounter(0);

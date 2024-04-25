@@ -1,3 +1,4 @@
+using SCOM.CoreSystem;
 using UnityEngine;
 
 public class TouchWater : TouchLowGravity
@@ -11,9 +12,22 @@ public class TouchWater : TouchLowGravity
         }
 
         Player tempUnit = collision.GetComponent<Player>();
-        if (tempUnit != null && !tempUnit.JumpState.CanJump())
+
+        if (tempUnit != null)
         {
-            tempUnit.JumpState.ResetAmountOfJumpsLeft();
+            tempUnit.Core.CoreMovement.SetVelocityY(
+                    Mathf.Clamp(
+                        tempUnit.RB.velocity.y,
+                        -7f,
+                        tempUnit.Core.CoreUnitStats.CalculStatsData.DefaultJumpVelocity * (100f + tempUnit.Core.CoreUnitStats.CalculStatsData.JumpVEL_Per) / 100f
+                        )
+                    );
+        }
+
+        if (tempUnit != null && tempUnit.JumpState.GetJumpInput /*&&!tempUnit.JumpState.CanJump()*/)
+        {
+            tempUnit.FSM.ChangeState(tempUnit.JumpState);
+            //tempUnit.JumpState.ResetAmountOfJumpsLeft();
         }
     }
 

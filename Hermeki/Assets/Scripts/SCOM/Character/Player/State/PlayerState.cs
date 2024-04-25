@@ -9,6 +9,7 @@ public class PlayerState : UnitState
     protected int xInput;                   //x축 이동 입력값
     protected int yInput;                   //y축 이동 입력값
     protected bool JumpInput;               //점프 입력값
+    public bool GetJumpInput => JumpInput;
     protected bool JumpInputStop;           //점프 입력 해체 값
     protected bool dashInput;               //Dash 입력값
     protected bool skill1Input;             //Skill1 입력값
