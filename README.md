@@ -64,3 +64,25 @@ end
 ### 옵저버 패턴   
 >대상의 상태에 변화가 있을 때마다 옵저버들에게 통지하고, 옵저버는 알림을 받아 조치를 취하는 패턴으로 스테이지의 변경, 레벨의 변경 등에 따라 옵저버들이 변화하도록 구현하였습니다.
 
+## 문제 해결
+>> Error
+>> ### Addressable
+>>1.Addressable PlayMode 를  "Use Existing Build" 빌드 모드를 사용했을 때 스프라이트에 일반 텍스처가 누락되는 문제   
+>>-> 1.21.17 버전에서 수정됐다고 Doc에서 확인   
+>>->하지만 현재 프로젝트는 1.19.19버전이 최대   
+>>->프로젝트 종료 후 Packages/manifest.json 에서  "com.unity.addressables": "1.19.19"->"com.unity.addressables": "1.21.19"로 수정   
+>>->프로젝트 실행 후 PackageManager에서 Addressable 업데이트
+>><br/><br/>
+>>2.UnityEngine.AddressableAssets.InvalidKeyException: Exception of type 'UnityEngine.AddressableAssets.InvalidKeyException' was thrown. No Location found for Key=default
+>>  Addressables.GetDownloadSizeAsync(label); 이런 식으로 Label이름으로 가져올 때 해당 Label로 설정된 Asset이 하나도 없으면 Exception을 일으킨다.
+>><br/><br/>
+>>3.SpriteAtlasV1 Enable for Build 사용 시 SpriteAtlas 패키징된 Sprite가 흰색으로 나타나는 오류
+>> ->Always Enabled로 수정
+>> ### 구글 스토어 내부테스트
+>> 1. 프로젝트 설정
+>>> Scpriting Backend Mono -> IL2CPP로 수정
+>>> 2019년 8월 1일부터 64비트를 지원해야하기에 Target Architectures ARM64 체크
+>>> TargetAPI 30이상으로 수정
+>>2. 앱 서명
+>>> java keystore의 키 내보내기 및 업로드
+>>> 자바 버전이 맞지않음 -> jdk 버전 업데이트 -> OpenJdk 버전으로 수정 -> 환경변수 설정 -> 생성된 zip 업로드
