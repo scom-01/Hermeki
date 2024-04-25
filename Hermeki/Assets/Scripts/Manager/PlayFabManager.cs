@@ -4,54 +4,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayFabManager : MonoBehaviour
+public class PlayFabManager : Singleton<PlayFabManager>
 {
-    public static PlayFabManager Inst
-    {
-        get
-        {
-            if (_Inst == null)
-            {
-                _Inst = FindObjectOfType(typeof(PlayFabManager)) as PlayFabManager;
-                if (_Inst == null)
-                {
-                    Debug.Log("no Singleton obj");
-                }
-                else
-                {
-                    DontDestroyOnLoad(_Inst.gameObject);
-                }
-            }
-            return _Inst;
-        }
-    }
-    private static PlayFabManager _Inst = null;
-
     public string currentPlayFabId;
     public bool isGetData = false;
 
     private Dictionary<string, int> UserStatisticsDictionary = new Dictionary<string, int>();
     private Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
 
-    private void Awake()
-    {
-        if (_Inst)
-        {
-            var managers = Resources.FindObjectsOfTypeAll(typeof(PlayFabManager));
-            for (int i = 0; i < managers.Length; i++)
-            {
-                Debug.Log($"{managers[i]} = {i}");
-                if (i > 0)
-                {
-                    Destroy(managers[i].GameObject());
-                }
-            }
-            return;
-        }
-
-        _Inst = this;
-        DontDestroyOnLoad(this.gameObject);
-    }
     public void Start()
     {
         if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))

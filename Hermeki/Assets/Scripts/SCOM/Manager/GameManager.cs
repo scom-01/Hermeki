@@ -1,3 +1,4 @@
+using PlayFab.Internal;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,28 +8,8 @@ using UnityEngine.Playables;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Inst
-    {
-        get
-        {
-            if (_Inst == null)
-            {
-                _Inst = FindObjectOfType(typeof(GameManager)) as GameManager;
-                if (_Inst == null)
-                {
-                    Debug.Log("no Singleton obj");
-                }
-                else
-                {
-                    DontDestroyOnLoad(_Inst.gameObject);
-                }
-            }
-            return _Inst;
-        }
-    }
-    private static GameManager _Inst = null;
 
     /// <summary>
     /// true = pause
@@ -124,26 +105,9 @@ public class GameManager : MonoBehaviour
     private List<string> m_sceneNameList = new List<string>();
     public event Action SaveAction;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (_Inst)
-        {
-            var managers = Resources.FindObjectsOfTypeAll(typeof(GameManager));
-            for (int i = 0; i < managers.Length; i++)
-            {
-                Debug.Log($"{managers[i]} = {i}");
-                if (i > 0)
-                {
-                    Destroy(managers[i].GameObject());
-                }
-            }
-            return;
-        }
-
-        //LocalizationSettings.StringDatabase.MissingTranslationState = MissingTranslationBehavior.PrintWarning;
-
-        _Inst = this;
-        DontDestroyOnLoad(this.gameObject);
+        base.Awake();
         GraphicsSettings.useScriptableRenderPipelineBatching = true;
         //if (MainUI == null)
         //    MainUI = this.GetComponentInChildren<MainUIManager>();

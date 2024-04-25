@@ -1,57 +1,14 @@
 using SCOM;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-    public static SoundManager Inst
-    {
-        get
-        {
-            if (_Inst == null)
-            {
-                _Inst = FindObjectOfType(typeof(SoundManager)) as SoundManager;
-                if (_Inst == null)
-                {
-                    Debug.Log("no Singleton obj");
-                }
-                else
-                {
-                    DontDestroyOnLoad(_Inst.gameObject);
-                }
-            }
-            return _Inst;
-        }
-    }
-    private static SoundManager _Inst = null;
-
-
     AudioSource[] _audioSources = new AudioSource[(int)Sound.MaxCount];
     [SerializeField] AudioMixerGroup[] MixerGroup;
     Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
-    private void Awake()
-    {
-        if (_Inst)
-        {
-            var managers = Resources.FindObjectsOfTypeAll(typeof(SoundManager));
-            for (int i = 0; i < managers.Length; i++)
-            {
-                Debug.Log($"{managers[i]} = {i}");
-                if (i > 0)
-                {
-                    Destroy(managers[i].GameObject());
-                }
-            }
-            return;
-        }
-
-        _Inst = this;
-        DontDestroyOnLoad(this.gameObject);
-    }
     private void Start()
     {
         Init();
