@@ -49,6 +49,7 @@ end
 >위의 이유로 AssetBundle을 사용하고 관리 툴인 Addressable을 사용한다.
 ><br/><br/>
 >![image](https://github.com/scom-01/Hermeki/assets/78716085/ab7eb0c9-19a0-40ef-b585-8730f2f3c796)   
+>Amazon S3 서버에서 객체를 다운로드 받는 모습   
 >애플리케이션 실행 시 업데이트 파일을 체크 후 다운로드
 
 ### 스프라이트 아틀라스 에셋 사용   
