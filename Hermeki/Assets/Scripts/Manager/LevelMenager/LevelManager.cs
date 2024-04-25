@@ -50,7 +50,7 @@ public class LevelManager : MonoBehaviour
     public CinemachineVirtualCamera VirtualCamera;
     private void Awake()
     {
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 250;
         if (GameManager.Inst != null)
         {
             GameManager.Inst.LevelManager = this;
@@ -167,7 +167,7 @@ public class LevelManager : MonoBehaviour
 
     public void GoLobby()
     {
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadSceneAsync("Title");
     }
 
 

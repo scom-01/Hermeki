@@ -102,7 +102,7 @@ public class DownloadManager : MonoBehaviour
             AlldownloadPerText.text = string.Format("100.0 %");
             AlldownloadSilder.value = 1f;
 
-            SceneManager.LoadSceneAsync(0);
+            SceneManager.LoadSceneAsync("Title");
             yield return null;
         }
     }
@@ -209,7 +209,7 @@ public class DownloadManager : MonoBehaviour
             }
         }
 
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadSceneAsync("Title");
     }
     #endregion
 }

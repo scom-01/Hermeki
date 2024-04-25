@@ -28,6 +28,6 @@ public class TitleManager : MonoBehaviour
         if (!isGetData)
             return;
 
-        SceneManager.LoadSceneAsync(2);
+        SceneManager.LoadSceneAsync("Ingame");
     }
 }
