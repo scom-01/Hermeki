@@ -62,6 +62,7 @@ public class LevelManager : MonoBehaviour
         MaxIdx = StageList.Count;
         if (LevelCanvas != null)
         {
+            LevelCanvas.enabled = true;
             SelectUIList = LevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
             if (SelectUIList != null && SelectUIList.Count > 0)
             {

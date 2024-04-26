@@ -16,6 +16,7 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     /// </summary>
     public int CurrIdx = 0;
     public PolygonCollider2D PC2D;
+    public CompositeCollider2D CpC2D;
     [HideInInspector] public StageObjectController SO_Controller;
     
     private LevelManager _levelManager;
@@ -76,6 +77,10 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
         if (PC2D != null)
         {
             LM.VirtualCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = PC2D;
+        }
+        if(CpC2D!=null)
+        {
+            LM.VirtualCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = CpC2D;
         }
 
         if (this.TryGetComponent(out ActionEventHandler _action))
