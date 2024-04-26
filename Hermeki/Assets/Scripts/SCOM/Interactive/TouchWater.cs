@@ -24,7 +24,7 @@ public class TouchWater : TouchLowGravity
                     );
         }
 
-        if (tempUnit != null && tempUnit.JumpState.GetJumpInput /*&&!tempUnit.JumpState.CanJump()*/)
+        if (tempUnit != null && ((tempUnit.FSM.CurrentState) as PlayerState).GetJumpInput /*&&!tempUnit.JumpState.CanJump()*/)
         {
             tempUnit.FSM.ChangeState(tempUnit.JumpState);
             //tempUnit.JumpState.ResetAmountOfJumpsLeft();
