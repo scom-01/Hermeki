@@ -82,7 +82,7 @@ public class SelectStartLevel : MonoBehaviour
 
         if (PlayFabManager.Inst == null)
         {
-            SceneManager.LoadSceneAsync("Title");
+            //SceneManager.LoadSceneAsync("Title");
             return;
         }
 
