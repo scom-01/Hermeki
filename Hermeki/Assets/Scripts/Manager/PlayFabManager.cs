@@ -1,38 +1,53 @@
 ﻿using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayFabManager : Singleton<PlayFabManager>
 {
-    public string currentPlayFabId;
-    public bool isGetData = false;
+    public string currentPlayFabId = "";
+	public bool isGetData = false;
 
     private Dictionary<string, int> UserStatisticsDictionary = new Dictionary<string, int>();
     private Dictionary<string, string> UserDataDictionary = new Dictionary<string, string>();
 
     public void Start()
     {
-        if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
-        {
-            /*
+        
+	}
+
+    public void TryLogin()
+	{
+		if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
+		{
+			/*
             Please change the titleId below to your own titleId from PlayFab Game Manager.
             If you have already set the value in the Editor Extensions, this can be skipped.
             */
-            PlayFabSettings.staticSettings.TitleId = "42";
+			PlayFabSettings.staticSettings.TitleId = "42";
+		}
+        if (currentPlayFabId == "")
+        {
+			var request = new LoginWithCustomIDRequest { CustomId = /*currentPlayFabId*/"GettingStartedGuide", CreateAccount = true };
+			PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnLoginFailure);
+		}
+        else
+        {
+		    var request = new LoginWithCustomIDRequest { CustomId = currentPlayFabId/*"GettingStartedGuide"*/, CreateAccount = true };
+		    PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnLoginFailure);
         }
-        var request = new LoginWithCustomIDRequest { CustomId = "GettingStartedGuide", CreateAccount = true };
-        PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnLoginFailure);
-    }
+	}
 
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Congratulations, you made your first successful API call!");
-        currentPlayFabId = result.PlayFabId;
-        
-        //유저 데이터 불러오기
-        CS_GetUserData();
+		//currentPlayFabId = result.PlayFabId;
+		
+        TitleManager title = GameObject.FindObjectOfType<TitleManager>();
+		title?.SetLoadingPanel(false);
+
+		//유저 데이터 불러오기
+		CS_GetUserData();
     }
 
     private void OnLoginFailure(PlayFabError error)
@@ -224,12 +239,11 @@ public class PlayFabManager : Singleton<PlayFabManager>
                     UserDataDictionary.Add(data.Key, data.Value.Value);
                 }
                 Debug.Log(UserDataDictionary);
-
-                isGetData = true;
+			isGetData = true;
             },
             (error) =>
             {
-
+                Debug.Log("have not User Data");
             });
     }
     #endregion

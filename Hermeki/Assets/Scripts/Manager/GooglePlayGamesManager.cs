@@ -10,7 +10,7 @@ public class GooglePlayGamesManager : MonoBehaviour
     void Start()
     {
         PlayGamesPlatform.DebugLogEnabled = true;
-        PlayGamesPlatform.Activate();
+        PlayGamesPlatform.Activate(); 
         LogIn();
     }
 
@@ -55,7 +55,11 @@ public class GooglePlayGamesManager : MonoBehaviour
             Social.localUser.Authenticate((bool successed) =>
             {
                 if (successed)
-                    Google_Text.text = string.Format($"{Social.localUser.id} \n {Social.localUser.userName}");
+                {
+                    Google_Text.text = string.Format($"{PlayGamesPlatform.Instance.GetUserDisplayName()/* Social.localUser.id*/} \n {PlayGamesPlatform.Instance.GetUserId() /*Social.localUser.userName*/}");
+                    PlayFabManager.Inst.currentPlayFabId = PlayGamesPlatform.Instance.GetUserId();
+                    PlayFabManager.Inst?.TryLogin();
+				}
                 else
                     Google_Text.text = "Login Failed";
             });
