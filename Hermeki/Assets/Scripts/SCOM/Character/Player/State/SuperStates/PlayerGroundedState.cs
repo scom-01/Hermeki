@@ -42,7 +42,7 @@ public class PlayerGroundedState : PlayerState
         //    return;
         //}
         //점프
-        else if (JumpInput && player.JumpState.CanJump() && isGrounded && yInput >= 0 && !player.CC2D.isTrigger)
+        else if (JumpInput && player.JumpState.CanJump() && isGrounded &&/* yInput >= 0 &&*/ !player.CC2D.isTrigger)
         {
             player.FSM.ChangeState(player.JumpState);
             return;

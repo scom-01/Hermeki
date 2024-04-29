@@ -62,7 +62,7 @@ public class PlayerJumpState : PlayerInAirState
 
     public void DecreaseAmountOfJumpsLeft()
     {
-        Debug.Log($"amountOfJumpLeft = {amountOfJumpLeft}");
         amountOfJumpLeft--;
+        Debug.Log($"amountOfJumpLeft = {amountOfJumpLeft}");
     }
 }
