@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class PostProcessingManager : MonoBehaviour
+public class PostProcessingManager : Singleton<PostProcessingManager>
 {
     Volume volume;
     VolumeProfile volumeProfile;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         volume = this.GetComponent<Volume>();
         volumeProfile = volume.profile;
     }
@@ -19,10 +20,10 @@ public class PostProcessingManager : MonoBehaviour
         volumeProfile.TryGet(out vignette);
         if (vignette != null)
         {
+            StopAllCoroutines();
             vignette.active = true;
             StartCoroutine(SetVignetteValue(_value, goal));
         }
-
     }
 
     IEnumerator SetVignetteValue(float _value, float goal)

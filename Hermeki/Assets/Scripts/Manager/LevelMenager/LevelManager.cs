@@ -14,7 +14,6 @@ public class LevelManager : MonoBehaviour
     public Unit player;
     public Transform StartPos;
     public AssetReferenceGameObject SpawnUnit;
-    public PostProcessingManager PostProcessingManager;
 
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
@@ -91,7 +90,7 @@ public class LevelManager : MonoBehaviour
         if (!player.IsAlive && isPlaying)
         {
             isPlaying = false;
-            PostProcessingManager?.SetVignette(0, 1f);
+            PostProcessingManager.Inst?.SetVignette(0, 1f);
             Invoke(nameof(GameOver), 2f);
         }
     }
@@ -132,7 +131,7 @@ public class LevelManager : MonoBehaviour
             };
         }
 
-        PostProcessingManager?.SetVignette(1f, 0);
+        PostProcessingManager.Inst?.SetVignette(1f, 0);
     }
     public void GameOver()
     {
