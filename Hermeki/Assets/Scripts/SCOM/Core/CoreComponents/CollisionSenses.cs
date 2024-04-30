@@ -81,6 +81,7 @@ namespace SCOM.CoreSystem
         protected ContactFilter2D contactFilter_Ground;
         protected ContactFilter2D contactFilter_Platform;
         protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
+        protected ContactPoint2D[] contactBuffer = new ContactPoint2D[16];
         #endregion
         protected override void Awake()
         {
@@ -114,6 +115,34 @@ namespace SCOM.CoreSystem
                         {
                             return true;
                         }
+                    }
+                }
+                return false;
+            }
+        }
+
+        public bool CheckSlope
+        { 
+            get
+            {
+                var count = RB.GetContacts(contactBuffer);
+                if (count > 0)
+                {
+                    foreach (var contact in contactBuffer) 
+                    {
+                        if (contact.collider?.CompareTag("Player") == true)
+                            continue;
+
+                        // |normal.x| 0.9f 초과, 0.7f 미만이면 무시
+                        if (Mathf.Abs(contact.normal.x * 10f) < 7 || Mathf.Abs(contact.normal.x * 10f) > 9)
+                            continue;
+
+                        // normal.y 0.9f 초과, 0.7f 미만이면 무시
+                        if ((contact.normal.y * 10f) > 9 || (contact.normal.y * 10f) < 7)
+                            continue;
+
+                        //닿은 면이 아래 부분이고 기울기가 크지않으면 true
+                        return true;
                     }
                 }
                 return false;

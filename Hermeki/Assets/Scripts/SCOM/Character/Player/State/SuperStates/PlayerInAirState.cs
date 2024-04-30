@@ -71,13 +71,19 @@ public class PlayerInAirState : PlayerState
             return;
 
         //Platform 착지
-        else if ((CollisionSenses.CheckIfPlatform) && Movement.CurrentVelocity.y <= Mathf.Abs(0.01f))
+        else if ((CollisionSenses.CheckIfPlatform) && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(0.01f))
         {
             player.FSM.ChangeState(player.LandState);
             return;
         }
+        //경사로 착지
+        else if ((!CollisionSenses.CheckIfGrounded) && CollisionSenses.CheckSlope && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1)) 
+        {
+            player.FSM.ChangeState(player.IdleState);
+            return;
+        }
         //Ground 착지
-        else if ((isGrounded) && Movement.CurrentVelocity.y <= Mathf.Abs(0.01f))
+        else if ((isGrounded) && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1))
         {
             player.FSM.ChangeState(player.LandState);
             return;

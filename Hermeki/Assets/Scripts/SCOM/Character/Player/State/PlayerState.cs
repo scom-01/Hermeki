@@ -42,7 +42,7 @@ public class PlayerState : UnitState
         base.DoChecks();
 
         //Check
-        isGrounded = CollisionSenses.CheckIfGrounded || CollisionSenses.CheckIfPlatform;
+        isGrounded = CollisionSenses.CheckIfGrounded || CollisionSenses.CheckIfPlatform || CollisionSenses.CheckSlope;
         isPlatform = CollisionSenses.CheckIfPlatform;
         isTouchingWall = CollisionSenses.CheckIfTouchingWall;
         isTouchingWallBack = CollisionSenses.CheckIfTouchingWallBack;
