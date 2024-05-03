@@ -13,11 +13,13 @@ public class PlayerIdleState : PlayerGroundedState
         base.Enter();
         player.JumpState.ResetAmountOfJumpsLeft();
         Movement.SetVelocityZero();
+        unit.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
     }
 
     public override void Exit()
     {
         base.Exit();
+        unit.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     public override void LogicUpdate()
