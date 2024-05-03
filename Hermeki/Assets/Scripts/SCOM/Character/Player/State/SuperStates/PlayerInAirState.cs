@@ -1,6 +1,3 @@
-using SCOM.Weapons.Components;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInAirState : PlayerState
@@ -71,21 +68,21 @@ public class PlayerInAirState : PlayerState
             return;
 
         //Platform 착지
-        else if ((CollisionSenses.CheckIfPlatform) && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(0.01f))
+        else if ((CollisionSenses.CheckIfPlatform) && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1f))
         {
             player.FSM.ChangeState(player.LandState);
-            return;
-        }
-        //경사로 착지
-        else if ((!CollisionSenses.CheckIfGrounded) && CollisionSenses.CheckSlope && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1)) 
-        {
-            player.FSM.ChangeState(player.IdleState);
             return;
         }
         //Ground 착지
         else if ((isGrounded) && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1))
         {
             player.FSM.ChangeState(player.LandState);
+            return;
+        }
+        //경사로 착지
+        else if ((isGrounded || CollisionSenses.CheckSlope || isTouchingWall) && (CollisionSenses.CheckIfGroundDist * 10f) <= 5)
+        {
+            player.FSM.ChangeState(player.IdleState);
             return;
         }
         //else if (JumpInput && (isTouchingWall || isTouchingWallBack || wallJumpCoyoteTime))
@@ -98,7 +95,7 @@ public class PlayerInAirState : PlayerState
         //    return;
         //}
         else if (coyoteTime && JumpInput && player.JumpState.CanJump() && !player.CC2D.isTrigger)
-        {            
+        {
             coyoteTime = false;
             player.FSM.ChangeState(player.JumpState);
             return;
@@ -146,7 +143,7 @@ public class PlayerInAirState : PlayerState
     {
         if (coyoteTime && Time.time > startTime + player.playerData.coyeteTime)
         {
-            coyoteTime = false;            
+            coyoteTime = false;
             //player.JumpState.DecreaseAmountOfJumpsLeft();
         }
     }

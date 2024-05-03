@@ -65,8 +65,8 @@ namespace SCOM.CoreSystem
         public Vector3 GroundFront => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2 * Movement.FancingDirection), GroundCenterPos.y, 0);
         public Vector3 GroundBack => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2 * -Movement.FancingDirection), GroundCenterPos.y, 0);
 
-        public Vector3 WallFrontPos => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2) * Movement.FancingDirection, GroundCenterPos.y + 0.7f, 0);
-        public Vector3 WallkBackPos => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2) * -Movement.FancingDirection, GroundCenterPos.y + 0.7f, 0);
+        public Vector3 WallFrontPos => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2) * Movement.FancingDirection, GroundCenterPos.y + (CC2D.size.y / 4), 0);
+        public Vector3 WallkBackPos => new Vector3(GroundCenterPos.x + (CC2D.size.x / 2) * -Movement.FancingDirection, GroundCenterPos.y + (CC2D.size.y / 4), 0);
 
         public Vector3 CliffFront => GroundFront + (Vector3.right * WallCheckDistance * Movement.FancingDirection);
 
@@ -122,33 +122,69 @@ namespace SCOM.CoreSystem
         }
 
         public bool CheckSlope
-        { 
+        {
             get
             {
-                var count = RB.GetContacts(contactBuffer);
-                if (count > 0)
-                {
-                    foreach (var contact in contactBuffer) 
-                    {
-                        if (contact.collider?.CompareTag("Player") == true)
-                            continue;
-
-                        // |normal.x| 0.9f 초과, 0.7f 미만이면 무시
-                        if (Mathf.Abs(contact.normal.x * 10f) < 7 || Mathf.Abs(contact.normal.x * 10f) > 9)
-                            continue;
-
-                        // normal.y 0.9f 초과, 0.7f 미만이면 무시
-                        if ((contact.normal.y * 10f) > 9 || (contact.normal.y * 10f) < 7)
-                            continue;
-
-                        //닿은 면이 아래 부분이고 기울기가 크지않으면 true
-                        return true;
-                    }
-                }
-                return false;
+                //angle                
+                var result = (VecSlope != Vector2.up) ? true : false;
+                return result;
             }
         }
 
+        public Vector2 VecSlope
+        {
+            get
+            {
+                var count = Physics2D.Raycast(GroundCenterPos, Vector2.down, contactFilter_Ground, hitBuffer, 0.25f);
+                if (count > 0)
+                {
+                    foreach (var hit in hitBuffer)
+                    {
+                        if (hit.rigidbody == null)
+                            continue;
+
+                        if (hit.transform.CompareTag("Platform"))
+                            continue;
+
+                        var result = Vector2.Perpendicular(hit.normal).normalized;
+                        var angle = Vector2.Angle(hit.normal, Vector2.up);
+                        Debug.DrawLine(hit.point, hit.point + result, Color.blue);
+                        if (angle != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return Vector2.up;
+                        }
+
+                    }
+                }
+                return Vector2.up;
+            }
+        }
+
+        public float CheckIfGroundDist
+        {
+            get
+            {
+                var count = Physics2D.Raycast(GroundCenterPos, Vector2.down, contactFilter_Ground, hitBuffer, 5f);
+                if (count > 0)
+                {
+                    foreach (var hit in hitBuffer)
+                    {
+                        if (hit.rigidbody == null)
+                            continue;
+
+                        if (hit.transform.CompareTag("Platform"))
+                            continue;
+
+                        return Vector2.Distance(GroundCenterPos, hit.point);
+                    }
+                }
+                return -1f;
+            }
+        }
         public bool CheckIfGrounded
         {
             get

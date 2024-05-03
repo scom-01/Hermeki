@@ -42,13 +42,13 @@ public class PlayerGroundedState : PlayerState
         //    return;
         //}
         //점프
-        else if (JumpInput && player.JumpState.CanJump() && isGrounded &&/* yInput >= 0 &&*/ !player.CC2D.isTrigger)
+        else if (JumpInput && player.JumpState.CanJump() && (isGrounded || CollisionSenses.CheckSlope) &&/* yInput >= 0 &&*/ !player.CC2D.isTrigger)
         {
             player.FSM.ChangeState(player.JumpState);
             return;
         }
         //공중에 있을 때 (ex. 절벽에서 걸어서 떨어졌을 때)
-        else if (!(isGrounded))
+        else if (!(isGrounded)&& !CollisionSenses.CheckSlope)
         {
             player.InAirState.StartCoyoteTime();
             player.FSM.ChangeState(player.InAirState);

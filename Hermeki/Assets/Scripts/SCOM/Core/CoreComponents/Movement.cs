@@ -32,6 +32,8 @@ namespace SCOM.CoreSystem
         public override void LogicUpdate()
         {
             CurrentVelocity = core.Unit.RB.velocity;
+            FixedVelocity = new Vector2(Mathf.Lerp(FixedVelocity.x, 0, Time.deltaTime * 10),
+                                        Mathf.Lerp(FixedVelocity.y, 0, Time.deltaTime * 10));
         }
 
         #region Set Func
@@ -50,6 +52,11 @@ namespace SCOM.CoreSystem
         {
             angle.Normalize();
             workspace.Set(angle.x * velocity * direction, angle.y * velocity);
+            SetFinalVelocity();
+        }
+        public void SetVelocity(Vector2 angle, int direction)
+        {
+            workspace.Set(angle.x * direction, angle.y * direction);
             SetFinalVelocity();
         }
         public void AddVelocity(Vector2 velocity)
