@@ -17,9 +17,7 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     public int CurrIdx = 0;
     public PolygonCollider2D PC2D;
     public CompositeCollider2D CpC2D;
-    [HideInInspector] public StageObjectController SO_Controller;
-    
-    private LevelManager _levelManager;
+    [HideInInspector] public StageObjectController SO_Controller;    
     private void Awake()
     {
         LM = this.GetComponentInParent<LevelManager>();
@@ -27,8 +25,7 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
         Gird.enabled = false;
         SO_Controller = GetComponentInChildren<StageObjectController>();
 
-        _levelManager = this.GetComponentInParent<LevelManager>();
-        _levelManager.registerObserver(this);
+        LM.registerObserver(this);
     }
     public bool ResetStage()
     {
@@ -110,10 +107,12 @@ public class StageController : MonoBehaviour, ILevelManagerObserver
     {
         if(CurrIdx == _value)
         {
+            this.gameObject.SetActive(true);
             StartStage();
             return;
         }
-        ResetStage();
+        this.gameObject.SetActive(false);
+        ResetStage();        
     }
     #endregion
 }

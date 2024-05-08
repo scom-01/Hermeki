@@ -15,11 +15,6 @@ public class StageLevelController : MonoBehaviour, ILevelManagerObserver
     [SerializeField]
     private bool isOverlap;
     private LevelManager _levelManager;
-    //public StageLevelController(StageController _stageController)
-    //{
-    //    this.stageController = _stageController;
-    //    stageController.registerObserver(this);
-    //}
 
     private void Awake()
     {

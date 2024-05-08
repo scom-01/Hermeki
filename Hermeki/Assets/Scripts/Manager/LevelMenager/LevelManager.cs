@@ -70,10 +70,22 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnEnable()
     {
+		if (PlayFabManager.Inst == null)
+		{
+			SceneManager.LoadSceneAsync("Title");
+			return;
+		}
+	}
+
+    private void OnDisable()
+    {        
         if (PlayFabManager.Inst == null)
+        {
             return;
+        }
+
 
         //캐릭터 레벨 PlayFab 저장 
         for (int i = 0; i < CharacterLevel.Count; i++)
