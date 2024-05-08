@@ -48,7 +48,7 @@ public class PlayerGroundedState : PlayerState
             return;
         }
         //공중에 있을 때 (ex. 절벽에서 걸어서 떨어졌을 때)
-        else if (!(isGrounded)&& !CollisionSenses.CheckSlope)
+        else if (!(isGrounded)&& !CollisionSenses.CheckSlope&& (CollisionSenses.CheckIfGroundDist * 100f) > 50)
         {
             player.InAirState.StartCoyoteTime();
             player.FSM.ChangeState(player.InAirState);

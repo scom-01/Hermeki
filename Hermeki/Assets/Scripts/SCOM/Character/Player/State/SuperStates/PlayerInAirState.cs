@@ -80,7 +80,7 @@ public class PlayerInAirState : PlayerState
             return;
         }
         //경사로 착지
-        else if ((isGrounded || CollisionSenses.CheckSlope || isTouchingWall) && (CollisionSenses.CheckIfGroundDist * 10f) <= 5)
+        else if ((isGrounded || CollisionSenses.CheckSlope || CollisionSenses.CheckWallSlope /*isTouchingWall*/) && (CollisionSenses.CheckIfGroundDist * 100f) <= 50 && (Movement.CurrentVelocity.y * 100f) <= Mathf.Abs(1f))
         {
             player.FSM.ChangeState(player.IdleState);
             return;

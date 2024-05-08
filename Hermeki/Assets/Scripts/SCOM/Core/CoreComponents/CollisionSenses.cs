@@ -121,6 +121,17 @@ namespace SCOM.CoreSystem
             }
         }
 
+
+        public bool CheckWallSlope
+        {
+            get
+            {
+                //angle                
+                var result = (VecWall != Vector2.left * Movement.FancingDirection) ? true : false;
+                return result;
+            }
+        }
+
         public bool CheckSlope
         {
             get
@@ -128,6 +139,39 @@ namespace SCOM.CoreSystem
                 //angle                
                 var result = (VecSlope != Vector2.up) ? true : false;
                 return result;
+            }
+        }
+
+        public Vector2 VecWall
+        {
+            get
+            {
+                var count = Physics2D.Raycast(WallFrontPos, Vector2.right * Movement.FancingDirection, contactFilter_Ground, hitBuffer, WallCheckDistance);
+                if (count > 0)
+                {
+                    foreach (var hit in hitBuffer)
+                    {
+                        if (hit.rigidbody == null)
+                            continue;
+
+                        if (hit.transform.CompareTag("Platform"))
+                            continue;
+
+                        var result = Vector2.Perpendicular(hit.normal).normalized;
+                        var angle = Vector2.Angle(hit.normal, Vector2.left * Movement.FancingDirection);
+                        Debug.DrawLine(hit.point, hit.point + result, Color.red);
+                        if (angle != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return Vector2.left * Movement.FancingDirection;
+                        }
+
+                    }
+                }
+                return Vector2.left * Movement.FancingDirection;
             }
         }
 
