@@ -44,15 +44,12 @@ public class ShadowController : MonoBehaviour
                 if (hit.rigidbody == null || hit.transform.CompareTag("Platform"))
                     continue;
 
-                //hit의 기울기(양수면 hit의 y가 더 낮은 위치, 즉 GroundCenterPos가 hit.point보다 위에 있으면 양수)
-                if (hit.normal.y < 0.9f)
-                    continue;
-                
                 //raycast hit와의 거리가 그림자 감지 거리보다 작을 때
                 if (hit.distance <= ShadowDistance)
                 {
                     ShadowSprite.transform.position = new Vector3(ShadowSprite.transform.position.x, hit.point.y, 0);
                     ShadowSprite.localScale = ShadowScale * ((ShadowDistance - hit.distance) / ShadowDistance);
+                    ShadowSprite.localEulerAngles = new Vector3(0, 0, (1 - (hit.normal.x* unit.Core.CoreMovement.FancingDirection / 1)) * 180f);
                     SR.color = new Color(SR.color.r, SR.color.g, SR.color.b, (ShadowAlpha * ((ShadowDistance - hit.distance) / ShadowDistance)));
                 }
                 else
