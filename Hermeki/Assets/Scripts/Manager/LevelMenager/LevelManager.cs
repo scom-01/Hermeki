@@ -15,21 +15,42 @@ public class LevelManager : MonoBehaviour
     public Transform StartPos;
     public AssetReferenceGameObject SpawnUnit;
 
+    /// <summary>
+    /// 스테이지 컨트롤러 리스트
+    /// </summary>
     [Header("Stage")]
     public List<StageController> StageList = new List<StageController>();
+    /// <summary>
+    /// 캐릭터 선택 클래스 리스트
+    /// </summary>
     public List<SelectStartLevel> SelectUIList = new List<SelectStartLevel>();
     /// <summary>
     /// 현재 진행 중인 캐릭터 UI 클래스
     /// </summary>
     public SelectStartLevel CurrSelectUI;
     public bool isPlaying = false;
-    [Tooltip("현재 진행중인 스테이지")]
-    public int CurrStageIdx = 0;
+    /// <summary>
+    /// 현재 스테이지
+    /// </summary>
+    [Tooltip("현재 진행중인 스테이지")]    
+    private int CurrStageIdx = 0;
+    /// <summary>
+    /// 최대 스테이지 수
+    /// </summary>
     private int MaxIdx = 0;
+    /// <summary>
+    /// 현재 진행중인 캐릭터 이름
+    /// </summary>
     [Tooltip("현재 진행중인 캐릭터 이름")]
     public string CurrCharacterName;
+    /// <summary>
+    /// 현재 스테이지 난이도
+    /// </summary>
     [Tooltip("스테이지 난이도")]
     public int StageLevel = 0;
+    /// <summary>
+    /// 최대 스테이지 난이도
+    /// </summary>
     public int MaxLevel = 5;
 
     //-------Observer
@@ -40,10 +61,18 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private Dictionary<string, int> CharacterLevel = new Dictionary<string, int>();
 
+    /// <summary>
+    /// 메인 레벨 UI
+    /// </summary>
     [Header("UI")]
     public Canvas LevelCanvas;
+    /// <summary>
+    /// 인벤토리 테이블관리 클래스
+    /// </summary>
     public InventoryTable InventoryTable;
-
+    /// <summary>
+    /// 캐릭터 외형 클래스
+    /// </summary>
     public SPUM_SpriteList SettingSpriteList;
     [Header("Cam")]
     public CinemachineVirtualCamera VirtualCamera;
@@ -51,36 +80,38 @@ public class LevelManager : MonoBehaviour
     {
         Application.targetFrameRate = 250;
         if (GameManager.Inst != null)
-        {
             GameManager.Inst.LevelManager = this;
-        }
     }
     public virtual void Start()
     {
+        //현재 에디터의 스테이지 컨트롤러를 리스트로 가져옴
         StageList = GetComponentsInChildren<StageController>().ToList();
         MaxIdx = StageList.Count;
+
+        //메인 레벨 UI 클래스가져옴
         if (LevelCanvas != null)
         {
             LevelCanvas.enabled = true;
             SelectUIList = LevelCanvas.GetComponentsInChildren<SelectStartLevel>().ToList();
+
             if (SelectUIList != null && SelectUIList.Count > 0)
-            {
                 SelectStart(0);
-            }
         }
     }
 
     private void OnEnable()
     {
-		if (PlayFabManager.Inst == null)
-		{
-			SceneManager.LoadSceneAsync("Title");
-			return;
-		}
-	}
+        if (PlayFabManager.Inst == null)
+        {
+            SceneManager.LoadSceneAsync("Title");
+            return;
+        }
+        //스테이지 0 초기화
+        ChangeStageIdx(0);
+    }
 
     private void OnDisable()
-    {        
+    {
         if (PlayFabManager.Inst == null)
         {
             return;
@@ -115,19 +146,14 @@ public class LevelManager : MonoBehaviour
     {
         isPlaying = true;
         Vector3 _Pos = Vector3.zero;
-        _Pos = CurrStage().StartPos.position;
-        if (StartPos != null)
-        {
-            _Pos = StartPos.position;
-        }
+        ChangeStageIdx(0);
 
+        _Pos = CurrStage().StartPos != null ? CurrStage().StartPos.position : Vector3.zero;
         if (LevelCanvas != null)
             LevelCanvas.enabled = false;
 
         if (InventoryTable != null)
-        {
             InventoryTable.SetState(InventoryState.Close);
-        }
 
         if (SpawnUnit != null)
         {
@@ -151,7 +177,7 @@ public class LevelManager : MonoBehaviour
         if (player == null || LevelCanvas == null)
             return;
 
-        CurrStageIdx = 0;
+        ChangeStageIdx(0);
         if (LevelCanvas != null)
             LevelCanvas.enabled = true;
 
@@ -163,15 +189,14 @@ public class LevelManager : MonoBehaviour
         if (VirtualCamera != null && player != null)
             VirtualCamera.Follow = null;
         for (int i = 0; i < StageList.Count; i++)
-        {
             StageList[i].ResetStage();
-        }
     }
 
     public bool SetUnitSprite()
     {
         if (player == null || SettingSpriteList == null)
             return false;
+
         player.GetComponentInChildren<SPUM_SpriteList>()?.SetSpriteList(SettingSpriteList);
         player.GetComponentInChildren<SPUM_SpriteList>()?.ResyncData();
         return true;
@@ -200,9 +225,7 @@ public class LevelManager : MonoBehaviour
             return false;
 
         if (!StageList[CurrStageIdx].StartStage())
-        {
             return false;
-        }
 
         return true;
     }
@@ -228,12 +251,11 @@ public class LevelManager : MonoBehaviour
         if (player == null)
             return false;
 
-        CurrStageIdx++;
-        ChangeStageIdx(CurrStageIdx);
+        ChangeStageIdx(++CurrStageIdx);
         //스테이지 모두 클리어 시
         if (CurrStageIdx >= StageList.Count)
         {
-            CurrStageIdx = StageList.Count - 1;
+            ChangeStageIdx(StageList.Count - 1);
             GameOver();
 
             //현재 최대 레벨 클리어 시
@@ -244,10 +266,10 @@ public class LevelManager : MonoBehaviour
             }
             return false;
         }
+
         if (!StartStage())
-        {
             return false;
-        }
+
         return true;
     }
     private IEnumerator UpdateCameraFrameLater()
@@ -279,9 +301,7 @@ public class LevelManager : MonoBehaviour
     public bool ChangeLevel(int idx)
     {
         if (idx >= MaxLevel)
-        {
             idx = MaxLevel;
-        }
 
         StageLevel = idx;
 
@@ -289,12 +309,15 @@ public class LevelManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 스테이지 설정
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
     public bool ChangeStageIdx(int idx)
     {
         if (idx >= MaxIdx)
-        {
             idx = MaxIdx;
-        }
 
         CurrStageIdx = idx;
 
@@ -330,9 +353,8 @@ public class LevelManager : MonoBehaviour
     public int GetCharacterLevel(string key)
     {
         if (!CharacterLevel.ContainsKey(key))
-        {
             return -1;
-        }
+
         return CharacterLevel[key];
     }
 
@@ -350,17 +372,17 @@ public class LevelManager : MonoBehaviour
         if (CharacterLevel.ContainsKey(key))
         {
             CharacterLevel[key] = value;
+
             foreach (var _char in CharacterLevel)
-            {
                 print($"{_char.Key} = {_char.Value}");
-            }
+
             return true;
         }
+
         CharacterLevel.Add(key, value);
+
         foreach (var _char in CharacterLevel)
-        {
             print($"{_char.Key} = {_char.Value}");
-        }
         return true;
     }
     #endregion
@@ -399,9 +421,7 @@ public class LevelManager : MonoBehaviour
     public void notifyStageLevelObservers(int _value)
     {
         foreach (var _observer in Observers)
-        {
             _observer.UpdateStageLevel(_value);
-        }
     }
     /// <summary>
     /// 옵저버들에게 스테이지 Idx 변경 사항 알림
@@ -410,9 +430,7 @@ public class LevelManager : MonoBehaviour
     public void notifyStageIdxObservers(int _value)
     {
         foreach (var _observer in Observers)
-        {
             _observer.UpdateStageIdx(_value);
-        }
     }
     #endregion
 }
