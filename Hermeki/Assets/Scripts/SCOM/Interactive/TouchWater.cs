@@ -35,7 +35,7 @@ public class TouchWater : TouchLowGravity
     {
         base.UnTouch(obj);
         Player tempUnit = obj.GetComponent<Player>();
-        if (tempUnit != null && tempUnit.JumpState.CanJump())
+        if (tempUnit != null && !((tempUnit.FSM.CurrentState) as PlayerState).GetisGrounded && tempUnit.FSM.CompareRootState<PlayerInAirState>() && tempUnit.JumpState.CanJump())
         {
             tempUnit.JumpState.DecreaseAmountOfJumpsLeft();
         }

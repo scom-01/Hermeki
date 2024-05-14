@@ -15,6 +15,7 @@ public class PlayerState : UnitState
     protected bool skill1Input;             //Skill1 입력값
     protected bool skill2Input;             //Skill2 입력값
     //Checks
+    public bool GetisGrounded => isGrounded;
     protected bool isGrounded;              //Grounded 체크
     protected bool isPlatform;              //Platform 체크
     protected bool isTouchingWall;          //벽 체크 
