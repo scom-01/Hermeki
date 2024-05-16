@@ -1,6 +1,4 @@
 using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerUnitSpawnManager : MonoBehaviour
@@ -12,9 +10,13 @@ public class PlayerUnitSpawnManager : MonoBehaviour
 
     private void Start()
     {
-        if(SinglePlayerPrefab!=null)
+        if (SinglePlayerPrefab != null)
         {
             GameObject obj = Instantiate(SinglePlayerPrefab);
+            
+            if (TestManager.Inst != null)
+                TestManager.Inst.player = obj.GetComponent<Player>();
+
             if (VirtualCamera != null)
             {
                 VirtualCamera.Follow = obj.transform;

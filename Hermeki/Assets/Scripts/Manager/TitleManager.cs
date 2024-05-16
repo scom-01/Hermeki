@@ -14,20 +14,19 @@ public class TitleManager : MonoBehaviour
             LoadingPanel.SetActive(true);
         }
     }
-    private void Update()
+
+    private void Start()
     {
-        if (!isGetData && PlayFabManager.Inst != null && PlayFabManager.Inst.isGetData)
-        {
-            //값 불러옴
-            isGetData = true;
-            if (LoadingPanel != null) LoadingPanel.SetActive(false);
-        }
-    }
+        PlayFabManager.Inst?.TryLogin();
+	}
+
     public void MoveToSinglePlay()
     {
-        if (!isGetData)
-            return;
+        //if (!PlayFabManager.Inst.isGetData)
+        //    return;
 
         SceneManager.LoadSceneAsync("Ingame");
     }
+
+    public void SetLoadingPanel(bool _isactive) => LoadingPanel.SetActive(_isactive);
 }
